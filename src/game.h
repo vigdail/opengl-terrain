@@ -5,6 +5,7 @@
 #include <entt/entt.hpp>
 
 #include "resource_manager.h"
+#include "terrain.h"
 
 enum GameState {
   GAME_MENU,
@@ -31,4 +32,5 @@ class Game {
   uint height_;
   GameState state_;
   bool keys_[kKeysCount_];
+  Terrain terrain_;
 };
