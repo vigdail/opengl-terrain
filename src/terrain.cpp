@@ -1,6 +1,3 @@
-
-#include <iostream>
-
 #include "terrain.h"
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -55,8 +52,6 @@ void Terrain::GenerateIndices() {
       index += 6;
     }
   }
-
-  std::cout << indices_.size() << std::endl;
 }
 
 void Terrain::BuildVAO() {
