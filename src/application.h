@@ -24,4 +24,5 @@ class Application {
                                       int height);
   static void KeyCallback(GLFWwindow *window, int key, int scancode, int action,
                           int mode);
+  static void MouseCallback(GLFWwindow *window, double x, double y);
 };

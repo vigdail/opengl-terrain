@@ -4,6 +4,7 @@
 
 #include <entt/entt.hpp>
 
+#include "camera.h"
 #include "resource_manager.h"
 #include "terrain.h"
 
@@ -24,6 +25,7 @@ class Game {
   void SetKeyPressed(uint key);
   void SetKeyReleased(uint key);
   bool IsKeyPressed(uint key);
+  void MouseCallback(double x, double y);
 
  private:
   static const uint kKeysCount_ = 1024;
@@ -32,5 +34,8 @@ class Game {
   uint height_;
   GameState state_;
   bool keys_[kKeysCount_];
+  Camera camera_;
   Terrain terrain_;
+  double mouse_last_x_;
+  double mouse_last_y_;
 };

@@ -1,10 +1,11 @@
 #include "game.h"
+#include "application.h"
 
-#include <glm/glm.hpp>
 #include <iostream>
 #include <string>
 
-#include "application.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 const uint Game::kKeysCount_;
 
@@ -13,7 +14,10 @@ Game::Game(uint width, uint height)
       height_(height),
       state_(GAME_MENU),
       keys_(),
-      terrain_(Terrain()) {
+      camera_(Camera(glm::vec3(0.0f, 1.0f, 3.0f), glm::vec3(0.0f, 1.0f, 0.0f))),
+      terrain_(Terrain()),
+      mouse_last_x_(0.0),
+      mouse_last_y_(0.0) {
   LoadAssets();
 }
 
@@ -24,12 +28,30 @@ void Game::LoadAssets() {
                               "../assets/shaders/terrain.fs");
 }
 
-void Game::ProcessInput(float dt) {}
+void Game::ProcessInput(float dt) {
+  if (keys_[GLFW_KEY_W]) {
+    camera_.move(CameraMovement::FORWARD, dt);
+  }
+  if (keys_[GLFW_KEY_S]) {
+    camera_.move(CameraMovement::BACKWARD, dt);
+  }
+  if (keys_[GLFW_KEY_A]) {
+    camera_.move(CameraMovement::LEFT, dt);
+  }
+  if (keys_[GLFW_KEY_D]) {
+    camera_.move(CameraMovement::RIGHT, dt);
+  }
+}
 
 void Game::Update(float dt) {}
 
 void Game::Render() {
   Shader terrainShader = ResourceManager::GetShader("terrain");
+  terrainShader.SetMat4("view", camera_.getViewMatrix());
+
+  glm::mat4 projection =
+      glm::perspective(glm::radians(90.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+  terrainShader.SetMat4("projection", projection);
   terrain_.Draw(terrainShader);
 }
 
@@ -51,4 +73,14 @@ bool Game::IsKeyPressed(uint key) {
   }
 
   return false;
+}
+
+void Game::MouseCallback(double x, double y) {
+  float offsetX = x - mouse_last_x_;
+  float offsetY = mouse_last_y_ - y;
+
+  mouse_last_x_ = x;
+  mouse_last_y_ = y;
+
+  camera_.handleMouseMovement(offsetX, offsetY);
 }

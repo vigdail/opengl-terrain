@@ -1,6 +1,5 @@
 #include "terrain.h"
 #include <glad/glad.h>
-#include <glm/gtc/matrix_transform.hpp>
 
 Terrain::Terrain() : Terrain(10, 10) {}
 
@@ -83,13 +82,7 @@ void Terrain::BuildVAO() {
 void Terrain::Draw(Shader &shader) {
   shader.Use();
   glm::mat4 model = glm::mat4(1.0f);
-  glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 2.0f, 3.0f), glm::vec3(0.0f),
-                               glm::vec3(0.0f, 1.0f, 0.0f));
-  glm::mat4 projection =
-      glm::perspective(glm::radians(90.0f), 800.0f / 600.0f, 0.1f, 100.0f);
   shader.SetMat4("model", model);
-  shader.SetMat4("view", view);
-  shader.SetMat4("projection", projection);
   glBindVertexArray(VAO_);
   glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0);
 }
