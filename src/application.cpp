@@ -13,6 +13,18 @@ Application::Application(unsigned int width, unsigned int height)
 
   window_ = glfwCreateWindow(width, height, "Breakout GL", nullptr, nullptr);
   glfwMakeContextCurrent(window_);
+  glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+  GLFWmonitor *monitor = glfwGetPrimaryMonitor();
+  if (monitor == NULL) {
+    std::cerr << "Failed to get primary monitor" << std::endl;
+    glfwTerminate();
+  }
+
+  int screenWidth, screeHeight;
+  glfwGetMonitorWorkarea(monitor, NULL, NULL, &screenWidth, &screeHeight);
+  glfwSetWindowPos(window_, (screenWidth - width) / 2,
+                   (screeHeight - height) / 2);
 
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
     std::cout << "Failed to initialize GLAD" << std::endl;

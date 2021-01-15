@@ -1,13 +1,16 @@
 #include "terrain.h"
 #include <glad/glad.h>
 
-Terrain::Terrain() : Terrain(10, 10) {}
+Terrain::Terrain() : Terrain(100, 512, 512) {}
 
-Terrain::Terrain(int width, int length)
-    : width_(width),
-      length_(length),
-      vertices_(std::vector<Vertex>(width_ * length_)),
-      indices_(std::vector<int>((width_ - 1) * (length_ - 1) * 2 * 3)) {
+Terrain::Terrain(int size) : Terrain(size, 512, 512) {}
+
+Terrain::Terrain(int size, int width, int length)
+    : res_x_(width),
+      res_z_(length),
+      size_(size),
+      vertices_(std::vector<Vertex>(res_x_ * res_z_)),
+      indices_(std::vector<int>((res_x_ - 1) * (res_z_ - 1) * 2 * 3)) {
   glGenVertexArrays(1, &VAO_);
   glGenBuffers(1, &VBO_);
   glGenBuffers(1, &EBO_);
@@ -18,29 +21,29 @@ Terrain::Terrain(int width, int length)
 }
 
 void Terrain::GenerateVertices() {
-  for (int i = 0; i < length_; i++) {
-    for (int j = 0; j < width_; j++) {
-      float x = j - (width_ - 1) / 2.0f;
-      float z = i - (length_ - 1) / 2.0f;
-      float y = sin(x + z) / 5.0f;
+  for (int i = 0; i < res_z_; i++) {
+    for (int j = 0; j < res_x_; j++) {
+      float x = (j - (res_x_ - 1) / 2.0f) * size_ / res_x_;
+      float z = (i - (res_z_ - 1) / 2.0f) * size_ / res_z_;
+      float y = sin(x + z) / 5.0f + cos((x - z) / 10);
       Vertex v = {
           glm::vec3(x, y, z),
           glm::vec3(0.0f, 1.0f, 0.0f),
-          glm::vec2(static_cast<float>(j) / width_,
-                    static_cast<float>(i) / length_),
+          glm::vec2(static_cast<float>(j) / res_x_,
+                    static_cast<float>(i) / res_z_),
       };
-      vertices_[i * width_ + j] = v;
+      vertices_[i * res_x_ + j] = v;
     }
   }
 }
 
 void Terrain::GenerateIndices() {
   int index = 0;
-  for (int i = 0; i < length_ - 1; i++) {
-    for (int j = 0; j < width_ - 1; j++) {
-      int top_left = i * width_ + j;
+  for (int i = 0; i < res_z_ - 1; i++) {
+    for (int j = 0; j < res_x_ - 1; j++) {
+      int top_left = i * res_x_ + j;
       int top_right = top_left + 1;
-      int bottom_left = (i + 1) * width_ + j;
+      int bottom_left = (i + 1) * res_x_ + j;
       int bottom_right = bottom_left + 1;
       indices_[index] = top_left;
       indices_[index + 1] = bottom_left;

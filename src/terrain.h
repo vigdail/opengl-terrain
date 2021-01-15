@@ -14,12 +14,14 @@ struct Vertex {
 class Terrain {
  public:
   Terrain();
-  Terrain(int width, int length);
+  explicit Terrain(int size);
+  Terrain(int size, int res_x, int res_z);
   void Draw(Shader &shader);
 
  private:
-  int width_;
-  int length_;
+  int res_x_;
+  int res_z_;
+  int size_;
   std::vector<Vertex> vertices_;
   std::vector<int> indices_;
   // @TODO: Make some wrappers maybe
