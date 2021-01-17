@@ -1,3 +1,5 @@
+# Terrain rendering with OpenGL
+
 ## Dependencies
 
 Make sure you have ```opengl version>=3.3```, ```glfw``` and ```glm``` installed on you system.
@@ -12,7 +14,7 @@ Make sure you have ```opengl version>=3.3```, ```glfw``` and ```glm``` installed
 
 ```cmake ../ && make```
 
-# Roadmap
+## Roadmap
 
 - [ ] Perlin noise based landscape generation
 - [ ] Multiple texture layers
