@@ -19,6 +19,7 @@ Terrain::Terrain(int size, int width, int length)
 
   GenerateVertices();
   GenerateIndices();
+  GenerateNormals();
   BuildVAO();
 }
 
@@ -49,29 +50,6 @@ void Terrain::GenerateVertices() {
       vertices_[i * res_x_ + j] = v;
     }
   }
-
-  // @TODO: Consider this: https://gamedev.stackexchange.com/a/66937
-  for (int z = 0; z < res_z_; z++) {
-    for (int x = 0; x < res_x_; x++) {
-      float heightL = GetHeight(x - 1, z);
-      float heightR = GetHeight(x + 1, z);
-      float heightT = GetHeight(x, z - 1);
-      float heightD = GetHeight(x, z + 1);
-      glm::vec3 normal = glm::vec3((heightL - heightR), 1.0f * size_ / res_z_,
-                                   (heightD - heightT));
-      normal = glm::normalize(normal);
-      normals_[z * res_x_ + x] = normal;
-    }
-  }
-}
-
-float Terrain::GetHeight(int x, int z) {
-  if (x < 0 || z < 0 || x >= res_x_ || z >= res_z_) {
-    return 0;
-  }
-
-  float r = vertices_[z * res_x_ + x].position.y;
-  return r;
 }
 
 void Terrain::GenerateIndices() {
@@ -87,6 +65,32 @@ void Terrain::GenerateIndices() {
       index += 6;
     }
   }
+}
+
+void Terrain::GenerateNormals() {
+  for (int i = 0; i < indices_.size(); i += 3) {
+    glm::vec3 p0 = vertices_[indices_[i + 0]].position;
+    glm::vec3 p1 = vertices_[indices_[i + 1]].position;
+    glm::vec3 p2 = vertices_[indices_[i + 2]].position;
+
+    glm::vec3 e1 = p1 - p0;
+    glm::vec3 e2 = p2 - p0;
+    glm::vec3 normal = glm::cross(e1, e2);
+    normal = glm::normalize(normal);
+
+    normals_[indices_[i + 0]] += normal;
+    normals_[indices_[i + 1]] += normal;
+    normals_[indices_[i + 2]] += normal;
+  }
+}
+
+float Terrain::GetHeight(int x, int z) {
+  if (x < 0 || z < 0 || x >= res_x_ || z >= res_z_) {
+    return 0;
+  }
+
+  float r = vertices_[z * res_x_ + x].position.y;
+  return r;
 }
 
 int Terrain::GetIndex(int x, int z) { return z * res_x_ + x; }

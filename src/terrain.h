@@ -31,6 +31,7 @@ class Terrain {
 
   void GenerateVertices();
   void GenerateIndices();
+  void GenerateNormals();
   void BuildVAO();
   float GetHeight(int x, int z);
   int GetIndex(int x, int z);
