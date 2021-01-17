@@ -19,5 +19,4 @@ void main() {
     vec3 diffuse = diff * light.color * color;
     vec3 ambient = vec3(0.05);
     fragColor = vec4(diffuse + ambient, 1.0f); 
-    // fragColor = vec4(vec3(fragNormal.r, 0.0f, fragNormal.b), 1.0f); 
 }
