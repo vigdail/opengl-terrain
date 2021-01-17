@@ -15,7 +15,8 @@ Game::Game(uint width, uint height)
       state_(GAME_MENU),
       keys_(),
       camera_(Camera(glm::vec3(0.0f, 1.0f, 3.0f), glm::vec3(0.0f, 1.0f, 0.0f))),
-      terrain_(Terrain(10)),
+      light_(DirectionalLight(glm::vec3(10.0f, 5.0f, 0.0), glm::vec3(0.0f))),
+      terrain_(Terrain(100, 512, 512)),
       mouse_last_x_(0.0),
       mouse_last_y_(0.0) {
   LoadAssets();
@@ -43,7 +44,9 @@ void Game::ProcessInput(float dt) {
   }
 }
 
-void Game::Update(float dt) {}
+void Game::Update(float dt) {
+  light_.SetPosition(glm::vec3(10.0f * sin(glfwGetTime() / 5.0f), 5.0f, 0.0f));
+}
 
 void Game::Render() {
   Shader terrainShader = ResourceManager::GetShader("terrain");
@@ -52,6 +55,8 @@ void Game::Render() {
   glm::mat4 projection =
       glm::perspective(glm::radians(90.0f), 800.0f / 600.0f, 0.1f, 100.0f);
   terrainShader.SetMat4("projection", projection);
+  terrainShader.SetVec3("light.direction", light_.GetDirection());
+  terrainShader.SetVec3("light.color", light_.GetColor());
   terrain_.Draw(terrainShader);
 }
 

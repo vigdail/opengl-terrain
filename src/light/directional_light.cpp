@@ -1,0 +1,11 @@
+
+#include "directional_light.h"
+
+DirectionalLight::DirectionalLight(glm::vec3 position, glm::vec3 look_at)
+    : position_(position), look_at_(look_at), color_(glm::vec3(1.0f)) {}
+
+glm::vec3 DirectionalLight::GetDirection() {
+  return glm::normalize(position_ - look_at_);
+}
+void DirectionalLight::SetPosition(glm::vec3 position) { position_ = position; }
+glm::vec3 DirectionalLight::GetColor() { return color_; }

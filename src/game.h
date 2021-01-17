@@ -5,6 +5,7 @@
 #include <entt/entt.hpp>
 
 #include "camera.h"
+#include "light/directional_light.h"
 #include "resource_manager.h"
 #include "terrain.h"
 
@@ -35,6 +36,7 @@ class Game {
   GameState state_;
   bool keys_[kKeysCount_];
   Camera camera_;
+  DirectionalLight light_;
   Terrain terrain_;
   double mouse_last_x_;
   double mouse_last_y_;
