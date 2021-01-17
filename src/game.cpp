@@ -17,6 +17,14 @@ Game::Game(uint width, uint height)
       camera_(Camera(glm::vec3(0.0f, 1.0f, 3.0f), glm::vec3(0.0f, 1.0f, 0.0f))),
       light_(DirectionalLight(glm::vec3(10.0f, 5.0f, 0.0), glm::vec3(0.0f))),
       terrain_(Terrain(100, 512, 512)),
+      skybox_({
+          "../assets/textures/skybox/right.jpg",
+          "../assets/textures/skybox/left.jpg",
+          "../assets/textures/skybox/top.jpg",
+          "../assets/textures/skybox/bottom.jpg",
+          "../assets/textures/skybox/front.jpg",
+          "../assets/textures/skybox/back.jpg",
+      }),
       mouse_last_x_(0.0),
       mouse_last_y_(0.0) {
   LoadAssets();
@@ -27,6 +35,8 @@ Game::~Game() { ResourceManager::Clear(); }
 void Game::LoadAssets() {
   ResourceManager::LoadShader("terrain", "../assets/shaders/terrain.vs",
                               "../assets/shaders/terrain.fs");
+  ResourceManager::LoadShader("skybox", "../assets/shaders/skybox.vs",
+                              "../assets/shaders/skybox.fs");
 }
 
 void Game::ProcessInput(float dt) {
@@ -50,6 +60,7 @@ void Game::Update(float dt) {
 
 void Game::Render() {
   Shader terrainShader = ResourceManager::GetShader("terrain");
+  terrainShader.Use();
   terrainShader.SetMat4("view", camera_.getViewMatrix());
 
   glm::mat4 projection =
@@ -58,6 +69,14 @@ void Game::Render() {
   terrainShader.SetVec3("light.direction", light_.GetDirection());
   terrainShader.SetVec3("light.color", light_.GetColor());
   terrain_.Draw(terrainShader);
+
+  glDepthFunc(GL_LEQUAL);
+  Shader skyboxShader = ResourceManager::GetShader("skybox");
+  skyboxShader.Use();
+  skyboxShader.SetMat4("view", glm::mat4(glm::mat3(camera_.getViewMatrix())));
+  skyboxShader.SetMat4("projection", projection);
+  skybox_.Draw(skyboxShader);
+  glDepthFunc(GL_LESS);
 }
 
 void Game::SetKeyPressed(uint key) {

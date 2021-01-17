@@ -50,6 +50,7 @@ void Terrain::GenerateVertices() {
     }
   }
 
+  // @TODO: Consider this: https://gamedev.stackexchange.com/a/66937
   for (int z = 0; z < res_z_; z++) {
     for (int x = 0; x < res_x_; x++) {
       float heightL = GetHeight(x - 1, z);

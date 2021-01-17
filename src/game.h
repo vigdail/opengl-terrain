@@ -8,6 +8,7 @@
 #include "light/directional_light.h"
 #include "resource_manager.h"
 #include "terrain.h"
+#include "skybox.h"
 
 enum GameState {
   GAME_MENU,
@@ -38,6 +39,7 @@ class Game {
   Camera camera_;
   DirectionalLight light_;
   Terrain terrain_;
+  Skybox skybox_;
   double mouse_last_x_;
   double mouse_last_y_;
 };
