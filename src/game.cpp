@@ -15,7 +15,7 @@ Game::Game(uint width, uint height)
       state_(GAME_MENU),
       keys_(),
       camera_(Camera(glm::vec3(0.0f, 1.0f, 3.0f), glm::vec3(0.0f, 1.0f, 0.0f))),
-      terrain_(Terrain()),
+      terrain_(Terrain(10)),
       mouse_last_x_(0.0),
       mouse_last_y_(0.0) {
   LoadAssets();
