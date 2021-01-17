@@ -26,7 +26,7 @@ void Terrain::Draw(Shader &shader) {
   shader.Use();
   glm::mat4 model = glm::mat4(1.0f);
   shader.SetMat4("model", model);
-  shader.SetVec3("color", glm::vec3(0.1f, 0.85f, 0.2f));
+  shader.SetVec3("color", glm::vec3(0.1f, 0.75f, 0.2f));
   glBindVertexArray(VAO_);
   glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0);
 }
@@ -56,9 +56,8 @@ void Terrain::GenerateVertices() {
       float heightR = GetHeight(x + 1, z);
       float heightT = GetHeight(x, z - 1);
       float heightD = GetHeight(x, z + 1);
-      // @TODO: Proper normal y calculations based on max height value maybe
-      glm::vec3 normal =
-          glm::vec3((heightL - heightR), 0.1f, (heightD - heightT));
+      glm::vec3 normal = glm::vec3((heightL - heightR), 1.0f * size_ / res_z_,
+                                   (heightD - heightT));
       normal = glm::normalize(normal);
       normals_[z * res_x_ + x] = normal;
     }
