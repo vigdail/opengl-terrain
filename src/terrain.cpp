@@ -33,10 +33,6 @@ void Terrain::Draw(Shader &shader) {
 }
 
 void Terrain::GenerateVertices() {
-  std::random_device rd;
-  std::default_random_engine eng(rd());
-  std::uniform_real_distribution<float> distr(0.0, 0.01f);
-
   for (int i = 0; i < res_z_; i++) {
     for (int j = 0; j < res_x_; j++) {
       float x = (j - (res_x_ - 1) / 2.0f) * size_ / res_x_;
