@@ -26,6 +26,7 @@ void Terrain::Draw(Shader &shader) {
   shader.Use();
   glm::mat4 model = glm::mat4(1.0f);
   shader.SetMat4("model", model);
+  shader.SetVec3("color", glm::vec3(0.1f, 0.85f, 0.2f));
   glBindVertexArray(VAO_);
   glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0);
 }
