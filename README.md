@@ -22,3 +22,5 @@ Make sure you have ```opengl version>=3.3```, ```glfw``` and ```glm``` installed
 - [ ] Procedural skybox
 - [ ] Rendering procedural sun (+ day/night cycle)
 - [ ] Lens flare effect
+- [ ] Grass
+- [ ] Water
