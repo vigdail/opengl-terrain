@@ -11,7 +11,6 @@ Terrain::Terrain(int size, int width, int length)
       res_z_(length),
       size_(size),
       vertices_(std::vector<Vertex>(res_x_ * res_z_)),
-      normals_(std::vector<glm::vec3>(res_x_ * res_z_)),
       indices_(std::vector<int>((res_x_ - 1) * (res_z_ - 1) * 2 * 3)) {
   glGenVertexArrays(1, &VAO_);
   glGenBuffers(1, &VBO_);
@@ -40,6 +39,7 @@ void Terrain::GenerateVertices() {
       float y = sin(z * x / 100.0f) + 1.0f;
       Vertex v = {
           glm::vec3(x, y, z),
+          glm::vec3(0.0f, 1.0f, 0.0f),
           glm::vec2(static_cast<float>(j) / res_x_,
                     static_cast<float>(i) / res_z_),
       };
@@ -74,9 +74,9 @@ void Terrain::GenerateNormals() {
     glm::vec3 normal = glm::cross(e1, e2);
     normal = glm::normalize(normal);
 
-    normals_[indices_[i + 0]] += normal;
-    normals_[indices_[i + 1]] += normal;
-    normals_[indices_[i + 2]] += normal;
+    vertices_[indices_[i + 0]].normal += normal;
+    vertices_[indices_[i + 1]].normal += normal;
+    vertices_[indices_[i + 2]].normal += normal;
   }
 }
 
@@ -106,18 +106,12 @@ void Terrain::BuildVAO() {
                         static_cast<void *>(0));
 
   glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                        static_cast<void *>(0) + offsetof(Vertex, uv));
-
-  unsigned int normals_VBO;
-  glGenBuffers(1, &normals_VBO);
-  glBindBuffer(GL_ARRAY_BUFFER, normals_VBO);
-  glBufferData(GL_ARRAY_BUFFER, normals_.size() * sizeof(glm::vec3),
-               normals_.data(), GL_STATIC_DRAW);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                        static_cast<void *>(0) + offsetof(Vertex, normal));
 
   glEnableVertexAttribArray(2);
-  glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3),
-                        static_cast<void *>(0));
+  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                        static_cast<void *>(0) + offsetof(Vertex, uv));
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);

@@ -7,6 +7,7 @@
 
 struct Vertex {
   glm::vec3 position;
+  glm::vec3 normal;
   glm::vec2 uv;
 };
 
@@ -22,7 +23,6 @@ class Terrain {
   int res_z_;
   int size_;
   std::vector<Vertex> vertices_;
-  std::vector<glm::vec3> normals_;
   std::vector<int> indices_;
   // @TODO: Make some wrappers maybe
   unsigned int VAO_;
