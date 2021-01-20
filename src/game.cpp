@@ -61,7 +61,8 @@ void Game::ProcessInput(float dt) {
 }
 
 void Game::Update(float dt) {
-  light_.SetPosition(glm::vec3(10.0f * sin(glfwGetTime() / 5.0f), 5.0f, 0.0f));
+  light_.SetPosition(glm::vec3(10.0f * sin(glfwGetTime() / 5.0f),
+                               10.0f * cos(glfwGetTime() / 5.0f), 0.0f));
 }
 
 void Game::Render() {
@@ -81,6 +82,8 @@ void Game::Render() {
   skyboxShader.Use();
   skyboxShader.SetMat4("view", glm::mat4(glm::mat3(camera_.getViewMatrix())));
   skyboxShader.SetMat4("projection", projection);
+  skyboxShader.SetVec3("light.direction", light_.GetDirection());
+  skyboxShader.SetVec3("light.color", light_.GetColor());
   skybox_.Draw(skyboxShader);
   glDepthFunc(GL_LESS);
 }

@@ -5,6 +5,7 @@ layout (location = 0) in vec3 position;
 uniform mat4 view;
 uniform mat4 projection;
 
+
 out vec3 uv;
 
 void main() {
