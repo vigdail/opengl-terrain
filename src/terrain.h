@@ -16,7 +16,8 @@ class Terrain {
   Terrain();
   explicit Terrain(int size);
   Terrain(int size, int res_x, int res_z);
-  void Draw(Shader &shader);
+  void Draw(Shader& shader);
+  void SetHeightmap(const std::vector<float>& heightmap);
 
  private:
   int res_x_;
@@ -33,6 +34,5 @@ class Terrain {
   void GenerateIndices();
   void GenerateNormals();
   void BuildVAO();
-  float GetHeight(int x, int z);
   int GetIndex(int x, int z);
 };

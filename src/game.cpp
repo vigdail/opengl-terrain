@@ -7,6 +7,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "utils/heightmap_generator.h"
+
 const uint Game::kKeysCount_;
 
 Game::Game(uint width, uint height)
@@ -28,6 +30,10 @@ Game::Game(uint width, uint height)
       mouse_last_x_(0.0),
       mouse_last_y_(0.0) {
   LoadAssets();
+
+  HeightmapGenerator generator;
+  generator.Generate();
+  terrain_.SetHeightmap(generator.GetData());
 }
 
 Game::~Game() { ResourceManager::Clear(); }

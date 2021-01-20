@@ -2,7 +2,7 @@
 #include <glad/glad.h>
 #include <random>
 
-Terrain::Terrain() : Terrain(100, 512, 512) {}
+Terrain::Terrain() : Terrain(100) {}
 
 Terrain::Terrain(int size) : Terrain(size, 512, 512) {}
 
@@ -18,7 +18,16 @@ Terrain::Terrain(int size, int width, int length)
 
   GenerateVertices();
   GenerateIndices();
+  BuildVAO();
+}
+
+void Terrain::SetHeightmap(const std::vector<float> &heightmap) {
+  for (int i = 0; i < res_x_ * res_z_; i++) {
+    vertices_[i].position.y = heightmap[i] * 10.0f;
+  }
   GenerateNormals();
+
+  // @TODO: Update only normals
   BuildVAO();
 }
 
@@ -26,7 +35,7 @@ void Terrain::Draw(Shader &shader) {
   shader.Use();
   glm::mat4 model = glm::mat4(1.0f);
   shader.SetMat4("model", model);
-  shader.SetVec3("color", glm::vec3(0.1f, 0.75f, 0.2f));
+  shader.SetVec3("color", glm::vec3(0.45f, 0.4f, 0.3f));
   glBindVertexArray(VAO_);
   glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0);
 }
@@ -36,7 +45,7 @@ void Terrain::GenerateVertices() {
     for (int j = 0; j < res_x_; j++) {
       float x = (j - (res_x_ - 1) / 2.0f) * size_ / res_x_;
       float z = (i - (res_z_ - 1) / 2.0f) * size_ / res_z_;
-      float y = sin(z * x / 100.0f) + 1.0f;
+      float y = 0.0f;
       Vertex v = {
           glm::vec3(x, y, z),
           glm::vec3(0.0f, 1.0f, 0.0f),
@@ -78,15 +87,6 @@ void Terrain::GenerateNormals() {
     vertices_[indices_[i + 1]].normal += normal;
     vertices_[indices_[i + 2]].normal += normal;
   }
-}
-
-float Terrain::GetHeight(int x, int z) {
-  if (x < 0 || z < 0 || x >= res_x_ || z >= res_z_) {
-    return 0;
-  }
-
-  float r = vertices_[z * res_x_ + x].position.y;
-  return r;
 }
 
 int Terrain::GetIndex(int x, int z) { return z * res_x_ + x; }
