@@ -11,24 +11,24 @@ Terrain::Terrain(int size, int width, int length)
       res_z_(length),
       size_(size),
       vertices_(std::vector<Vertex>(res_x_ * res_z_)),
-      indices_(std::vector<int>((res_x_ - 1) * (res_z_ - 1) * 2 * 3)) {
+      indices_(std::vector<int>((res_x_ - 1) * (res_z_ - 1) * 2 * 3)),
+      generator_(res_x_, res_z_) {
   glGenVertexArrays(1, &VAO_);
   glGenBuffers(1, &VBO_);
   glGenBuffers(1, &EBO_);
 
   GenerateVertices();
   GenerateIndices();
+  generator_.Generate();
+  SetHeightmap(generator_.GetData());
   BuildVAO();
 }
 
 void Terrain::SetHeightmap(const std::vector<float> &heightmap) {
   for (int i = 0; i < res_x_ * res_z_; i++) {
-    vertices_[i].position.y = heightmap[i] * 10.0f;
+    vertices_[i].position.y = heightmap[i] * 20.0f;
   }
   GenerateNormals();
-
-  // @TODO: Update only normals
-  BuildVAO();
 }
 
 void Terrain::Draw(Shader &shader) {
@@ -91,11 +91,21 @@ void Terrain::GenerateNormals() {
 
 int Terrain::GetIndex(int x, int z) { return z * res_x_ + x; }
 
+void Terrain::UpdateVAO() {
+  glBindVertexArray(VAO_);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO_);
+  glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(Vertex),
+               vertices_.data(), GL_DYNAMIC_DRAW);
+
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindVertexArray(0);
+}
+
 void Terrain::BuildVAO() {
   glBindVertexArray(VAO_);
   glBindBuffer(GL_ARRAY_BUFFER, VBO_);
   glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(Vertex),
-               vertices_.data(), GL_STATIC_DRAW);
+               vertices_.data(), GL_DYNAMIC_DRAW);
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned int),

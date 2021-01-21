@@ -16,11 +16,13 @@ Make sure you have ```opengl version>=3.3```, ```glfw``` and ```glm``` installed
 
 ## Roadmap
 
-- [ ] Perlin noise based landscape generation
+- [x] Perlin noise based landscape generation
+- [ ] Normals calculation in compute shader using heightmap texture
 - [ ] Multiple texture layers
 - [ ] First person camera movement
 - [ ] Procedural skybox
 - [ ] Rendering procedural sun (+ day/night cycle)
 - [ ] Lens flare effect
 - [ ] Grass
+- [ ] Quad tree based terrain tesselation
 - [ ] Water

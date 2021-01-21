@@ -3,7 +3,7 @@
 #include <glm/gtc/noise.hpp>
 #include <algorithm>
 
-HeightmapGenerator::HeightmapGenerator() : HeightmapGenerator(512, 512, 10) {}
+HeightmapGenerator::HeightmapGenerator() : HeightmapGenerator(512, 512, 8) {}
 HeightmapGenerator::HeightmapGenerator(int width, int height)
     : HeightmapGenerator(width, height, 8) {}
 

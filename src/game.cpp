@@ -18,7 +18,7 @@ Game::Game(uint width, uint height)
       keys_(),
       camera_(Camera(glm::vec3(0.0f, 1.0f, 3.0f), glm::vec3(0.0f, 1.0f, 0.0f))),
       light_(DirectionalLight(glm::vec3(10.0f, 5.0f, 0.0), glm::vec3(0.0f))),
-      terrain_(Terrain(100, 512, 512)),
+      terrain_(Terrain(500, 512, 512)),
       skybox_({
           "../assets/textures/skybox/right.jpg",
           "../assets/textures/skybox/left.jpg",
@@ -30,10 +30,6 @@ Game::Game(uint width, uint height)
       mouse_last_x_(0.0),
       mouse_last_y_(0.0) {
   LoadAssets();
-
-  HeightmapGenerator generator;
-  generator.Generate();
-  terrain_.SetHeightmap(generator.GetData());
 }
 
 Game::~Game() { ResourceManager::Clear(); }
@@ -61,8 +57,8 @@ void Game::ProcessInput(float dt) {
 }
 
 void Game::Update(float dt) {
-  light_.SetPosition(glm::vec3(10.0f * sin(glfwGetTime() / 5.0f),
-                               10.0f * cos(glfwGetTime() / 5.0f), 0.0f));
+  // light_.SetPosition(glm::vec3(10.0f * sin(glfwGetTime() / 5.0f),
+  //                              10.0f * cos(glfwGetTime() / 5.0f), 0.0f));
 }
 
 void Game::Render() {
@@ -71,7 +67,7 @@ void Game::Render() {
   terrainShader.SetMat4("view", camera_.getViewMatrix());
 
   glm::mat4 projection =
-      glm::perspective(glm::radians(90.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+      glm::perspective(glm::radians(60.0f), 800.0f / 600.0f, 0.1f, 1000.0f);
   terrainShader.SetMat4("projection", projection);
   terrainShader.SetVec3("light.direction", light_.GetDirection());
   terrainShader.SetVec3("light.color", light_.GetColor());
