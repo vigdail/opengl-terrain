@@ -11,7 +11,7 @@ Application::Application(unsigned int width, unsigned int height)
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_RESIZABLE, false);
 
-  window_ = glfwCreateWindow(width, height, "Breakout GL", nullptr, nullptr);
+  window_ = glfwCreateWindow(width, height, "Terrain", nullptr, nullptr);
   glfwMakeContextCurrent(window_);
   glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
