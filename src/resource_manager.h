@@ -24,11 +24,11 @@ class ResourceManager {
  public:
   ResourceManager() = delete;
   static void Clear();
-  static Shader LoadShader(
+  static Shader &LoadShader(
       std::string name, const std::filesystem::path &v_shader_path,
       const std::filesystem::path &f_shader_path,
       const std::optional<std::filesystem::path> g_shader_path = std::nullopt);
-  static Shader GetShader(std::string name);
+  static Shader &GetShader(std::string name);
 
   static Texture LoadTexture(std::string name,
                              const std::filesystem::path &path);

@@ -57,12 +57,12 @@ void Game::ProcessInput(float dt) {
 }
 
 void Game::Update(float dt) {
-  // light_.SetPosition(glm::vec3(10.0f * sin(glfwGetTime() / 5.0f),
-  //                              10.0f * cos(glfwGetTime() / 5.0f), 0.0f));
+  light_.SetPosition(glm::vec3(10.0f * cos(glfwGetTime() / 5.0f),
+                               10.0f * sin(glfwGetTime() / 5.0f), 0.0f));
 }
 
 void Game::Render() {
-  Shader terrainShader = ResourceManager::GetShader("terrain");
+  Shader &terrainShader = ResourceManager::GetShader("terrain");
   terrainShader.Use();
   terrainShader.SetMat4("view", camera_.getViewMatrix());
 
@@ -74,7 +74,7 @@ void Game::Render() {
   terrain_.Draw(terrainShader);
 
   glDepthFunc(GL_LEQUAL);
-  Shader skyboxShader = ResourceManager::GetShader("skybox");
+  Shader &skyboxShader = ResourceManager::GetShader("skybox");
   skyboxShader.Use();
   skyboxShader.SetMat4("view", glm::mat4(glm::mat3(camera_.getViewMatrix())));
   skyboxShader.SetMat4("projection", projection);

@@ -10,16 +10,17 @@ std::map<std::string, Texture> ResourceManager::textures_;
 std::map<std::string, Shader> ResourceManager::shaders_;
 
 void ResourceManager::Clear() {
-  for (auto &[name, shader] : shaders_) {
-    shader.Delete();
-  }
+  // for (auto &[name, shader] : shaders_) {
+  //   shader.Delete();
+  // }
+  shaders_.clear();
 
   for (auto &[name, texture] : textures_) {
     texture.Delete();
   }
 }
 
-Shader ResourceManager::LoadShader(
+Shader &ResourceManager::LoadShader(
     std::string name, const std::filesystem::path &v_shader_path,
     const std::filesystem::path &f_shader_path,
     const std::optional<std::filesystem::path> g_shader_path) {
@@ -28,7 +29,7 @@ Shader ResourceManager::LoadShader(
   return shaders_[name];
 }
 
-Shader ResourceManager::GetShader(std::string name) { return shaders_[name]; }
+Shader &ResourceManager::GetShader(std::string name) { return shaders_[name]; }
 
 Texture ResourceManager::LoadTexture(std::string name,
                                      const std::filesystem::path &path) {
@@ -86,7 +87,15 @@ Shader ResourceManager::loadShaderFromFile(
   const char *g_shader_code =
       (g_shader_path.has_value() ? geom_code.c_str() : nullptr);
 
-  return Shader(v_shader_code, f_shader_code, g_shader_code);
+  Shader shader;
+  shader.AttachShader(GL_VERTEX_SHADER, v_shader_code);
+  shader.AttachShader(GL_FRAGMENT_SHADER, f_shader_code);
+  if (g_shader_code) {
+    shader.AttachShader(GL_GEOMETRY_SHADER, g_shader_code);
+  }
+  shader.Link();
+
+  return shader;
 }
 
 Texture ResourceManager::loadTextureFromFile(

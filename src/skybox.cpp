@@ -2,6 +2,7 @@
 
 #include <glad/glad.h>
 #include <stb_image.h>
+#include <iostream>
 
 Skybox::Skybox(std::vector<std::string> faces) {
   VBO_ = Skybox::CreateVBO();
