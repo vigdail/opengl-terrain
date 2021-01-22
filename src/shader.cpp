@@ -20,7 +20,7 @@ void Shader::Delete() {
 }
 void Shader::Use() { glUseProgram(ID_); }
 void Shader::AttachShader(const unsigned int type, const char *source) {
-  unsigned int shader = shader = glCreateShader(type);
+  unsigned int shader = glCreateShader(type);
   glShaderSource(shader, 1, &source, NULL);
   glCompileShader(shader);
   CheckCompileErrors(shader, type);
