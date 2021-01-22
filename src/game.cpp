@@ -14,7 +14,6 @@ const uint Game::kKeysCount_;
 Game::Game(uint width, uint height)
     : width_(width),
       height_(height),
-      state_(GAME_MENU),
       keys_(),
       camera_(Camera(glm::vec3(0.0f, 1.0f, 3.0f), glm::vec3(0.0f, 1.0f, 0.0f))),
       light_(DirectionalLight(glm::vec3(10.0f, 5.0f, 0.0), glm::vec3(0.0f))),

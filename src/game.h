@@ -10,12 +10,6 @@
 #include "terrain.h"
 #include "skybox.h"
 
-enum GameState {
-  GAME_MENU,
-  GAME_ACTIVE,
-  GAME_WIN,
-};
-
 class Game {
  public:
   Game(uint width, uint height);
@@ -34,7 +28,6 @@ class Game {
   entt::registry registry_;
   uint width_;
   uint height_;
-  GameState state_;
   bool keys_[kKeysCount_];
   Camera camera_;
   DirectionalLight light_;
