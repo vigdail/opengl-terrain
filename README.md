@@ -18,6 +18,7 @@ Make sure you have ```opengl version>=3.3```, ```glfw``` and ```glm``` installed
 
 - [x] Perlin noise based landscape generation
 - [ ] Normals calculation in compute shader using heightmap texture
+- [ ] Heightmap generation in compute shader
 - [ ] Multiple texture layers
 - [ ] First person camera movement
 - [ ] Procedural skybox
