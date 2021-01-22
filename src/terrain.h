@@ -35,7 +35,6 @@ class Terrain {
   void GenerateIndices();
   void GenerateNormals();
   void BuildVAO();
-  void UpdateVAO();
   int GetIndex(int x, int z);
   void SetHeightmap(const std::vector<float>& heightmap);
 };

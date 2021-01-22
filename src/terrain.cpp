@@ -91,16 +91,6 @@ void Terrain::GenerateNormals() {
 
 int Terrain::GetIndex(int x, int z) { return z * res_x_ + x; }
 
-void Terrain::UpdateVAO() {
-  glBindVertexArray(VAO_);
-  glBindBuffer(GL_ARRAY_BUFFER, VBO_);
-  glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(Vertex),
-               vertices_.data(), GL_DYNAMIC_DRAW);
-
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindVertexArray(0);
-}
-
 void Terrain::BuildVAO() {
   glBindVertexArray(VAO_);
   glBindBuffer(GL_ARRAY_BUFFER, VBO_);
