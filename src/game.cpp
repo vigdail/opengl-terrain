@@ -62,12 +62,12 @@ void Game::Update(float dt) {
 }
 
 void Game::Render() {
+  glm::mat4 projection =
+      glm::perspective(glm::radians(60.0f), 800.0f / 600.0f, 0.1f, 1000.0f);
+
   Shader &terrainShader = ResourceManager::GetShader("terrain");
   terrainShader.Use();
   terrainShader.SetMat4("view", camera_.getViewMatrix());
-
-  glm::mat4 projection =
-      glm::perspective(glm::radians(60.0f), 800.0f / 600.0f, 0.1f, 1000.0f);
   terrainShader.SetMat4("projection", projection);
   terrainShader.SetVec3("light.direction", light_.GetDirection());
   terrainShader.SetVec3("light.color", light_.GetColor());

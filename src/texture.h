@@ -5,9 +5,13 @@
 class Texture {
  public:
   Texture();
+  Texture(const Texture &) = delete;
+  Texture(Texture &&other);
+  Texture &operator=(const Texture &) = delete;
+  Texture &operator=(Texture &&other);
+  ~Texture();
   void Bind();
   void Generate(unsigned int width, unsigned int height, unsigned char *data);
-  void Delete() { glDeleteTextures(1, &ID_); }
 
   unsigned int internal_format;
   unsigned int image_format;
@@ -20,4 +24,6 @@ class Texture {
   unsigned int ID_;
   unsigned int width_;
   unsigned int height_;
+
+  void Delete();
 };

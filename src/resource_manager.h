@@ -30,7 +30,7 @@ class ResourceManager {
       const std::optional<std::filesystem::path> g_shader_path = std::nullopt);
   static Shader &GetShader(std::string name);
 
-  static Texture LoadTexture(std::string name,
-                             const std::filesystem::path &path);
-  static Texture GetTexture(std::string name);
+  static Texture &LoadTexture(std::string name,
+                              const std::filesystem::path &path);
+  static Texture &GetTexture(std::string name);
 };
