@@ -10,9 +10,6 @@ std::map<std::string, Texture> ResourceManager::textures_;
 std::map<std::string, Shader> ResourceManager::shaders_;
 
 void ResourceManager::Clear() {
-  // for (auto &[name, shader] : shaders_) {
-  //   shader.Delete();
-  // }
   shaders_.clear();
 
   for (auto &[name, texture] : textures_) {

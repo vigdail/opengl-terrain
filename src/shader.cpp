@@ -10,6 +10,8 @@ Shader &Shader::operator=(Shader &&other) {
     Delete();
     std::swap(ID_, other.ID_);
   }
+
+  return *this;
 }
 Shader::~Shader() { Delete(); }
 void Shader::Delete() {
