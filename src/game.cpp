@@ -31,8 +31,6 @@ Game::Game(uint width, uint height)
   LoadAssets();
 }
 
-Game::~Game() { ResourceManager::Clear(); }
-
 void Game::LoadAssets() {
   ResourceManager::LoadShader("terrain", "../assets/shaders/terrain.vs",
                               "../assets/shaders/terrain.fs");

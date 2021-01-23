@@ -13,7 +13,6 @@
 class Game {
  public:
   Game(uint width, uint height);
-  ~Game();
   void LoadAssets();
   void ProcessInput(float dt);
   void Update(float dt);
