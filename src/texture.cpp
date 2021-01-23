@@ -1,6 +1,7 @@
 #include "texture.h"
 #include <memory>
 #include <utility>
+#include <iostream>
 
 Texture::Texture()
     : internal_format(GL_RGB),
@@ -10,7 +11,8 @@ Texture::Texture()
       filter_min(GL_LINEAR),
       filter_mag(GL_LINEAR),
       width_(0),
-      height_(0) {
+      height_(0),
+      type(GL_UNSIGNED_BYTE) {
   glGenTextures(1, &ID_);
 }
 
@@ -23,6 +25,7 @@ Texture::Texture(Texture &&other)
       filter_mag(other.filter_mag),
       width_(other.width_),
       height_(other.height_),
+      type(other.type),
       ID_(std::exchange(other.ID_, 0)) {}
 
 Texture &Texture::operator=(Texture &&other) {
@@ -36,6 +39,7 @@ Texture &Texture::operator=(Texture &&other) {
     std::swap(filter_mag, other.filter_mag);
     std::swap(width_, other.width_);
     std::swap(height_, other.height_);
+    std::swap(type, other.type);
     std::swap(ID_, other.ID_);
   }
 
@@ -56,7 +60,7 @@ void Texture::Generate(unsigned int width, unsigned int height,
 
   glBindTexture(GL_TEXTURE_2D, ID_);
   glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width_, height_, 0,
-               image_format, GL_UNSIGNED_BYTE, data);
+               image_format, type, data);
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter_min);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter_mag);
@@ -67,3 +71,8 @@ void Texture::Generate(unsigned int width, unsigned int height,
 }
 
 void Texture::Bind() { glBindTexture(GL_TEXTURE_2D, ID_); }
+
+void Texture::BindImage() {
+  glActiveTexture(GL_TEXTURE0);
+  glBindImageTexture(0, ID_, 0, GL_FALSE, 0, GL_WRITE_ONLY, internal_format);
+}

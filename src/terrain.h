@@ -2,13 +2,13 @@
 
 #include <vector>
 #include <glm/glm.hpp>
+#include <memory>
 
 #include "shader.h"
 #include "utils/heightmap_generator.h"
 
 struct Vertex {
   glm::vec3 position;
-  glm::vec3 normal;
   glm::vec2 uv;
 };
 
@@ -29,11 +29,10 @@ class Terrain {
   unsigned int VAO_;
   unsigned int EBO_;
   unsigned int VBO_;
-  HeightmapGenerator generator_;
+  Texture normalmap_;
 
   void GenerateVertices();
   void GenerateIndices();
-  void GenerateNormals();
   void BuildVAO();
   int GetIndex(int x, int z);
   void SetHeightmap(const std::vector<float>& heightmap);

@@ -2,7 +2,7 @@
 
 ## Dependencies
 
-Make sure you have ```opengl version>=3.3```, ```glfw``` and ```glm``` installed on you system.
+Make sure you have ```opengl version>=4.5```, ```glfw``` and ```glm``` installed on you system.
 
 ## Build
 ### Linux
@@ -17,7 +17,7 @@ Make sure you have ```opengl version>=3.3```, ```glfw``` and ```glm``` installed
 ## Roadmap
 
 - [x] Perlin noise based landscape generation
-- [ ] Normals calculation in compute shader using heightmap texture
+- [x] Normals calculation in compute shader using heightmap texture
 - [ ] Heightmap generation in compute shader
 - [ ] Multiple texture layers
 - [ ] First person camera movement

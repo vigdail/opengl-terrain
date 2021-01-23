@@ -11,7 +11,10 @@ class Texture {
   Texture &operator=(Texture &&other);
   ~Texture();
   void Bind();
+  void BindImage();
   void Generate(unsigned int width, unsigned int height, unsigned char *data);
+  unsigned int GetWidth() { return width_; }
+  unsigned int GetHeight() { return height_; }
 
   unsigned int internal_format;
   unsigned int image_format;
@@ -19,6 +22,7 @@ class Texture {
   unsigned int wrap_t;
   unsigned int filter_min;
   unsigned int filter_mag;
+  unsigned int type;
 
  private:
   unsigned int ID_;

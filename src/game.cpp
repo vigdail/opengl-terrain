@@ -8,6 +8,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "utils/heightmap_generator.h"
+#include "normalmap_renderer.h"
 
 const uint Game::kKeysCount_;
 
@@ -17,7 +18,6 @@ Game::Game(uint width, uint height)
       keys_(),
       camera_(Camera(glm::vec3(0.0f, 1.0f, 3.0f), glm::vec3(0.0f, 1.0f, 0.0f))),
       light_(DirectionalLight(glm::vec3(10.0f, 5.0f, 0.0), glm::vec3(0.0f))),
-      terrain_(Terrain(500, 512, 512)),
       skybox_({
           "../assets/textures/skybox/right.jpg",
           "../assets/textures/skybox/left.jpg",
@@ -29,6 +29,7 @@ Game::Game(uint width, uint height)
       mouse_last_x_(0.0),
       mouse_last_y_(0.0) {
   LoadAssets();
+  terrain_ = std::make_unique<Terrain>(100, 512, 512);
 }
 
 void Game::LoadAssets() {
@@ -36,6 +37,9 @@ void Game::LoadAssets() {
                               "../assets/shaders/terrain.fs");
   ResourceManager::LoadShader("skybox", "../assets/shaders/skybox.vs",
                               "../assets/shaders/skybox.fs");
+
+  ResourceManager::LoadComputeShader(
+      "compute_normalmap", "../assets/shaders/compute/normalmap.comp");
 }
 
 void Game::ProcessInput(float dt) {
@@ -68,7 +72,7 @@ void Game::Render() {
   terrainShader.SetMat4("projection", projection);
   terrainShader.SetVec3("light.direction", light_.GetDirection());
   terrainShader.SetVec3("light.color", light_.GetColor());
-  terrain_.Draw(terrainShader);
+  terrain_->Draw(terrainShader);
 
   glDepthFunc(GL_LEQUAL);
   Shader &skyboxShader = ResourceManager::GetShader("skybox");

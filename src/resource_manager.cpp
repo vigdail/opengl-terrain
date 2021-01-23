@@ -9,6 +9,10 @@
 std::map<std::string, Texture> ResourceManager::textures_;
 std::map<std::string, Shader> ResourceManager::shaders_;
 
+void ResourceManager::LoadComputeShader(std::string name,
+                                        const std::filesystem::path &path) {
+  shaders_[name] = loadComputeShaderFromFile(path);
+}
 void ResourceManager::LoadShader(
     std::string name, const std::filesystem::path &v_shader_path,
     const std::filesystem::path &f_shader_path,
@@ -80,6 +84,35 @@ Shader ResourceManager::loadShaderFromFile(
   if (g_shader_code) {
     shader.AttachShader(GL_GEOMETRY_SHADER, g_shader_code);
   }
+  shader.Link();
+
+  return shader;
+}
+
+Shader ResourceManager::loadComputeShaderFromFile(
+    const std::filesystem::path &path) {
+  std::string code;
+
+  try {
+    std::ifstream file(path);
+    std::stringstream stream;
+
+    file.exceptions(std::fstream::failbit | std::fstream::badbit);
+
+    stream << file.rdbuf();
+
+    file.close();
+
+    code = stream.str();
+  } catch (std::ifstream::failure &e) {
+    std::cerr << "ERROR::SHADER: Can't load shader from file: "
+              << e.code().message() << std::endl;
+  }
+
+  const char *shader_code = code.c_str();
+
+  Shader shader;
+  shader.AttachShader(GL_COMPUTE_SHADER, shader_code);
   shader.Link();
 
   return shader;

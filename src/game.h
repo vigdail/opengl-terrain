@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 
 #include <entt/entt.hpp>
 
@@ -30,7 +31,7 @@ class Game {
   bool keys_[kKeysCount_];
   Camera camera_;
   DirectionalLight light_;
-  Terrain terrain_;
+  std::unique_ptr<Terrain> terrain_;
   Skybox skybox_;
   double mouse_last_x_;
   double mouse_last_y_;
