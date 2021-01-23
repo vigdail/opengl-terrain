@@ -34,7 +34,7 @@ void Shader::Link() {
   CheckCompileErrors(ID_, GL_PROGRAM);
 }
 void Shader::SetInt(const char *name, const int value) {
-  glUniform1f(glGetUniformLocation(ID_, name), value);
+  glUniform1i(glGetUniformLocation(ID_, name), value);
 }
 void Shader::SetFloat(const char *name, float value) {
   glUniform1f(glGetUniformLocation(ID_, name), value);
