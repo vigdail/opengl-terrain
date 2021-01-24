@@ -26,7 +26,7 @@ Game::Game(uint width, uint height)
       mouse_last_x_(0.0),
       mouse_last_y_(0.0) {
   LoadAssets();
-  terrain_ = std::make_unique<Terrain>(100, 512, 512);
+  terrain_ = std::make_unique<Terrain>(100, 1024, 1024);
 }
 
 void Game::LoadAssets() {

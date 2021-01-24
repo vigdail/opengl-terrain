@@ -7,8 +7,8 @@ HeightmapRenderer::HeightmapRenderer() {}
 
 Texture HeightmapRenderer::Render(int width, int height, int octaves) {
   Texture heightmap;
-  heightmap.internal_format = GL_RGBA32F;
-  heightmap.image_format = GL_RGBA;
+  heightmap.internal_format = GL_R32F;
+  heightmap.image_format = GL_RED;
   heightmap.type = GL_FLOAT;
   heightmap.Generate(width, height, NULL);
   heightmap.BindImage();

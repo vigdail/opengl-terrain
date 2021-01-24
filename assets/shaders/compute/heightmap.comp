@@ -2,7 +2,7 @@
 #version 430 core
 
 layout (local_size_x = 16, local_size_y = 16) in;
-layout (rgba32f, binding = 0) uniform writeonly image2D heightmap;
+layout (r32f, binding = 0) uniform writeonly image2D heightmap;
 
 uniform int width;
 uniform int octaves;
