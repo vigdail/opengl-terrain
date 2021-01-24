@@ -10,8 +10,12 @@ uniform mat4 projection;
 out vec4 fragPos;
 out vec2 fragUV;
 
+uniform sampler2D heightmap;
+
 void main() {
-    fragPos = projection * view * model * vec4(position, 1.0);
+    vec3 p = position;
+    p.y = texture(heightmap, uv).r  * 20.0;
+    fragPos = projection * view * model * vec4(p, 1.0);
     fragUV = uv;
     gl_Position = fragPos;
 }

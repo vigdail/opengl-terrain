@@ -18,12 +18,13 @@ Make sure you have ```opengl version>=4.5```, ```glfw``` and ```glm``` installed
 
 - [x] Perlin noise based landscape generation
 - [x] Normals calculation in compute shader using heightmap texture
-- [ ] Heightmap generation in compute shader
-- [ ] Multiple texture layers
-- [ ] First person camera movement
+- [x] Heightmap generation in compute shader
 - [ ] Procedural skybox
 - [ ] Rendering procedural sun (+ day/night cycle)
+- [ ] Multiple texture layers
+- [ ] First person camera movement
 - [ ] Lens flare effect
-- [ ] Grass
-- [ ] Quad tree based terrain tesselation
 - [ ] Water
+- [ ] Grass
+- [ ] Cascade shadows
+- [ ] Quad tree based terrain tesselation

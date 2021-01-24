@@ -1,5 +1,6 @@
 #include "terrain.h"
 #include "normalmap_renderer.h"
+#include "heightmap_renderer.h"
 #include "resource_manager.h"
 
 #include <glad/glad.h>
@@ -21,29 +22,24 @@ Terrain::Terrain(int size, int width, int length)
   GenerateVertices();
   GenerateIndices();
 
-  HeightmapGenerator generator(res_x_, res_z_);
-  generator.Generate();
-  Texture heightmap = generator.CreateTexture();
+  HeightmapRenderer hm_renderer;
+  heightmap_ = hm_renderer.Render(res_x_, res_z_, 8);
 
   NormalmapRenderer nm_renderer;
-  normalmap_ = nm_renderer.Render(heightmap);
-
-  SetHeightmap(generator.GetData());
+  normalmap_ = nm_renderer.Render(heightmap_);
 
   BuildVAO();
-}
-
-void Terrain::SetHeightmap(const std::vector<float> &heightmap) {
-  for (int i = 0; i < res_x_ * res_z_; i++) {
-    vertices_[i].position.y = heightmap[i] * 20.0f;
-  }
 }
 
 void Terrain::Draw(Shader &shader) {
   glm::mat4 model = glm::mat4(1.0f);
   shader.SetMat4("model", model);
+  shader.SetInt("heightmap", 0);
+  shader.SetInt("normalmap", 1);
   shader.SetVec3("color", glm::vec3(0.45f, 0.4f, 0.3f));
   glActiveTexture(GL_TEXTURE0);
+  heightmap_.Bind();
+  glActiveTexture(GL_TEXTURE1);
   normalmap_.Bind();
   glBindVertexArray(VAO_);
   glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0);

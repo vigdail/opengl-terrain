@@ -11,18 +11,16 @@ Texture NormalmapRenderer::Render(Texture& heightmap) {
   normalmap.image_format = GL_RGBA;
   normalmap.type = GL_FLOAT;
   normalmap.Generate(heightmap.GetWidth(), heightmap.GetHeight(), NULL);
-  glActiveTexture(GL_TEXTURE0);
-  normalmap.Bind();
   normalmap.BindImage();
 
   Shader& shader = ResourceManager::GetShader("compute_normalmap");
   shader.Use();
-  glActiveTexture(GL_TEXTURE1);
+  glActiveTexture(GL_TEXTURE0);
   heightmap.Bind();
-  shader.SetInt("heightmap", 1);
+  shader.SetInt("heightmap", 0);
   shader.SetInt("width", heightmap.GetWidth());
   shader.SetFloat("strength", 10.0f);
-  glDispatchCompute(heightmap.GetWidth(), heightmap.GetHeight(), 1);
+  glDispatchCompute(heightmap.GetWidth() / 16, heightmap.GetHeight() / 16, 1);
 
   glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 

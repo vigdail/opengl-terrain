@@ -7,9 +7,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "utils/heightmap_generator.h"
-#include "normalmap_renderer.h"
-
 const uint Game::kKeysCount_;
 
 Game::Game(uint width, uint height)
@@ -40,6 +37,8 @@ void Game::LoadAssets() {
 
   ResourceManager::LoadComputeShader(
       "compute_normalmap", "../assets/shaders/compute/normalmap.comp");
+  ResourceManager::LoadComputeShader(
+      "compute_heightmap", "../assets/shaders/compute/heightmap.comp");
 }
 
 void Game::ProcessInput(float dt) {
