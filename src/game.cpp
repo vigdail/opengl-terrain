@@ -15,18 +15,11 @@ Game::Game(uint width, uint height)
       keys_(),
       camera_(Camera(glm::vec3(0.0f, 1.0f, 3.0f), glm::vec3(0.0f, 1.0f, 0.0f))),
       light_(DirectionalLight(glm::vec3(10.0f, 5.0f, 0.0), glm::vec3(0.0f))),
-      skybox_({
-          "../assets/textures/skybox/right.jpg",
-          "../assets/textures/skybox/left.jpg",
-          "../assets/textures/skybox/top.jpg",
-          "../assets/textures/skybox/bottom.jpg",
-          "../assets/textures/skybox/front.jpg",
-          "../assets/textures/skybox/back.jpg",
-      }),
       mouse_last_x_(0.0),
       mouse_last_y_(0.0) {
   LoadAssets();
   terrain_ = std::make_unique<Terrain>(100, 1024, 1024);
+  skybox_ = std::make_unique<Skybox>();
 }
 
 void Game::LoadAssets() {
@@ -34,6 +27,8 @@ void Game::LoadAssets() {
                               "../assets/shaders/terrain.fs");
   ResourceManager::LoadShader("skybox", "../assets/shaders/skybox.vs",
                               "../assets/shaders/skybox.fs");
+  ResourceManager::LoadShader("solid", "../assets/shaders/solid_color.vs",
+                              "../assets/shaders/solid_color.fs");
 
   ResourceManager::LoadComputeShader(
       "compute_normalmap", "../assets/shaders/compute/normalmap.comp");
@@ -74,13 +69,15 @@ void Game::Render() {
   terrain_->Draw(terrainShader);
 
   glDepthFunc(GL_LEQUAL);
+  glFrontFace(GL_CW);
   Shader &skyboxShader = ResourceManager::GetShader("skybox");
   skyboxShader.Use();
   skyboxShader.SetMat4("view", glm::mat4(glm::mat3(camera_.getViewMatrix())));
   skyboxShader.SetMat4("projection", projection);
   skyboxShader.SetVec3("light.direction", light_.GetDirection());
   skyboxShader.SetVec3("light.color", light_.GetColor());
-  skybox_.Draw(skyboxShader);
+  skybox_->Draw(skyboxShader);
+  glFrontFace(GL_CCW);
   glDepthFunc(GL_LESS);
 }
 
