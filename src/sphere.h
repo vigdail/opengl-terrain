@@ -13,7 +13,7 @@ class Sphere {
 
  public:
   Sphere(int u, int v, float radius);
-  void Draw(Shader &shader);
+  void Draw();
 
  private:
   int sectors_;

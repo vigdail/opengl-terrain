@@ -17,17 +17,10 @@ Sphere::Sphere(int sectors, int stacks, float radius)
   BuildVAO();
 }
 
-void Sphere::Draw(Shader &shader) {
-  shader.Use();
-  shader.SetVec3("color", glm::vec3(1.0f, 0.0f, 0.0f));
-
-  // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
+void Sphere::Draw() {
   glBindVertexArray(VAO_);
   glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0);
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-  // glPointSize(4);
-  // glDrawArrays(GL_POINTS, 0, vertices_.size());
 }
 
 void Sphere::GenerateVertices() {

@@ -4,6 +4,9 @@
 #include <stb_image.h>
 #include <iostream>
 
-Skybox::Skybox() : mesh_(8, 8, 1.0) {}
+Skybox::Skybox() : mesh_(128, 128, 1.0) {}
 
-void Skybox::Draw(Shader &shader) { mesh_.Draw(shader); }
+void Skybox::Draw(Shader &shader) {
+  shader.Use();
+  mesh_.Draw();
+}
