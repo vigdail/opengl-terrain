@@ -57,9 +57,8 @@ void Game::ProcessInput(float dt) {
 }
 
 void Game::Update(float dt) {
-  light_.SetPosition(glm::vec3(10.0f * cos(glfwGetTime() / 5.0f),
-                               10.0f * sin(glfwGetTime() / 5.0f), 0.0f));
-
+  light_.SetPosition(glm::vec3(1.0f * cos(glfwGetTime() / 5.0f),
+                               1.0f * sin(glfwGetTime() / 5.0f), 0.0f));
   gui_->Update(dt);
 }
 

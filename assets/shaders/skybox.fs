@@ -1,6 +1,8 @@
-#version 330 core
+// Atmosphere scattering code from here:
+// https://github.com/shff/opengl_sky
+#version 450 core
 
-in vec3 uv;
+in vec3 fragPos;
 
 struct DirectionalLight {
     vec3 direction;
@@ -11,13 +13,30 @@ uniform DirectionalLight light;
 
 out vec4 fragColor;
 
+const float Br = 0.0025;
+const float Bm = 0.0003;
+const float g =  0.9800;
+const vec3 nitrogen = vec3(0.650, 0.570, 0.475);
+const vec3 Kr = Br / pow(nitrogen, vec3(4.0));
+const vec3 Km = Bm / pow(nitrogen, vec3(0.84));
+
 void main() {
-    float value = light.direction.y;
-    vec4 color_blue =  vec4(0.4, 0.7, 0.8, 1.0);
-    vec4 color_red =  vec4(0.9, 0.3, 0.2, 1.0);
-    if (value > 0.0) {
-    fragColor = mix(color_red, color_blue, value);
-    } else {
-        fragColor = mix(color_red, vec4(0.0,0.0,0.0,1.0), abs(value));
+    if (fragPos.y < 0) {
+        discard;
     }
+
+    float mu = dot(normalize(fragPos), normalize(light.direction));
+    // @TODO: Replace this with integration
+    vec3 extinction = mix(
+        exp(-exp(-((fragPos.y + light.direction.y * 4.0)
+                    * (exp(-fragPos.y * 16.0) + 0.1) / 80.0) / Br) 
+                    * (exp(-fragPos.y * 16.0) + 0.1) * Kr / Br) 
+                    * exp(-fragPos.y * exp(-fragPos.y * 8.0 ) * 4.0) 
+                    * exp(-fragPos.y * 2.0) * 4.0, vec3(1.0 - exp(light.direction.y)) 
+                    * 0.2, -light.direction.y * 0.2 + 0.5);
+    fragColor.rgb = 3.0 / (8.0 * 3.14) * (1.0 + mu * mu) * (Kr + Km * (1.0 - g * g) / (2.0 + g * g) / pow(1.0 + g * g - 2.0 * g * mu, 1.5)) / (Br + Bm) * extinction;
+
+    // @TODO: Move this to post-processing shader
+    fragColor.rgb = vec3(1.0) - exp(-fragColor.rgb * 0.5);
+    fragColor.rgb = pow(fragColor.rgb, vec3(1.0/2.2));
 }
