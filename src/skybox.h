@@ -13,5 +13,4 @@ class Skybox {
 
  private:
   Sphere mesh_;
-  unsigned int cubemap_;
 };
