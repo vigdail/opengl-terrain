@@ -22,6 +22,7 @@ class Game {
   void SetKeyReleased(uint key);
   bool IsKeyPressed(uint key);
   void MouseCallback(double x, double y);
+  void SetCameraActive(bool active);
 
  private:
   static const uint kKeysCount_ = 1024;

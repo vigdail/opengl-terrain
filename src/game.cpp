@@ -84,6 +84,14 @@ void Game::Render() {
   glDepthFunc(GL_LESS);
 }
 
+void Game::SetCameraActive(bool active) {
+  if (active) {
+    camera_.Enable();
+  } else {
+    camera_.Disable();
+  }
+}
+
 void Game::SetKeyPressed(uint key) {
   if (key < kKeysCount_) {
     keys_[key] = true;

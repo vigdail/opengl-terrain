@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "./game.h"
+#include "./gui/gui_layer.h"
 
 class Application {
  public:
@@ -17,6 +18,7 @@ class Application {
  private:
   GLFWwindow *window_;
   std::unique_ptr<Game> game_;
+  std::unique_ptr<GUILayer> gui_;
   unsigned int width_;
   unsigned int height_;
 

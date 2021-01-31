@@ -43,6 +43,7 @@ Application::Application(unsigned int width, unsigned int height)
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
   game_ = std::make_unique<Game>(width, height);
+  gui_ = std::make_unique<GUILayer>(width, height);
 }
 
 Application::~Application() { glfwTerminate(); }
@@ -58,9 +59,11 @@ void Application::Run() {
     game_->ProcessInput(delta_time);
 
     game_->Update(delta_time);
+    gui_->Update(delta_time);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     game_->Render();
+    gui_->Render();
 
     glfwSwapBuffers(window_);
   }
@@ -71,6 +74,21 @@ void Application::KeyCallback(GLFWwindow *window, int key, int scancode,
   auto self = static_cast<Application *>(glfwGetWindowUserPointer(window));
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, true);
+  }
+  // @TODO: Find out a proper way to handle cursor visibility and camera
+  // activity
+  if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
+    int mode;
+    bool camera;
+    if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED) {
+      mode = GLFW_CURSOR_NORMAL;
+      camera = false;
+    } else {
+      mode = GLFW_CURSOR_DISABLED;
+      camera = true;
+    }
+    glfwSetInputMode(window, GLFW_CURSOR, mode);
+    self->game_->SetCameraActive(camera);
   }
   if (action == GLFW_PRESS) {
     self->game_->SetKeyPressed(key);
