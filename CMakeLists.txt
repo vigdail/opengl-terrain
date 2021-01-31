@@ -30,6 +30,12 @@ add_library(glad "lib/src/glad.c")
 target_include_directories(glad PRIVATE "lib/include/")
 set(LIBS ${LIBS} glad)
 
+add_compile_definitions(IMGUI_IMPL_OPENGL_LOADER_GLAD)
+file(GLOB IMGUI_SOURCE "lib/imgui/*.cpp")
+add_library(imgui ${IMGUI_SOURCE})
+target_include_directories(imgui PRIVATE "lib/imgui/" "lib/include/")
+set(LIBS ${LIBS} imgui)
+
 file(GLOB SOURCE "src/**/*.cpp" "src/*.cpp")
 
 set(APP "app")

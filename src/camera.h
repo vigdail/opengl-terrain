@@ -41,7 +41,11 @@ class Camera {
   void move(CameraMovement direction, float dt);
   void handleMouseMovement(float dx, float dy, bool contrainPitch = true);
   void handleMouseScroll(float dy);
+  void Disable();
+  void Enable();
+  void Toggle();
 
  private:
+  bool active_;
   void updateVectors();
 };

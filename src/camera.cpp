@@ -10,10 +10,12 @@ Camera::Camera()
       pitch(PITCH),
       speed(SPEED),
       sensitivity(SENSITIVITY),
-      fov(FOV) {
+      fov(FOV),
+      active_(true) {
   updateVectors();
 }
 
+// @TODO: refactor this
 Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
     : position(position),
       front(glm::vec3(0.0f, 0.0f, -1.0f)),
@@ -22,7 +24,8 @@ Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
       pitch(pitch),
       speed(SPEED),
       sensitivity(SENSITIVITY),
-      fov(FOV) {
+      fov(FOV),
+      active_(true) {
   updateVectors();
 }
 
@@ -30,7 +33,14 @@ glm::mat4 Camera::getViewMatrix() {
   return glm::lookAt(position, position + front, up);
 }
 
+void Camera::Enable() { active_ = true; }
+void Camera::Disable() { active_ = false; }
+void Camera::Toggle() { active_ = !active_; }
+
 void Camera::move(CameraMovement direction, float dt) {
+  if (!active_) {
+    return;
+  }
   switch (direction) {
     case CameraMovement::FORWARD:
       position += front * speed * dt;
@@ -49,6 +59,9 @@ void Camera::move(CameraMovement direction, float dt) {
   }
 }
 void Camera::handleMouseMovement(float dx, float dy, bool contrainPitch) {
+  if (!active_) {
+    return;
+  }
   const float sensetivity = 0.1f;
   dx *= sensetivity;
   dy *= sensetivity;
@@ -69,6 +82,9 @@ void Camera::handleMouseMovement(float dx, float dy, bool contrainPitch) {
 }
 
 void Camera::handleMouseScroll(float dy) {
+  if (!active_) {
+    return;
+  }
   fov -= dy;
 
   if (fov > 45.0f) {

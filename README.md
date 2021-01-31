@@ -19,6 +19,7 @@ Make sure you have ```opengl version>=4.5```, ```glfw``` and ```glm``` installed
 - [x] Perlin noise based landscape generation
 - [x] Normals calculation in compute shader using heightmap texture
 - [x] Heightmap generation in compute shader
+- [ ] ImGui integration
 - [ ] Procedural skybox
 - [ ] Rendering procedural sun (+ day/night cycle)
 - [ ] Multiple texture layers

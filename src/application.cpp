@@ -34,6 +34,7 @@ Application::Application(unsigned int width, unsigned int height)
 
   glfwSetKeyCallback(window_, KeyCallback);
   glfwSetCursorPosCallback(window_, MouseCallback);
+  glfwSetMouseButtonCallback(window_, MouseButtonCallback);
   glfwSetFramebufferSizeCallback(window_, FramebufferSizeCallback);
 
   glEnable(GL_DEPTH_TEST);
@@ -72,16 +73,29 @@ void Application::KeyCallback(GLFWwindow *window, int key, int scancode,
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, true);
   }
-  if (action == GLFW_PRESS) {
-    self->game_->SetKeyPressed(key);
-  } else if (action == GLFW_RELEASE) {
-    self->game_->SetKeyReleased(key);
+  // @TODO: Find out a proper way to handle cursor visibility
+  if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
+    int mode;
+    if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED) {
+      mode = GLFW_CURSOR_NORMAL;
+    } else {
+      mode = GLFW_CURSOR_DISABLED;
+    }
+    glfwSetInputMode(window, GLFW_CURSOR, mode);
   }
+
+  self->game_->OnKeyEvent(key, scancode, action, mode);
 }
 
 void Application::MouseCallback(GLFWwindow *window, double x, double y) {
   auto self = static_cast<Application *>(glfwGetWindowUserPointer(window));
-  self->game_->MouseCallback(x, y);
+  self->game_->OnMousePositionEvent(x, y);
+}
+
+void Application::MouseButtonCallback(GLFWwindow *window, int button,
+                                      int action, int mode) {
+  auto self = static_cast<Application *>(glfwGetWindowUserPointer(window));
+  self->game_->OnMouseButtonEvent(button, action, mode);
 }
 
 void Application::FramebufferSizeCallback(GLFWwindow *window, int width,
