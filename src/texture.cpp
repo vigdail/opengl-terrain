@@ -10,9 +10,9 @@ Texture::Texture()
       wrap_t(GL_CLAMP_TO_EDGE),
       filter_min(GL_LINEAR),
       filter_mag(GL_LINEAR),
+      type(GL_UNSIGNED_BYTE),
       width_(0),
-      height_(0),
-      type(GL_UNSIGNED_BYTE) {
+      height_(0) {
   glGenTextures(1, &ID_);
 }
 
@@ -23,10 +23,10 @@ Texture::Texture(Texture &&other)
       wrap_t(other.wrap_t),
       filter_min(other.filter_min),
       filter_mag(other.filter_mag),
-      width_(other.width_),
-      height_(other.height_),
       type(other.type),
-      ID_(std::exchange(other.ID_, 0)) {}
+      ID_(std::exchange(other.ID_, 0)),
+      width_(other.width_),
+      height_(other.height_) {}
 
 Texture &Texture::operator=(Texture &&other) {
   if (this != &other) {

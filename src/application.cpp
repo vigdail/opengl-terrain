@@ -1,6 +1,7 @@
 #include "application.h"
 
 #include <iostream>
+#include <string>
 
 Application::Application(unsigned int width, unsigned int height)
     : width_(width), height_(height) {
@@ -11,7 +12,7 @@ Application::Application(unsigned int width, unsigned int height)
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_RESIZABLE, false);
 
-  window_ = glfwCreateWindow(width, height, "Terrain", nullptr, nullptr);
+  window_ = glfwCreateWindow(width, height, "OpenGL Terrain", nullptr, nullptr);
   glfwMakeContextCurrent(window_);
   glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -54,6 +55,11 @@ void Application::Run() {
     float current_time = glfwGetTime();
     float delta_time = current_time - last_time;
     last_time = current_time;
+
+    int fps = floor(1.0f / delta_time);
+    std::string title = "OpenGL Terrain | " + std::to_string(fps);
+    glfwSetWindowTitle(window_, title.c_str());
+
     glfwPollEvents();
 
     game_->ProcessInput(delta_time);

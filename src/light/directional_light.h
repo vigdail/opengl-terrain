@@ -6,6 +6,7 @@ class DirectionalLight {
  public:
   DirectionalLight(glm::vec3 position, glm::vec3 look_at);
   glm::vec3 GetDirection();
+  glm::vec3 GetPosition();
   void SetPosition(glm::vec3 position);
   glm::vec3 GetColor();
 
