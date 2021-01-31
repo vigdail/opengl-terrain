@@ -1,5 +1,5 @@
 #include "sphere.h"
-#include <glad/glad.h>
+// #include <glad/glad.h>
 #include <cmath>
 #include <iostream>
 

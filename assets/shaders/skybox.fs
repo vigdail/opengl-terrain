@@ -10,15 +10,15 @@ struct DirectionalLight {
 };
 
 uniform DirectionalLight light;
+uniform float Br = 0.0025;
+uniform float Bm = 0.0003;
+uniform float g =  0.9800;
+uniform vec3 color = vec3(0.650, 0.570, 0.475);
 
 out vec4 fragColor;
 
-const float Br = 0.0025;
-const float Bm = 0.0003;
-const float g =  0.9800;
-const vec3 nitrogen = vec3(0.650, 0.570, 0.475);
-const vec3 Kr = Br / pow(nitrogen, vec3(4.0));
-const vec3 Km = Bm / pow(nitrogen, vec3(0.84));
+vec3 Kr = Br / pow(color, vec3(4.0));
+vec3 Km = Bm / pow(color, vec3(0.84));
 
 void main() {
     if (fragPos.y < 0) {

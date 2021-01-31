@@ -81,13 +81,13 @@ void Application::KeyCallback(GLFWwindow *window, int key, int scancode,
   }
   // @TODO: Find out a proper way to handle cursor visibility
   if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
-    int mode;
+    int cursore_mode;
     if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED) {
-      mode = GLFW_CURSOR_NORMAL;
+      cursore_mode = GLFW_CURSOR_NORMAL;
     } else {
-      mode = GLFW_CURSOR_DISABLED;
+      cursore_mode = GLFW_CURSOR_DISABLED;
     }
-    glfwSetInputMode(window, GLFW_CURSOR, mode);
+    glfwSetInputMode(window, GLFW_CURSOR, cursore_mode);
   }
 
   self->game_->OnKeyEvent(key, scancode, action, mode);
