@@ -7,5 +7,6 @@ DirectionalLight::DirectionalLight(glm::vec3 position, glm::vec3 look_at)
 glm::vec3 DirectionalLight::GetDirection() {
   return glm::normalize(position_ - look_at_);
 }
+glm::vec3 DirectionalLight::GetPosition() { return position_; }
 void DirectionalLight::SetPosition(glm::vec3 position) { position_ = position; }
 glm::vec3 DirectionalLight::GetColor() { return color_; }
