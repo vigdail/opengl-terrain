@@ -10,7 +10,7 @@
 
 class Application {
  public:
-  Application() : Application(800, 600) {}
+  Application() : Application(1000, 600) {}
   Application(unsigned int width, unsigned int height);
   ~Application();
   void Run();
@@ -26,5 +26,7 @@ class Application {
                                       int height);
   static void KeyCallback(GLFWwindow *window, int key, int scancode, int action,
                           int mode);
+  static void MouseButtonCallback(GLFWwindow *window, int button, int action,
+                                  int mode);
   static void MouseCallback(GLFWwindow *window, double x, double y);
 };

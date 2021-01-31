@@ -34,6 +34,7 @@ Application::Application(unsigned int width, unsigned int height)
 
   glfwSetKeyCallback(window_, KeyCallback);
   glfwSetCursorPosCallback(window_, MouseCallback);
+  glfwSetMouseButtonCallback(window_, MouseButtonCallback);
   glfwSetFramebufferSizeCallback(window_, FramebufferSizeCallback);
 
   glEnable(GL_DEPTH_TEST);
@@ -95,11 +96,20 @@ void Application::KeyCallback(GLFWwindow *window, int key, int scancode,
   } else if (action == GLFW_RELEASE) {
     self->game_->SetKeyReleased(key);
   }
+
+  self->gui_->OnKeyEvent(key, scancode, action, mode);
 }
 
 void Application::MouseCallback(GLFWwindow *window, double x, double y) {
   auto self = static_cast<Application *>(glfwGetWindowUserPointer(window));
   self->game_->MouseCallback(x, y);
+  self->gui_->OnMousePositionEvent(x, y);
+}
+
+void Application::MouseButtonCallback(GLFWwindow *window, int button,
+                                      int action, int mode) {
+  auto self = static_cast<Application *>(glfwGetWindowUserPointer(window));
+  self->gui_->OnMouseButtonEvent(button, action, mode);
 }
 
 void Application::FramebufferSizeCallback(GLFWwindow *window, int width,

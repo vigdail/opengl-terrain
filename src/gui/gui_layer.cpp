@@ -36,10 +36,6 @@ GUILayer::GUILayer(int width, int height) : width_(width), height_(height) {
   ImGui_ImplOpenGL3_Init("#version 450");
 }
 
-void GUILayer::OnEvent() {
-  //
-}
-
 void GUILayer::Update(float delta_time) {
   ImGuiIO &io = ImGui::GetIO();
 
@@ -56,4 +52,33 @@ void GUILayer::Render() {
 
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void GUILayer::OnMouseButtonEvent(int button, int action, int mode) {
+  bool state;
+  if (action == GLFW_PRESS) {
+    state = true;
+  } else if (action == GLFW_RELEASE) {
+    state = false;
+  }
+
+  ImGuiIO &io = ImGui::GetIO();
+  io.MouseDown[button] = state;
+}
+void GUILayer::OnKeyEvent(int key, int scancode, int action, int mode) {
+  bool state;
+  if (action == GLFW_PRESS) {
+    state = true;
+  } else if (action == GLFW_RELEASE) {
+    state = false;
+  }
+
+  ImGuiIO &io = ImGui::GetIO();
+  io.KeysDown[key] = state;
+}
+
+void GUILayer::OnMousePositionEvent(double x, double y) {
+  ImGuiIO &io = ImGui::GetIO();
+  io.MousePos.x = x;
+  io.MousePos.y = y;
 }
