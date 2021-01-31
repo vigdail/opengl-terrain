@@ -10,6 +10,7 @@
 #include "resource_manager.h"
 #include "terrain.h"
 #include "skybox.h"
+#include "gui/gui_layer.h"
 
 class Game {
  public:
@@ -21,8 +22,9 @@ class Game {
   void SetKeyPressed(uint key);
   void SetKeyReleased(uint key);
   bool IsKeyPressed(uint key);
-  void MouseCallback(double x, double y);
-  void SetCameraActive(bool active);
+  void OnKeyEvent(int key, int scancode, int action, int mode);
+  void OnMouseButtonEvent(int button, int action, int mode);
+  void OnMousePositionEvent(double x, double y);
 
  private:
   static const uint kKeysCount_ = 1024;
@@ -34,6 +36,7 @@ class Game {
   DirectionalLight light_;
   std::unique_ptr<Terrain> terrain_;
   Skybox skybox_;
+  std::unique_ptr<GUILayer> gui_;
   double mouse_last_x_;
   double mouse_last_y_;
 };

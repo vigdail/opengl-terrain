@@ -47,8 +47,20 @@ void GUILayer::Render() {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui::NewFrame();
 
-  static bool show = true;
-  ImGui::ShowDemoWindow(&show);
+  // @TODO: replace this with actual UI
+  static float f = 0.0f;
+  static int counter = 0;
+  ImGui::Begin("Hello, world!");
+  ImGui::Text("This is some useful text.");
+  ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+  if (ImGui::Button("Button")) {
+    counter++;
+  }
+  ImGui::SameLine();
+  ImGui::Text("counter = %d", counter);
+  ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
+              1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+  ImGui::End();
 
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -65,6 +77,7 @@ void GUILayer::OnMouseButtonEvent(int button, int action, int mode) {
   ImGuiIO &io = ImGui::GetIO();
   io.MouseDown[button] = state;
 }
+
 void GUILayer::OnKeyEvent(int key, int scancode, int action, int mode) {
   bool state;
   if (action == GLFW_PRESS) {

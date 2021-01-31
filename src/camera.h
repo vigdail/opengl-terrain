@@ -43,6 +43,7 @@ class Camera {
   void handleMouseScroll(float dy);
   void Disable();
   void Enable();
+  void Toggle();
 
  private:
   bool active_;

@@ -35,6 +35,7 @@ glm::mat4 Camera::getViewMatrix() {
 
 void Camera::Enable() { active_ = true; }
 void Camera::Disable() { active_ = false; }
+void Camera::Toggle() { active_ = !active_; }
 
 void Camera::move(CameraMovement direction, float dt) {
   if (!active_) {

@@ -27,6 +27,7 @@ Game::Game(uint width, uint height)
       mouse_last_y_(0.0) {
   LoadAssets();
   terrain_ = std::make_unique<Terrain>(100, 1024, 1024);
+  gui_ = std::make_unique<GUILayer>(width, height);
 }
 
 void Game::LoadAssets() {
@@ -54,11 +55,17 @@ void Game::ProcessInput(float dt) {
   if (keys_[GLFW_KEY_D]) {
     camera_.move(CameraMovement::RIGHT, dt);
   }
+
+  if (keys_[GLFW_KEY_SPACE]) {
+    camera_.Toggle();
+  }
 }
 
 void Game::Update(float dt) {
   light_.SetPosition(glm::vec3(10.0f * cos(glfwGetTime() / 5.0f),
                                10.0f * sin(glfwGetTime() / 5.0f), 0.0f));
+
+  gui_->Update(dt);
 }
 
 void Game::Render() {
@@ -82,20 +89,40 @@ void Game::Render() {
   skyboxShader.SetVec3("light.color", light_.GetColor());
   skybox_.Draw(skyboxShader);
   glDepthFunc(GL_LESS);
-}
 
-void Game::SetCameraActive(bool active) {
-  if (active) {
-    camera_.Enable();
-  } else {
-    camera_.Disable();
-  }
+  gui_->Render();
 }
 
 void Game::SetKeyPressed(uint key) {
   if (key < kKeysCount_) {
     keys_[key] = true;
   }
+}
+
+void Game::OnKeyEvent(int key, int scancode, int action, int mode) {
+  gui_->OnKeyEvent(key, scancode, action, mode);
+
+  if (action == GLFW_PRESS) {
+    SetKeyPressed(key);
+  } else if (action == GLFW_RELEASE) {
+    SetKeyReleased(key);
+  }
+}
+
+void Game::OnMouseButtonEvent(int button, int action, int mode) {
+  gui_->OnMouseButtonEvent(button, action, mode);
+}
+
+void Game::OnMousePositionEvent(double x, double y) {
+  float offsetX = x - mouse_last_x_;
+  float offsetY = mouse_last_y_ - y;
+
+  mouse_last_x_ = x;
+  mouse_last_y_ = y;
+
+  camera_.handleMouseMovement(offsetX, offsetY);
+
+  gui_->OnMousePositionEvent(x, y);
 }
 
 void Game::SetKeyReleased(uint key) {
@@ -110,14 +137,4 @@ bool Game::IsKeyPressed(uint key) {
   }
 
   return false;
-}
-
-void Game::MouseCallback(double x, double y) {
-  float offsetX = x - mouse_last_x_;
-  float offsetY = mouse_last_y_ - y;
-
-  mouse_last_x_ = x;
-  mouse_last_y_ = y;
-
-  camera_.handleMouseMovement(offsetX, offsetY);
 }
