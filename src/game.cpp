@@ -6,6 +6,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include "gui/gui_skybox.h"
 
 const uint Game::kKeysCount_;
 
@@ -21,7 +22,8 @@ Game::Game(uint width, uint height)
   terrain_ = std::make_unique<Terrain>(100, 1024, 1024);
   skybox_ = std::make_unique<Skybox>();
   gui_ = std::make_unique<GUILayer>(width, height);
-  gui_->AddPanel(new GUISkyboxPanel(skybox_->GetAtmosphere()));
+  gui_->AddPanel(reinterpret_cast<GUIPanel *>(
+      new GUISkyboxPanel(skybox_->GetAtmosphere())));
 }
 
 void Game::LoadAssets() {

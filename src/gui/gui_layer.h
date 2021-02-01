@@ -1,6 +1,8 @@
 #pragma once
 
-#include "gui_skybox.h"
+#include <vector>
+
+#include "gui_panel.h"
 
 class GUILayer {
  public:
@@ -12,12 +14,11 @@ class GUILayer {
   void OnMouseButtonEvent(int button, int action, int mode);
   void OnKeyEvent(int key, int scancode, int action, int mode);
   void OnMousePositionEvent(double x, double y);
-  void AddPanel(GUISkyboxPanel *panel);
+  void AddPanel(GUIPanel *panel);
 
  private:
   int width_;
   int height_;
 
-  //
-  GUISkyboxPanel *panel_;
+  std::vector<GUIPanel *> panels_;
 };

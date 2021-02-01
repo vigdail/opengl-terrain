@@ -4,7 +4,7 @@
 #include <imgui/imgui_impl_opengl3.h>
 
 GUILayer::GUILayer(int width, int height)
-    : width_(width), height_(height), panel_(nullptr) {
+    : width_(width), height_(height), panels_() {
   ImGui::CreateContext();
   ImGui::StyleColorsDark();
 
@@ -39,12 +39,12 @@ GUILayer::GUILayer(int width, int height)
 }
 
 GUILayer::~GUILayer() {
-  if (panel_) {
-    delete panel_;
+  for (auto panel : panels_) {
+    delete panel;
   }
 }
 
-void GUILayer::AddPanel(GUISkyboxPanel *panel) { panel_ = panel; }
+void GUILayer::AddPanel(GUIPanel *panel) { panels_.push_back(panel); }
 
 void GUILayer::Update(float delta_time) {
   ImGuiIO &io = ImGui::GetIO();
@@ -57,8 +57,8 @@ void GUILayer::Render() {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui::NewFrame();
 
-  if (panel_) {
-    panel_->Render();
+  for (auto panel : panels_) {
+    panel->Render();
   }
 
   ImGui::Render();

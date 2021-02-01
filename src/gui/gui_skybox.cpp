@@ -2,7 +2,7 @@
 #include "gui_skybox.h"
 
 GUISkyboxPanel::GUISkyboxPanel(Atmosphere &atmosphere)
-    : atmosphere_(atmosphere) {}
+    : GUIPanel(), atmosphere_(atmosphere) {}
 
 void GUISkyboxPanel::Render() {
   ImGui::Begin("Atmosphere");
