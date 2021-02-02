@@ -70,7 +70,7 @@ void Texture::Generate(unsigned int width, unsigned int height,
   glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Texture::Bind() { glBindTexture(GL_TEXTURE_2D, ID_); }
+void Texture::Bind() const { glBindTexture(GL_TEXTURE_2D, ID_); }
 
 void Texture::BindImage() {
   glActiveTexture(GL_TEXTURE0);

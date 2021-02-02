@@ -3,8 +3,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <utility>
 
-Shader::Shader() { ID_ = glCreateProgram(); }
-Shader::Shader(Shader &&other) : ID_(other.ID_) { other.ID_ = 0; }
+Shader::Shader() noexcept { ID_ = glCreateProgram(); }
+Shader::Shader(Shader &&other) noexcept : ID_(other.ID_) { other.ID_ = 0; }
 Shader &Shader::operator=(Shader &&other) {
   if (this != &other) {
     Delete();

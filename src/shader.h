@@ -7,9 +7,9 @@
 
 class Shader {
  public:
-  Shader();
+  Shader() noexcept;
   Shader(const Shader &) = delete;
-  Shader(Shader &&other);
+  Shader(Shader &&other) noexcept;
   Shader &operator=(const Shader &) = delete;
   Shader &operator=(Shader &&other);
   ~Shader();

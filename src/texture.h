@@ -10,11 +10,11 @@ class Texture {
   Texture &operator=(const Texture &) = delete;
   Texture &operator=(Texture &&other);
   ~Texture();
-  void Bind();
+  void Bind() const;
   void BindImage();
   void Generate(unsigned int width, unsigned int height, unsigned char *data);
-  unsigned int GetWidth() { return width_; }
-  unsigned int GetHeight() { return height_; }
+  unsigned int GetWidth() const { return width_; }
+  unsigned int GetHeight() const { return height_; }
 
   unsigned int internal_format;
   unsigned int image_format;
