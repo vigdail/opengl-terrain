@@ -11,21 +11,21 @@ std::map<std::string, Shader> ResourceManager::shaders_;
 
 void ResourceManager::LoadComputeShader(std::string name,
                                         const std::filesystem::path &path) {
-  shaders_[name] = loadComputeShaderFromFile(path);
+  shaders_.emplace(name, loadComputeShaderFromFile(path));
 }
 void ResourceManager::LoadShader(
     std::string name, const std::filesystem::path &v_shader_path,
     const std::filesystem::path &f_shader_path,
     const std::optional<std::filesystem::path> g_shader_path) {
-  shaders_[name] =
-      loadShaderFromFile(v_shader_path, f_shader_path, g_shader_path);
+  shaders_.emplace(
+      name, loadShaderFromFile(v_shader_path, f_shader_path, g_shader_path));
 }
 
 Shader &ResourceManager::GetShader(std::string name) { return shaders_[name]; }
 
 void ResourceManager::LoadTexture(std::string name,
                                   const std::filesystem::path &path) {
-  textures_[name] = loadTextureFromFile(path);
+  textures_.emplace(name, loadTextureFromFile(path));
 }
 Texture &ResourceManager::GetTexture(std::string name) {
   return textures_[name];
