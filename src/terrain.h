@@ -17,7 +17,7 @@ class Terrain {
   Terrain();
   explicit Terrain(int size);
   Terrain(int size, int res_x, int res_z);
-  void Draw(Shader& shader);
+  void Draw(Shader &shader);
 
  private:
   int res_x_;

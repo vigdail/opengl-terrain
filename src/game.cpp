@@ -62,8 +62,8 @@ void Game::Update(float dt) {
 }
 
 void Game::Render() {
-  glm::mat4 projection =
-      glm::perspective(glm::radians(60.0f), 800.0f / 600.0f, 0.1f, 1000.0f);
+  glm::mat4 projection = glm::perspective(
+      glm::radians(60.0f), 1.0f * width_ / height_, 0.1f, 1000.0f);
 
   Shader &terrainShader = ResourceManager::GetShader("terrain");
   terrainShader.Use();
@@ -71,6 +71,7 @@ void Game::Render() {
   terrainShader.SetMat4("projection", projection);
   terrainShader.SetVec3("light.direction", light_.GetDirection());
   terrainShader.SetVec3("light.color", light_.GetColor());
+  terrainShader.SetFloat("light.intensity", light_.GetIntensity());
   terrain_->Draw(terrainShader);
 
   glDepthFunc(GL_LEQUAL);
@@ -79,8 +80,10 @@ void Game::Render() {
   skyboxShader.Use();
   skyboxShader.SetMat4("view", glm::mat4(glm::mat3(camera_.getViewMatrix())));
   skyboxShader.SetMat4("projection", projection);
-  skyboxShader.SetVec3("light.direction", light_.GetDirection());
-  skyboxShader.SetVec3("light.color", light_.GetColor());
+  skyboxShader.SetVec3("camera", camera_.position);
+  skyboxShader.SetVec3("sun.direction", light_.GetDirection());
+  skyboxShader.SetVec3("sun.color", light_.GetColor());
+  skyboxShader.SetFloat("sun.intensity", light_.GetIntensity());
   skybox_->Draw(skyboxShader);
   glFrontFace(GL_CCW);
   glDepthFunc(GL_LESS);

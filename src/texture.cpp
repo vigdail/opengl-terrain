@@ -3,7 +3,7 @@
 #include <utility>
 #include <iostream>
 
-Texture::Texture()
+Texture::Texture() noexcept
     : internal_format(GL_RGB),
       image_format(GL_RGB),
       wrap_s(GL_CLAMP_TO_EDGE),
@@ -16,7 +16,7 @@ Texture::Texture()
   glGenTextures(1, &ID_);
 }
 
-Texture::Texture(Texture &&other)
+Texture::Texture(Texture &&other) noexcept
     : internal_format(other.internal_format),
       image_format(other.image_format),
       wrap_s(other.wrap_s),

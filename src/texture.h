@@ -4,9 +4,9 @@
 
 class Texture {
  public:
-  Texture();
+  Texture() noexcept;
   Texture(const Texture &) = delete;
-  Texture(Texture &&other);
+  Texture(Texture &&other) noexcept;
   Texture &operator=(const Texture &) = delete;
   Texture &operator=(Texture &&other);
   ~Texture();

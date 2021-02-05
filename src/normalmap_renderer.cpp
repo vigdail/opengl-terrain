@@ -5,7 +5,7 @@
 
 NormalmapRenderer::NormalmapRenderer() {}
 
-Texture NormalmapRenderer::Render(Texture& heightmap) {
+Texture NormalmapRenderer::Render(const Texture& heightmap) {
   Texture normalmap;
   normalmap.internal_format = GL_RGBA32F;
   normalmap.image_format = GL_RGBA;
