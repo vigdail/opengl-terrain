@@ -6,9 +6,19 @@ GUISkyboxPanel::GUISkyboxPanel(Atmosphere &atmosphere)
 
 void GUISkyboxPanel::Render() {
   ImGui::Begin("Atmosphere");
-  ImGui::SliderFloat("Br", &atmosphere_.Br, 0.0f, 0.01f);
-  ImGui::SliderFloat("Bm", &atmosphere_.Bm, 0.0f, 0.008f);
+  ImGui::SliderFloat("Planet radius", &atmosphere_.planet_radius, 1000e3,
+                     7000e3);
+  ImGui::SliderFloat("Atmosphere radius", &atmosphere_.atmosphere_radius,
+                     1000e3, 7000e3);
+  ImGui::SliderFloat("Rayleigh height", &atmosphere_.hR, 100, 10000);
+  ImGui::SliderFloat("Mie height", &atmosphere_.hM, 100, 10000);
   ImGui::SliderFloat("g", &atmosphere_.g, -0.999f, 0.999f);
-  ImGui::SliderFloat3("color", &atmosphere_.color.r, 0.0f, 1.0f);
+  glm::vec3 rayleigh_coeffs(atmosphere_.beta_R * 10.0e6f);
+  if (ImGui::SliderFloat3("Rayleigh coeffs", &rayleigh_coeffs.r, 0.0f,
+                          1000.0f)) {
+    atmosphere_.beta_R = rayleigh_coeffs / 10.0e6f;
+  }
+  ImGui::SliderInt("View dir samples", &atmosphere_.view_dir_samples, 1, 100);
+  ImGui::SliderInt("Sun dir samples", &atmosphere_.sun_dir_samples, 1, 100);
   ImGui::End();
 }
