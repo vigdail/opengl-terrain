@@ -3,30 +3,30 @@
 #include <utility>
 #include <iostream>
 
-Texture::Texture()
+Texture::Texture() noexcept
     : internal_format(GL_RGB),
       image_format(GL_RGB),
       wrap_s(GL_CLAMP_TO_EDGE),
       wrap_t(GL_CLAMP_TO_EDGE),
       filter_min(GL_LINEAR),
       filter_mag(GL_LINEAR),
+      type(GL_UNSIGNED_BYTE),
       width_(0),
-      height_(0),
-      type(GL_UNSIGNED_BYTE) {
+      height_(0) {
   glGenTextures(1, &ID_);
 }
 
-Texture::Texture(Texture &&other)
+Texture::Texture(Texture &&other) noexcept
     : internal_format(other.internal_format),
       image_format(other.image_format),
       wrap_s(other.wrap_s),
       wrap_t(other.wrap_t),
       filter_min(other.filter_min),
       filter_mag(other.filter_mag),
-      width_(other.width_),
-      height_(other.height_),
       type(other.type),
-      ID_(std::exchange(other.ID_, 0)) {}
+      ID_(std::exchange(other.ID_, 0)),
+      width_(other.width_),
+      height_(other.height_) {}
 
 Texture &Texture::operator=(Texture &&other) {
   if (this != &other) {
@@ -70,7 +70,7 @@ void Texture::Generate(unsigned int width, unsigned int height,
   glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Texture::Bind() { glBindTexture(GL_TEXTURE_2D, ID_); }
+void Texture::Bind() const { glBindTexture(GL_TEXTURE_2D, ID_); }
 
 void Texture::BindImage() {
   glActiveTexture(GL_TEXTURE0);

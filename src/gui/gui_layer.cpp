@@ -1,8 +1,10 @@
 #include "gui_layer.h"
 
+#include <GLFW/glfw3.h>
 #include <imgui/imgui_impl_opengl3.h>
 
-GUILayer::GUILayer(int width, int height) : width_(width), height_(height) {
+GUILayer::GUILayer(int width, int height)
+    : width_(width), height_(height), panels_() {
   ImGui::CreateContext();
   ImGui::StyleColorsDark();
 
@@ -36,6 +38,14 @@ GUILayer::GUILayer(int width, int height) : width_(width), height_(height) {
   ImGui_ImplOpenGL3_Init("#version 450");
 }
 
+GUILayer::~GUILayer() {
+  for (auto panel : panels_) {
+    delete panel;
+  }
+}
+
+void GUILayer::AddPanel(GUIPanel *panel) { panels_.push_back(panel); }
+
 void GUILayer::Update(float delta_time) {
   ImGuiIO &io = ImGui::GetIO();
 
@@ -47,27 +57,16 @@ void GUILayer::Render() {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui::NewFrame();
 
-  // @TODO: replace this with actual UI
-  static float f = 0.0f;
-  static int counter = 0;
-  ImGui::Begin("Hello, world!");
-  ImGui::Text("This is some useful text.");
-  ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
-  if (ImGui::Button("Button")) {
-    counter++;
+  for (auto panel : panels_) {
+    panel->Render();
   }
-  ImGui::SameLine();
-  ImGui::Text("counter = %d", counter);
-  ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
-              1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-  ImGui::End();
 
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 void GUILayer::OnMouseButtonEvent(int button, int action, int mode) {
-  bool state;
+  bool state = false;
   if (action == GLFW_PRESS) {
     state = true;
   } else if (action == GLFW_RELEASE) {
@@ -79,7 +78,7 @@ void GUILayer::OnMouseButtonEvent(int button, int action, int mode) {
 }
 
 void GUILayer::OnKeyEvent(int key, int scancode, int action, int mode) {
-  bool state;
+  bool state = false;
   if (action == GLFW_PRESS) {
     state = true;
   } else if (action == GLFW_RELEASE) {

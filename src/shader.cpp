@@ -3,8 +3,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <utility>
 
-Shader::Shader() { ID_ = glCreateProgram(); }
-Shader::Shader(Shader &&other) : ID_(other.ID_) { other.ID_ = 0; }
+Shader::Shader() noexcept { ID_ = glCreateProgram(); }
+Shader::Shader(Shader &&other) noexcept : ID_(std::exchange(other.ID_, 0)) {}
 Shader &Shader::operator=(Shader &&other) {
   if (this != &other) {
     Delete();
@@ -26,7 +26,6 @@ void Shader::AttachShader(const unsigned int type, const char *source) {
   CheckCompileErrors(shader, type);
 
   glAttachShader(ID_, shader);
-  // @TODO: Is it correct to remove attached shader before linking
   glDeleteShader(shader);
 }
 void Shader::Link() {

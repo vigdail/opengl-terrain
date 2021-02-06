@@ -17,7 +17,7 @@ class Terrain {
   Terrain();
   explicit Terrain(int size);
   Terrain(int size, int res_x, int res_z);
-  void Draw(Shader& shader);
+  void Draw(Shader &shader);
 
  private:
   int res_x_;
@@ -35,5 +35,5 @@ class Terrain {
   void GenerateVertices();
   void GenerateIndices();
   void BuildVAO();
-  int GetIndex(int x, int z);
+  int GetIndex(int x, int z) { return z * res_x_ + x; }
 };
