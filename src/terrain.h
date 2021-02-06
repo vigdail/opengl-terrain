@@ -35,5 +35,5 @@ class Terrain {
   void GenerateVertices();
   void GenerateIndices();
   void BuildVAO();
-  int GetIndex(int x, int z);
+  int GetIndex(int x, int z) { return z * res_x_ + x; }
 };

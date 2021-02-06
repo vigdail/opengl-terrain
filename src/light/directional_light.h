@@ -10,10 +10,13 @@ class DirectionalLight {
   void SetPosition(glm::vec3 position);
   glm::vec3 GetColor();
   float GetIntensity();
+  void SetIntensity(float intensity);
+  void SetDirection(glm::vec3 direction);
 
  private:
   float intensity_;
   glm::vec3 position_;
   glm::vec3 look_at_;
+  glm::vec3 direction_;
   glm::vec3 color_;
 };

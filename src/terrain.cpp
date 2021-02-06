@@ -76,8 +76,6 @@ void Terrain::GenerateIndices() {
   }
 }
 
-int Terrain::GetIndex(int x, int z) { return z * res_x_ + x; }
-
 void Terrain::BuildVAO() {
   glBindVertexArray(VAO_);
   glBindBuffer(GL_ARRAY_BUFFER, VBO_);

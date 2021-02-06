@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "gui/gui_skybox.h"
+#include "gui/gui_sun.h"
 
 const uint Game::kKeysCount_;
 
@@ -22,8 +23,8 @@ Game::Game(uint width, uint height)
   terrain_ = std::make_unique<Terrain>(100, 1024, 1024);
   skybox_ = std::make_unique<Skybox>();
   gui_ = std::make_unique<GUILayer>(width, height);
-  gui_->AddPanel(
-      static_cast<GUIPanel *>(new GUISkyboxPanel(skybox_->GetAtmosphere())));
+  gui_->AddPanel(new GUISkyboxPanel(skybox_->GetAtmosphere()));
+  gui_->AddPanel(new GUISunPanel(&light_));
 }
 
 void Game::LoadAssets() {
@@ -55,11 +56,7 @@ void Game::ProcessInput(float dt) {
   }
 }
 
-void Game::Update(float dt) {
-  // light_.SetPosition(glm::vec3(1.0f * cos(glfwGetTime() / 5.0f),
-  //                              1.0f * sin(glfwGetTime() / 5.0f), 0.0f));
-  gui_->Update(dt);
-}
+void Game::Update(float dt) { gui_->Update(dt); }
 
 void Game::Render() {
   glm::mat4 projection = glm::perspective(
@@ -69,7 +66,8 @@ void Game::Render() {
   terrainShader.Use();
   terrainShader.SetMat4("view", camera_.getViewMatrix());
   terrainShader.SetMat4("projection", projection);
-  terrainShader.SetVec3("light.direction", light_.GetDirection());
+  terrainShader.SetVec3("light.direction",
+                        glm::normalize(light_.GetDirection()));
   terrainShader.SetVec3("light.color", light_.GetColor());
   terrainShader.SetFloat("light.intensity", light_.GetIntensity());
   terrain_->Draw(terrainShader);
@@ -81,7 +79,7 @@ void Game::Render() {
   skyboxShader.SetMat4("view", glm::mat4(glm::mat3(camera_.getViewMatrix())));
   skyboxShader.SetMat4("projection", projection);
   skyboxShader.SetVec3("camera", camera_.position);
-  skyboxShader.SetVec3("sun.direction", light_.GetDirection());
+  skyboxShader.SetVec3("sun.direction", glm::normalize(light_.GetDirection()));
   skyboxShader.SetVec3("sun.color", light_.GetColor());
   skyboxShader.SetFloat("sun.intensity", light_.GetIntensity());
   skybox_->Draw(skyboxShader);

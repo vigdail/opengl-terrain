@@ -8,8 +8,8 @@ Skybox::Skybox() : mesh_(128, 128, 1.0), atmosphere_() {}
 
 void Skybox::Draw(Shader &shader) {
   shader.Use();
-  shader.SetFloat("planet_radius", atmosphere_.planet_radius);
-  shader.SetFloat("atmosphere_radius", atmosphere_.atmosphere_radius);
+  shader.SetFloat("planet_radius", (float)atmosphere_.planet_radius);
+  shader.SetFloat("atmosphere_radius", (float)atmosphere_.atmosphere_radius);
   shader.SetFloat("hR", atmosphere_.hR);
   shader.SetFloat("hM", atmosphere_.hM);
   shader.SetFloat("g", atmosphere_.g);

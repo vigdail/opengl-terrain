@@ -7,7 +7,7 @@
 class GUISkyboxPanel : public GUIPanel {
  public:
   explicit GUISkyboxPanel(Atmosphere &atmosphere);
-  ~GUISkyboxPanel() override{};
+  // ~GUISkyboxPanel() override{};
 
   void Render() override;
 

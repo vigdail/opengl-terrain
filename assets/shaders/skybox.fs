@@ -10,13 +10,13 @@ struct DirectionalLight {
 
 uniform vec3 camera;
 uniform DirectionalLight sun;
-uniform float planet_radius = 6360e3;
-uniform float atmosphere_radius = 6420e3;
-uniform float hR = 7794;
-uniform float hM = 1200;
-uniform float g = 0.82;
-uniform vec3 beta_R = vec3(3.8e-6f, 13.5e-6f, 33.1e-6f);
-uniform float beta_M = 21e-6f;
+uniform float planet_radius;
+uniform float atmosphere_radius;
+uniform float hR;
+uniform float hM;
+uniform float g;
+uniform vec3 beta_R;
+uniform float beta_M;
 
 uniform int view_dir_samples = 16;
 uniform int sun_dir_samples = 8;
