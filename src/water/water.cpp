@@ -1,6 +1,5 @@
 #include "water.h"
 #include <array>
-#include <glm/gtc/matrix_transform.hpp>
 
 Water::Water() {
   glGenVertexArrays(1, &VAO_);
@@ -16,13 +15,7 @@ Water::~Water() {
   glDeleteBuffers(1, &EBO_);
 }
 
-void Water::Draw(Shader* shader) {
-  glm::mat4 model = glm::mat4(1.0f);
-  model = glm::translate(model, glm::vec3(0.0f, 1.7f, 0.0f));
-  model = glm::scale(model, glm::vec3(50.0f, 1.0f, 50.0f));
-  shader->Use();
-  shader->SetMat4("model", model);
-  shader->SetVec3("color", glm::vec3(0.0f, 0.0f, 1.0f));
+void Water::Draw() {
   glBindVertexArray(VAO_);
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }

@@ -29,6 +29,9 @@ Terrain::Terrain(int size, int width, int length)
   normalmap_ = nm_renderer.Render(heightmap_);
 
   BuildVAO();
+
+  vertices_.clear();
+  indices_.clear();
 }
 
 void Terrain::Draw(Shader &shader) {
@@ -42,7 +45,7 @@ void Terrain::Draw(Shader &shader) {
   glActiveTexture(GL_TEXTURE1);
   normalmap_.Bind();
   glBindVertexArray(VAO_);
-  glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0);
+  glDrawElements(GL_TRIANGLES, indices_count_, GL_UNSIGNED_INT, 0);
 }
 
 void Terrain::GenerateVertices() {
@@ -74,6 +77,8 @@ void Terrain::GenerateIndices() {
       index += 6;
     }
   }
+
+  indices_count_ = indices_.size();
 }
 
 void Terrain::BuildVAO() {

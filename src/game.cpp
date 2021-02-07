@@ -15,14 +15,16 @@ Game::Game(uint width, uint height)
     : width_(width),
       height_(height),
       keys_(),
-      camera_(Camera(glm::vec3(0.0f, 1.0f, 3.0f), glm::vec3(0.0f, 1.0f, 0.0f))),
-      light_(DirectionalLight(glm::vec3(10.0f, 5.0f, 0.0), glm::vec3(0.0f))),
+      camera_(Camera(glm::vec3(0.0f, 2.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f))),
+      light_(DirectionalLight(glm::vec3(0.0f), glm::vec3(0.0f))),
+      projection_(glm::perspective(glm::radians(60.0f), 1.0f * width_ / height_,
+                                   0.1f, 1000.0f)),
       mouse_last_x_(0.0),
       mouse_last_y_(0.0) {
   LoadAssets();
   terrain_ = std::make_unique<Terrain>(100, 1024, 1024);
   skybox_ = std::make_unique<Skybox>();
-  water_ = std::make_unique<Water>();
+  water_ = std::make_unique<WaterRenderer>();
 
   gui_ = std::make_unique<GUILayer>(width, height);
   gui_->AddPanel(new GUISkyboxPanel(skybox_->GetAtmosphere()));
@@ -61,35 +63,24 @@ void Game::ProcessInput(float dt) {
 void Game::Update(float dt) { gui_->Update(dt); }
 
 void Game::Render() {
-  glm::mat4 projection = glm::perspective(
-      glm::radians(60.0f), 1.0f * width_ / height_, 0.1f, 1000.0f);
-
   Shader &terrainShader = ResourceManager::GetShader("terrain");
   terrainShader.Use();
   terrainShader.SetMat4("view", camera_.getViewMatrix());
-  terrainShader.SetMat4("projection", projection);
+  terrainShader.SetMat4("projection", projection_);
   terrainShader.SetVec3("light.direction",
                         glm::normalize(light_.GetDirection()));
   terrainShader.SetVec3("light.color", light_.GetColor());
   terrainShader.SetFloat("light.intensity", light_.GetIntensity());
   terrain_->Draw(terrainShader);
 
-  Shader &solidShader = ResourceManager::GetShader("solid");
-  solidShader.Use();
-  solidShader.SetMat4("view", camera_.getViewMatrix());
-  solidShader.SetMat4("projection", projection);
-  // solidShader.SetVec3("light.direction",
-  //                       glm::normalize(light_.GetDirection()));
-  // solidShader.SetVec3("light.color", light_.GetColor());
-  // solidShader.SetFloat("light.intensity", light_.GetIntensity());
-  water_->Draw(&solidShader);
+  water_->Render(&camera_, projection_);
 
   glDepthFunc(GL_LEQUAL);
   glFrontFace(GL_CW);
   Shader &skyboxShader = ResourceManager::GetShader("skybox");
   skyboxShader.Use();
   skyboxShader.SetMat4("view", glm::mat4(glm::mat3(camera_.getViewMatrix())));
-  skyboxShader.SetMat4("projection", projection);
+  skyboxShader.SetMat4("projection", projection_);
   skyboxShader.SetVec3("camera", camera_.position);
   skyboxShader.SetVec3("sun.direction", glm::normalize(light_.GetDirection()));
   skyboxShader.SetVec3("sun.color", light_.GetColor());

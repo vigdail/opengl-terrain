@@ -13,7 +13,7 @@ class Water {
  public:
   Water();
   ~Water();
-  void Draw(Shader *shader);
+  void Draw();
 
  private:
   unsigned int VAO_;
