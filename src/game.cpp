@@ -22,6 +22,8 @@ Game::Game(uint width, uint height)
   LoadAssets();
   terrain_ = std::make_unique<Terrain>(100, 1024, 1024);
   skybox_ = std::make_unique<Skybox>();
+  water_ = std::make_unique<Water>();
+
   gui_ = std::make_unique<GUILayer>(width, height);
   gui_->AddPanel(new GUISkyboxPanel(skybox_->GetAtmosphere()));
   gui_->AddPanel(new GUISunPanel(&light_));
@@ -71,6 +73,16 @@ void Game::Render() {
   terrainShader.SetVec3("light.color", light_.GetColor());
   terrainShader.SetFloat("light.intensity", light_.GetIntensity());
   terrain_->Draw(terrainShader);
+
+  Shader &solidShader = ResourceManager::GetShader("solid");
+  solidShader.Use();
+  solidShader.SetMat4("view", camera_.getViewMatrix());
+  solidShader.SetMat4("projection", projection);
+  // solidShader.SetVec3("light.direction",
+  //                       glm::normalize(light_.GetDirection()));
+  // solidShader.SetVec3("light.color", light_.GetColor());
+  // solidShader.SetFloat("light.intensity", light_.GetIntensity());
+  water_->Draw(&solidShader);
 
   glDepthFunc(GL_LEQUAL);
   glFrontFace(GL_CW);

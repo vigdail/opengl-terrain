@@ -10,6 +10,7 @@
 #include "resource_manager.h"
 #include "terrain.h"
 #include "skybox.h"
+#include "water/water.h"
 #include "gui/gui_layer.h"
 
 class Game {
@@ -37,6 +38,7 @@ class Game {
   std::unique_ptr<Terrain> terrain_;
   std::unique_ptr<GUILayer> gui_;
   std::unique_ptr<Skybox> skybox_;
+  std::unique_ptr<Water> water_;
   double mouse_last_x_;
   double mouse_last_y_;
 };
