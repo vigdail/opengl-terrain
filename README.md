@@ -22,10 +22,10 @@ Make sure you have ```opengl version>=4.5```, ```glfw``` and ```glm``` installed
 - [x] ImGui integration
 - [x] Procedural skybox
 - [x] Rendering procedural sun (+ day/night cycle)
+- [ ] Water
 - [ ] First person camera movement
 - [ ] Multiple texture layers
 - [ ] Lens flare effect
-- [ ] Water
 - [ ] Grass
 - [ ] Cascade shadows
 - [ ] Quad tree based terrain tesselation
