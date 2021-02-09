@@ -5,6 +5,7 @@
 #include "water.h"
 #include "../camera.h"
 #include "../shader.h"
+#include "../frame_buffer.h"
 
 class WaterRenderer {
  public:
@@ -14,4 +15,5 @@ class WaterRenderer {
  private:
   Shader *water_shader_;
   std::unique_ptr<Water> water_;
+  std::unique_ptr<FrameBuffer> framebuffer_;
 };
