@@ -13,6 +13,7 @@ class Texture {
   void Bind() const;
   void BindImage();
   void Generate(unsigned int width, unsigned int height, unsigned char *data);
+  unsigned int GetID() const { return ID_; }
   unsigned int GetWidth() const { return width_; }
   unsigned int GetHeight() const { return height_; }
 

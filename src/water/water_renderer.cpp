@@ -5,6 +5,14 @@
 WaterRenderer::WaterRenderer() {
   water_shader_ = &ResourceManager::GetShader("solid");
   water_ = std::make_unique<Water>();
+
+  FrameBuffer::Spec spec;
+  spec.width = 512;
+  spec.height = 512;
+  spec.color_formats = {GL_RGB8};
+  spec.depth_format = GL_DEPTH24_STENCIL8;
+
+  framebuffer_ = std::make_unique<FrameBuffer>(spec);
 }
 
 void WaterRenderer::Render(Camera *camera, glm::mat4 projection) {
