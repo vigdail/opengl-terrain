@@ -64,6 +64,27 @@ void Game::Update(float dt) { gui_->Update(dt); }
 
 void Game::Render() {
   Shader &terrainShader = ResourceManager::GetShader("terrain");
+  // Water refraction pass
+
+  water_->BindRefractionFramebuffer();
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  terrainShader.Use();
+  terrainShader.SetMat4("view", camera_.getViewMatrix());
+  terrainShader.SetMat4("projection", projection_);
+  terrainShader.SetVec3("light.direction",
+                        glm::normalize(light_.GetDirection()));
+  terrainShader.SetVec3("light.color", light_.GetColor());
+  terrainShader.SetFloat("light.intensity", light_.GetIntensity());
+  terrain_->Draw(terrainShader);
+
+  // Water reflection pass
+  water_->BindReflectionFramebuffer();
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  // Main pass
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glViewport(0, 0, width_, height_);
   terrainShader.Use();
   terrainShader.SetMat4("view", camera_.getViewMatrix());
   terrainShader.SetMat4("projection", projection_);

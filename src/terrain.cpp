@@ -31,7 +31,9 @@ Terrain::Terrain(int size, int width, int length)
   BuildVAO();
 
   vertices_.clear();
+  vertices_.shrink_to_fit();
   indices_.clear();
+  indices_.shrink_to_fit();
 }
 
 void Terrain::Draw(Shader &shader) {

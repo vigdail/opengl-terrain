@@ -19,24 +19,32 @@ FrameBuffer::FrameBuffer(FrameBuffer::Spec spec) noexcept : spec_(spec) {
   int index = 0;
   for (auto format : spec_.color_formats) {
     Texture texture;
-    texture.image_format = format;
+    texture.internal_format = format;
     texture.Generate(spec_.width, spec_.height, nullptr);
-    color_attachments_.push_back(std::move(texture));
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + index++,
                            TextureTarget(spec_.is_multisampled),
                            texture.GetID(), 0);
+
+    color_attachments_.push_back(std::move(texture));
   }
 
   if (spec_.depth_format != 0) {
     Texture texture;
-    texture.image_format = spec_.depth_format;
+    texture.internal_format = spec_.depth_format;
+    texture.image_format = GL_DEPTH_COMPONENT;
+    texture.type = GL_FLOAT;
     texture.Generate(spec_.width, spec_.height, nullptr);
-    depth_attachment_ = std::move(texture);
 
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
                            TextureTarget(spec_.is_multisampled),
                            texture.GetID(), 0);
+
+    depth_attachment_ = std::move(texture);
+  }
+
+  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+    std::cerr << "Framebuffer is incomplete" << std::endl;
   }
 
   glBindFramebuffer(GL_FRAMEBUFFER, 0);

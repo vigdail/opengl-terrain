@@ -9,7 +9,7 @@ class FrameBuffer {
   struct Spec {
     int width;
     int height;
-    bool is_multisampled;
+    bool is_multisampled = false;
     std::vector<unsigned int> color_formats;
     unsigned int depth_format;
   };
@@ -27,6 +27,7 @@ class FrameBuffer {
 
  protected:
   unsigned int ID_;
+  unsigned int RBO_;
   Spec spec_;
   std::vector<Texture> color_attachments_;
   std::optional<Texture> depth_attachment_;
