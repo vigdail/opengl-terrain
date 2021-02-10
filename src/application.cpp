@@ -3,6 +3,12 @@
 #include <iostream>
 #include <string>
 
+void DebugMessageCallback(unsigned source, unsigned type, unsigned id,
+                          unsigned severity, int length, const char *message,
+                          const void *userParam) {
+  std::cerr << message << std::endl;
+}
+
 Application::Application(unsigned int width, unsigned int height)
     : width_(width), height_(height) {
   glfwInit();
@@ -37,6 +43,15 @@ Application::Application(unsigned int width, unsigned int height)
   glfwSetCursorPosCallback(window_, MouseCallback);
   glfwSetMouseButtonCallback(window_, MouseButtonCallback);
   glfwSetFramebufferSizeCallback(window_, FramebufferSizeCallback);
+
+#ifndef NDEBUG
+  glEnable(GL_DEBUG_OUTPUT);
+  glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+  glDebugMessageCallback(DebugMessageCallback, nullptr);
+
+  glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE,
+                        GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
+#endif
 
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
