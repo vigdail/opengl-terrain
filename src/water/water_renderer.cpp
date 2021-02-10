@@ -6,13 +6,26 @@ WaterRenderer::WaterRenderer() {
   water_shader_ = &ResourceManager::GetShader("solid");
   water_ = std::make_unique<Water>();
 
+  // @TODO: set sizes
   FrameBuffer::Spec spec;
-  spec.width = 512;
-  spec.height = 512;
-  spec.color_formats = {GL_RGB8};
-  spec.depth_format = GL_DEPTH24_STENCIL8;
+  spec.width = 1024;
+  spec.height = 1024;
+  spec.color_formats = {GL_RGB};
+  spec.depth_format = GL_DEPTH_COMPONENT24;
 
-  framebuffer_ = std::make_unique<FrameBuffer>(spec);
+  refraction_framebuffer_ = std::make_unique<FrameBuffer>(spec);
+
+  spec.width = 256;
+  spec.height = 256;
+  reflection_framebuffer_ = std::make_unique<FrameBuffer>(spec);
+}
+
+void WaterRenderer::BindReflectionFramebuffer() {
+  reflection_framebuffer_->Bind();
+}
+
+void WaterRenderer::BindRefractionFramebuffer() {
+  refraction_framebuffer_->Bind();
 }
 
 void WaterRenderer::Render(Camera *camera, glm::mat4 projection) {
