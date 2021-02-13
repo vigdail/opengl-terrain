@@ -53,6 +53,7 @@ void WaterRenderer::Render(Camera *camera, glm::mat4 projection) {
   water_shader_->SetInt("refraction", 1);
   water_shader_->SetInt("dudv", 2);
   water_shader_->SetFloat("time", glfwGetTime());
+  water_shader_->SetVec3("camera_position", camera->position);
 
   water_->Draw();
 }

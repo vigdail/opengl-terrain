@@ -7,12 +7,16 @@ layout(location = 1) in vec2 uv;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
+uniform vec3 camera_position;
 
 out vec2 fragUV;
 out vec4 fragClip;
+out vec3 toCamera;
 
 void main() {
     fragUV = uv;
-    fragClip = projection * view * model * vec4(position, 1.0);
+    vec4 worldPos = model * vec4(position, 1.0);
+    fragClip = projection * view * worldPos;
+    toCamera = camera_position - worldPos.xyz;
     gl_Position = fragClip;
 }

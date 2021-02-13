@@ -2,6 +2,7 @@
 
 in vec2 fragUV;
 in vec4 fragClip;
+in vec3 toCamera;
 
 uniform sampler2D reflection;
 uniform sampler2D refraction;
@@ -28,6 +29,10 @@ void main() {
 
     vec4 reflectionColor = texture(reflection, reflectionUV);
     vec4 refractionColor = texture(refraction, refractionUV);
-    fragColor = mix(reflectionColor, refractionColor, 0.5); 
+
+    float k = dot(normalize(toCamera), vec3(0.0, 1.0, 0.0));
+    float reflectiveFactor = pow(k, 0.5);
+
+    fragColor = mix(reflectionColor, refractionColor, reflectiveFactor); 
     fragColor = mix(fragColor, vec4(0.0, 0.3, 0.4, 1.0), 0.2);
 }
