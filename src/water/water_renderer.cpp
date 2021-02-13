@@ -1,6 +1,7 @@
 #include "water_renderer.h"
 #include "../resource_manager.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include <GLFW/glfw3.h>
 
 WaterRenderer::WaterRenderer() : height_(1.7f) {
   water_shader_ = &ResourceManager::GetShader("water");
@@ -18,6 +19,12 @@ WaterRenderer::WaterRenderer() : height_(1.7f) {
   spec.width = 256;
   spec.height = 256;
   reflection_framebuffer_ = std::make_unique<FrameBuffer>(spec);
+
+  dudv_map_ = &ResourceManager::GetTexture("water-dudv");
+
+  dudv_map_->Bind();
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }
 
 void WaterRenderer::BindReflectionFramebuffer() {
@@ -37,11 +44,15 @@ void WaterRenderer::Render(Camera *camera, glm::mat4 projection) {
   BindReflectionTexture();
   glActiveTexture(GL_TEXTURE1);
   BindRefractionTexture();
+  glActiveTexture(GL_TEXTURE2);
+  dudv_map_->Bind();
   water_shader_->SetMat4("model", model);
   water_shader_->SetMat4("view", camera->getViewMatrix());
   water_shader_->SetMat4("projection", projection);
   water_shader_->SetInt("reflection", 0);
   water_shader_->SetInt("refraction", 1);
+  water_shader_->SetInt("dudv", 2);
+  water_shader_->SetFloat("time", glfwGetTime());
 
   water_->Draw();
 }

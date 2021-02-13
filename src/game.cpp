@@ -48,6 +48,9 @@ void Game::LoadAssets() {
       "compute_normalmap", "../assets/shaders/compute/normalmap.comp");
   ResourceManager::LoadComputeShader(
       "compute_heightmap", "../assets/shaders/compute/heightmap.comp");
+
+  ResourceManager::LoadTexture("water-dudv",
+                               "../assets/textures/waterDUDV.png");
 }
 
 void Game::ProcessInput(float dt) {

@@ -20,6 +20,7 @@ class WaterRenderer {
  private:
   Shader *water_shader_;
   std::unique_ptr<Water> water_;
+  Texture *dudv_map_;
   std::unique_ptr<FrameBuffer> reflection_framebuffer_;
   std::unique_ptr<FrameBuffer> refraction_framebuffer_;
   float height_;
