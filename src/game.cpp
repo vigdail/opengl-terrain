@@ -41,6 +41,8 @@ void Game::LoadAssets() {
                               "../assets/shaders/solid_color.fs");
   ResourceManager::LoadShader("sprite", "../assets/shaders/sprite.vs",
                               "../assets/shaders/sprite.fs");
+  ResourceManager::LoadShader("water", "../assets/shaders/water.vs",
+                              "../assets/shaders/water.fs");
 
   ResourceManager::LoadComputeShader(
       "compute_normalmap", "../assets/shaders/compute/normalmap.comp");
@@ -90,25 +92,6 @@ void Game::Render() {
   RenderScene(glm::vec4(0.0f));
 
   water_->Render(&camera_, projection_);
-
-  Shader &sprite_shader = ResourceManager::GetShader("sprite");
-  sprite_shader.Use();
-  glm::mat4 model(1.0f);
-  model = glm::scale(model, glm::vec3(256.0f, 256.0f, 0.5f));
-  glDisable(GL_CULL_FACE);
-  glActiveTexture(GL_TEXTURE0);
-  sprite_shader.SetMat4("model", model);
-  sprite_shader.SetMat4(
-      "projection", glm::ortho(0.0f, static_cast<float>(width_),
-                               static_cast<float>(height_), 0.0f, -1.0f, 1.0f));
-  sprite_shader.SetVec3("color", glm::vec3(1.0f));
-  water_->BindRefractionTexture();
-  quad_->Draw();
-  model = glm::translate(model, glm::vec3(1.0f, 0.0f, 0.0f));
-  sprite_shader.SetMat4("model", model);
-  water_->BindReflectionTexture();
-  quad_->Draw();
-  glEnable(GL_CULL_FACE);
 
   gui_->Render();
 }

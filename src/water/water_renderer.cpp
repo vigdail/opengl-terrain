@@ -3,7 +3,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 WaterRenderer::WaterRenderer() : height_(1.7f) {
-  water_shader_ = &ResourceManager::GetShader("solid");
+  water_shader_ = &ResourceManager::GetShader("water");
   water_ = std::make_unique<Water>();
 
   // @TODO: set sizes
@@ -32,11 +32,16 @@ void WaterRenderer::Render(Camera *camera, glm::mat4 projection) {
   water_shader_->Use();
   glm::mat4 model = glm::mat4(1.0f);
   model = glm::translate(model, glm::vec3(0.0f, height_, 0.0f));
-  model = glm::scale(model, glm::vec3(50.0f, 1.0f, 50.0f));
+  model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+  glActiveTexture(GL_TEXTURE0);
+  BindReflectionTexture();
+  glActiveTexture(GL_TEXTURE1);
+  BindRefractionTexture();
   water_shader_->SetMat4("model", model);
   water_shader_->SetMat4("view", camera->getViewMatrix());
   water_shader_->SetMat4("projection", projection);
-  water_shader_->SetVec3("color", glm::vec3(0.0f, 0.0f, 1.0f));
+  water_shader_->SetInt("reflection", 0);
+  water_shader_->SetInt("refraction", 1);
 
   water_->Draw();
 }
