@@ -14,12 +14,14 @@ class FrameBuffer {
     unsigned int depth_format;
   };
 
-  explicit FrameBuffer(Spec spec) noexcept;
+  explicit FrameBuffer(const Spec &spec) noexcept;
   FrameBuffer(const FrameBuffer &) = delete;
   FrameBuffer(FrameBuffer &&) noexcept;
   FrameBuffer &operator=(const FrameBuffer &) = delete;
   FrameBuffer &operator=(FrameBuffer &&);
   virtual ~FrameBuffer();
+
+  void BindTexture(int i) { color_attachments_[i].Bind(); }
 
  public:
   void Bind();
@@ -27,7 +29,6 @@ class FrameBuffer {
 
  protected:
   unsigned int ID_;
-  unsigned int RBO_;
   Spec spec_;
   std::vector<Texture> color_attachments_;
   std::optional<Texture> depth_attachment_;

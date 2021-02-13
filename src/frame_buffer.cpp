@@ -3,7 +3,7 @@
 #include <utility>
 
 // @TODO: Refactor this
-FrameBuffer::FrameBuffer(FrameBuffer::Spec spec) noexcept : spec_(spec) {
+FrameBuffer::FrameBuffer(const FrameBuffer::Spec& spec) noexcept : spec_(spec) {
   glGenFramebuffers(1, &ID_);
 
   glBindFramebuffer(GL_FRAMEBUFFER, ID_);
@@ -41,10 +41,6 @@ FrameBuffer::FrameBuffer(FrameBuffer::Spec spec) noexcept : spec_(spec) {
                            texture.GetID(), 0);
 
     depth_attachment_ = std::move(texture);
-  }
-
-  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-    std::cerr << "Framebuffer is incomplete" << std::endl;
   }
 
   glBindFramebuffer(GL_FRAMEBUFFER, 0);

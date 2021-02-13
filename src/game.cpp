@@ -25,6 +25,7 @@ Game::Game(uint width, uint height)
   terrain_ = std::make_unique<Terrain>(100, 1024, 1024);
   skybox_ = std::make_unique<Skybox>();
   water_ = std::make_unique<WaterRenderer>();
+  quad_ = std::make_unique<Quad>();
 
   gui_ = std::make_unique<GUILayer>(width, height);
   gui_->AddPanel(new GUISkyboxPanel(skybox_->GetAtmosphere()));
@@ -38,6 +39,8 @@ void Game::LoadAssets() {
                               "../assets/shaders/skybox.fs");
   ResourceManager::LoadShader("solid", "../assets/shaders/solid_color.vs",
                               "../assets/shaders/solid_color.fs");
+  ResourceManager::LoadShader("sprite", "../assets/shaders/sprite.vs",
+                              "../assets/shaders/sprite.fs");
 
   ResourceManager::LoadComputeShader(
       "compute_normalmap", "../assets/shaders/compute/normalmap.comp");
@@ -63,28 +66,57 @@ void Game::ProcessInput(float dt) {
 void Game::Update(float dt) { gui_->Update(dt); }
 
 void Game::Render() {
-  Shader &terrainShader = ResourceManager::GetShader("terrain");
   // Water refraction pass
-
   water_->BindRefractionFramebuffer();
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  terrainShader.Use();
-  terrainShader.SetMat4("view", camera_.getViewMatrix());
-  terrainShader.SetMat4("projection", projection_);
-  terrainShader.SetVec3("light.direction",
-                        glm::normalize(light_.GetDirection()));
-  terrainShader.SetVec3("light.color", light_.GetColor());
-  terrainShader.SetFloat("light.intensity", light_.GetIntensity());
-  terrain_->Draw(terrainShader);
+  glEnable(GL_CLIP_DISTANCE0);
+  RenderScene(glm::vec4(0.0f, -1.0f, 0.0f, water_->GetHeight()));
 
   // Water reflection pass
   water_->BindReflectionFramebuffer();
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  float dy = 2.0f * (camera_.position.y - water_->GetHeight());
+  camera_.position.y -= dy;
+  camera_.InvertPitch();
+  RenderScene(glm::vec4(0.0f, 1.0f, 0.0f, -water_->GetHeight()));
+  camera_.InvertPitch();
+  camera_.position.y += dy;
 
   // Main pass
+  glDisable(GL_CLIP_DISTANCE0);
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glViewport(0, 0, width_, height_);
+  RenderScene(glm::vec4(0.0f));
+
+  water_->Render(&camera_, projection_);
+
+  Shader &sprite_shader = ResourceManager::GetShader("sprite");
+  sprite_shader.Use();
+  glm::mat4 model(1.0f);
+  model = glm::scale(model, glm::vec3(256.0f, 256.0f, 0.5f));
+  glDisable(GL_CULL_FACE);
+  glActiveTexture(GL_TEXTURE0);
+  sprite_shader.SetMat4("model", model);
+  sprite_shader.SetMat4(
+      "projection", glm::ortho(0.0f, static_cast<float>(width_),
+                               static_cast<float>(height_), 0.0f, -1.0f, 1.0f));
+  sprite_shader.SetVec3("color", glm::vec3(1.0f));
+  water_->BindRefractionTexture();
+  quad_->Draw();
+  model = glm::translate(model, glm::vec3(1.0f, 0.0f, 0.0f));
+  sprite_shader.SetMat4("model", model);
+  water_->BindReflectionTexture();
+  quad_->Draw();
+  glEnable(GL_CULL_FACE);
+
+  gui_->Render();
+}
+
+void Game::RenderScene(glm::vec4 clip_plane) {
+  Shader &terrainShader = ResourceManager::GetShader("terrain");
+  Shader &skyboxShader = ResourceManager::GetShader("skybox");
+
   terrainShader.Use();
   terrainShader.SetMat4("view", camera_.getViewMatrix());
   terrainShader.SetMat4("projection", projection_);
@@ -92,13 +124,11 @@ void Game::Render() {
                         glm::normalize(light_.GetDirection()));
   terrainShader.SetVec3("light.color", light_.GetColor());
   terrainShader.SetFloat("light.intensity", light_.GetIntensity());
+  terrainShader.SetVec4("clipPlane", clip_plane);
   terrain_->Draw(terrainShader);
-
-  water_->Render(&camera_, projection_);
 
   glDepthFunc(GL_LEQUAL);
   glFrontFace(GL_CW);
-  Shader &skyboxShader = ResourceManager::GetShader("skybox");
   skyboxShader.Use();
   skyboxShader.SetMat4("view", glm::mat4(glm::mat3(camera_.getViewMatrix())));
   skyboxShader.SetMat4("projection", projection_);
@@ -109,8 +139,6 @@ void Game::Render() {
   skybox_->Draw(skyboxShader);
   glFrontFace(GL_CCW);
   glDepthFunc(GL_LESS);
-
-  gui_->Render();
 }
 
 void Game::OnKeyEvent(int key, int scancode, int action, int mode) {

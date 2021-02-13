@@ -44,6 +44,7 @@ class Camera {
   void Disable();
   void Enable();
   void Toggle();
+  void InvertPitch();
 
  private:
   bool active_;

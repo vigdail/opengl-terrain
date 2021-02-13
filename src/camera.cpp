@@ -37,6 +37,11 @@ void Camera::Enable() { active_ = true; }
 void Camera::Disable() { active_ = false; }
 void Camera::Toggle() { active_ = !active_; }
 
+void Camera::InvertPitch() {
+  pitch = -pitch;
+  updateVectors();
+}
+
 void Camera::move(CameraMovement direction, float dt) {
   if (!active_) {
     return;

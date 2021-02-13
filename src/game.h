@@ -12,6 +12,7 @@
 #include "skybox.h"
 #include "water/water_renderer.h"
 #include "gui/gui_layer.h"
+#include "quad.h"
 
 class Game {
  public:
@@ -40,6 +41,11 @@ class Game {
   std::unique_ptr<GUILayer> gui_;
   std::unique_ptr<Skybox> skybox_;
   std::unique_ptr<WaterRenderer> water_;
+  std::unique_ptr<Quad> quad_;
+
   double mouse_last_x_;
   double mouse_last_y_;
+
+ private:
+  void RenderScene(glm::vec4 clip_plane);
 };

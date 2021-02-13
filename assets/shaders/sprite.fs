@@ -11,5 +11,5 @@ uniform sampler2D image;
 uniform vec3 color;
 
 void main() {
-    glColor = vec4(color, 1.0) * texture(image, fs_in.uv);
+    glColor = vec4(color, 1.0) * texture(image, fs_in.uv);  
 }
