@@ -15,7 +15,7 @@ Game::Game(uint width, uint height)
     : width_(width),
       height_(height),
       keys_(),
-      camera_(Camera(glm::vec3(0.0f, 2.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f))),
+      camera_(Camera(glm::vec3(0.0f, 4.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f))),
       light_(DirectionalLight(glm::vec3(0.0f), glm::vec3(0.0f))),
       projection_(glm::perspective(glm::radians(60.0f), 1.0f * width_ / height_,
                                    0.1f, 1000.0f)),
@@ -49,8 +49,10 @@ void Game::LoadAssets() {
   ResourceManager::LoadComputeShader(
       "compute_heightmap", "../assets/shaders/compute/heightmap.comp");
 
-  ResourceManager::LoadTexture("water-dudv",
-                               "../assets/textures/waterDUDV.png");
+  ResourceManager::LoadTexture("water_dudv",
+                               "../assets/textures/water_dudv.png");
+  ResourceManager::LoadTexture("water_normal",
+                               "../assets/textures/water_normalmap.png");
 }
 
 void Game::ProcessInput(float dt) {
@@ -94,7 +96,7 @@ void Game::Render() {
   glViewport(0, 0, width_, height_);
   RenderScene(glm::vec4(0.0f));
 
-  water_->Render(&camera_, projection_);
+  water_->Render(&camera_, &light_, projection_);
 
   gui_->Render();
 }
