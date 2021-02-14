@@ -85,7 +85,7 @@ void Game::Render() {
   float dy = 2.0f * (camera_.position.y - water_->GetHeight());
   camera_.position.y -= dy;
   camera_.InvertPitch();
-  RenderScene(glm::vec4(0.0f, 1.0f, 0.0f, -water_->GetHeight()));
+  RenderScene(glm::vec4(0.0f, 1.0f, 0.0f, -water_->GetHeight() + 0.05f));
   camera_.InvertPitch();
   camera_.position.y += dy;
 

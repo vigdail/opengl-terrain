@@ -52,16 +52,16 @@ void main() {
 
     vec3 viewDir = normalize(camera_position - worldPos.xyz);
 
-    float k = dot(viewDir, vec3(0.0, 1.0, 0.0));
-    float reflectiveFactor = pow(k, 0.1);
-
     vec4 normalSample = texture(normalmap, distUV);
-    vec3 normal = vec3(normalSample.r * 2.0 - 1.0, normalSample.b * 5.0, normalSample.g * 2.0 - 1.0);
+    vec3 normal = vec3(normalSample.r * 2.0 - 1.0, normalSample.b * 8.0, normalSample.g * 2.0 - 1.0);
     normal = normalize(normal);
+
+    float k = max(dot(viewDir, normal), 0.1); 
+    float reflectiveFactor = pow(k, 0.5);
 
     vec3 halfwayDir = normalize(sun.direction + viewDir);
     float specular = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
-    vec3 specularColor = sun.color * specular * 0.1;
+    vec3 specularColor = sun.color * specular * 0.1 * clamp(waterDepth, 0.0, 1.0);
 
     fragColor = mix(reflectionColor, refractionColor, reflectiveFactor); 
     fragColor = mix(fragColor, vec4(0.0, 0.3, 0.4, 1.0), 0.2) + vec4(specularColor, 0.0);
