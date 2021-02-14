@@ -3,21 +3,20 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <GLFW/glfw3.h>
 
-WaterRenderer::WaterRenderer() : height_(3.0f) {
+WaterRenderer::WaterRenderer(int width, int height) : height_(2.0f) {
   water_shader_ = &ResourceManager::GetShader("water");
   water_ = std::make_unique<Water>();
 
-  // @TODO: set sizes
   FrameBuffer::Spec spec;
-  spec.width = 1024;
-  spec.height = 1024;
+  spec.width = width;
+  spec.height = height;
   spec.color_formats = {GL_RGB};
   spec.depth_format = GL_DEPTH_COMPONENT24;
 
   refraction_framebuffer_ = std::make_unique<FrameBuffer>(spec);
 
-  spec.width = 256;
-  spec.height = 256;
+  spec.width = width / 4;
+  spec.height = height / 4;
   reflection_framebuffer_ = std::make_unique<FrameBuffer>(spec);
 
   dudv_map_ = &ResourceManager::GetTexture("water_dudv");
@@ -40,18 +39,20 @@ void WaterRenderer::BindRefractionFramebuffer() {
 
 void WaterRenderer::Render(Camera *camera, DirectionalLight *sun,
                            glm::mat4 projection) {
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   water_shader_->Use();
+
+  reflection_framebuffer_->GetTexture(0)->Bind(0);
+  refraction_framebuffer_->GetTexture(0)->Bind(1);
+  dudv_map_->Bind(2);
+  normal_map_->Bind(3);
+  refraction_framebuffer_->GetDepth()->Bind(4);
+
   glm::mat4 model = glm::mat4(1.0f);
   model = glm::translate(model, glm::vec3(0.0f, height_, 0.0f));
   model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-  glActiveTexture(GL_TEXTURE0);
-  BindReflectionTexture();
-  glActiveTexture(GL_TEXTURE1);
-  BindRefractionTexture();
-  glActiveTexture(GL_TEXTURE2);
-  dudv_map_->Bind();
-  glActiveTexture(GL_TEXTURE3);
-  normal_map_->Bind();
+
   water_shader_->SetMat4("model", model);
   water_shader_->SetMat4("view", camera->getViewMatrix());
   water_shader_->SetMat4("projection", projection);
@@ -59,6 +60,7 @@ void WaterRenderer::Render(Camera *camera, DirectionalLight *sun,
   water_shader_->SetInt("refraction", 1);
   water_shader_->SetInt("dudv", 2);
   water_shader_->SetInt("normalmap", 3);
+  water_shader_->SetInt("depthmap", 4);
   water_shader_->SetFloat("time", glfwGetTime());
   water_shader_->SetVec3("camera_position", camera->position);
   water_shader_->SetVec3("sun.direction", glm::normalize(sun->GetDirection()));
@@ -66,4 +68,6 @@ void WaterRenderer::Render(Camera *camera, DirectionalLight *sun,
   water_shader_->SetFloat("sun.intensity", sun->GetIntensity());
 
   water_->Draw();
+
+  glDisable(GL_BLEND);
 }

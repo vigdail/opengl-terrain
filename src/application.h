@@ -10,7 +10,7 @@
 
 class Application {
  public:
-  Application() : Application(1000, 600) {}
+  Application() : Application(1280, 720) {}
   Application(unsigned int width, unsigned int height);
   ~Application();
   void Run();

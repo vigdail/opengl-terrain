@@ -42,10 +42,8 @@ void Terrain::Draw(Shader &shader) {
   shader.SetInt("heightmap", 0);
   shader.SetInt("normalmap", 1);
   shader.SetVec3("color", glm::vec3(0.45f, 0.4f, 0.3f));
-  glActiveTexture(GL_TEXTURE0);
-  heightmap_.Bind();
-  glActiveTexture(GL_TEXTURE1);
-  normalmap_.Bind();
+  heightmap_.Bind(0);
+  normalmap_.Bind(1);
   glBindVertexArray(VAO_);
   glDrawElements(GL_TRIANGLES, indices_count_, GL_UNSIGNED_INT, 0);
 }

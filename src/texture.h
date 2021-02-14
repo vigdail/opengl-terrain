@@ -13,6 +13,7 @@ class Texture {
   Texture &operator=(Texture &&other);
   ~Texture();
   void Bind() const;
+  void Bind(int i) const;
   void BindImage();
   void Generate(unsigned int width, unsigned int height, unsigned char *data);
   unsigned int GetID() const { return ID_; }

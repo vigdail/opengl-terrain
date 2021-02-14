@@ -1,9 +1,7 @@
 #version 450 core
 
 layout(location = 0) in vec3 position;
-// layout(location = 1) in vec3 normal;
 layout(location = 1) in vec2 uv;
-
 
 uniform mat4 model;
 uniform mat4 view;
@@ -12,12 +10,11 @@ uniform vec3 camera_position;
 
 out vec2 fragUV;
 out vec4 fragClip;
-out vec3 toCamera;
+out vec4 worldPos;
 
 void main() {
     fragUV = uv;
-    vec4 worldPos = model * vec4(position, 1.0);
+    worldPos = model * vec4(position, 1.0);
     fragClip = projection * view * worldPos;
-    toCamera = camera_position - worldPos.xyz;
     gl_Position = fragClip;
 }

@@ -10,12 +10,10 @@
 
 class WaterRenderer {
  public:
-  WaterRenderer();
+  WaterRenderer(int width, int height);
   void Render(Camera *camera, DirectionalLight *sun, glm::mat4 projection);
   void BindReflectionFramebuffer();
   void BindRefractionFramebuffer();
-  void BindRefractionTexture() { refraction_framebuffer_->BindTexture(0); }
-  void BindReflectionTexture() { reflection_framebuffer_->BindTexture(0); }
   float GetHeight() { return height_; }
 
  private:

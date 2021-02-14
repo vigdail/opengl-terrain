@@ -21,7 +21,8 @@ class FrameBuffer {
   FrameBuffer &operator=(FrameBuffer &&);
   virtual ~FrameBuffer();
 
-  void BindTexture(int i) { color_attachments_[i].Bind(); }
+  Texture *GetTexture(int i) { return &color_attachments_[i]; }
+  Texture *GetDepth() { return &depth_attachment_.value(); }
 
  public:
   void Bind();

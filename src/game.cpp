@@ -24,7 +24,7 @@ Game::Game(uint width, uint height)
   LoadAssets();
   terrain_ = std::make_unique<Terrain>(100, 1024, 1024);
   skybox_ = std::make_unique<Skybox>();
-  water_ = std::make_unique<WaterRenderer>();
+  water_ = std::make_unique<WaterRenderer>(width_, height_);
   quad_ = std::make_unique<Quad>();
 
   gui_ = std::make_unique<GUILayer>(width, height);
