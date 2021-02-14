@@ -40,7 +40,7 @@ void main() {
     vec2 distUV = texture(dudv, vec2(fragUV.x + time / 500.0), fragUV.y).rg * 0.01;
     distUV = fragUV + vec2(distUV.x, distUV.y + time / 500.0);
     distUV *= dudv_tiling;
-    vec2 total_dist = (texture(dudv, distUV).rg * 2.0 - 1.0) * 0.01;
+    vec2 total_dist = (texture(dudv, distUV).rg * 2.0 - 1.0) * 0.01 * clamp(waterDepth / 5.0, 0.0, 1.0);
     reflectionUV += total_dist;
     refractionUV += total_dist;
 
