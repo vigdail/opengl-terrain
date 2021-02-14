@@ -10,7 +10,9 @@
 #include "resource_manager.h"
 #include "terrain.h"
 #include "skybox.h"
+#include "water/water_renderer.h"
 #include "gui/gui_layer.h"
+#include "quad.h"
 
 class Game {
  public:
@@ -34,9 +36,16 @@ class Game {
   bool keys_[kKeysCount_];
   Camera camera_;
   DirectionalLight light_;
+  glm::mat4 projection_;
   std::unique_ptr<Terrain> terrain_;
   std::unique_ptr<GUILayer> gui_;
   std::unique_ptr<Skybox> skybox_;
+  std::unique_ptr<WaterRenderer> water_;
+  std::unique_ptr<Quad> quad_;
+
   double mouse_last_x_;
   double mouse_last_y_;
+
+ private:
+  void RenderScene(glm::vec4 clip_plane);
 };

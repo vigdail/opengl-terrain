@@ -7,12 +7,12 @@
 #include "shader.h"
 #include "texture.h"
 
-struct Vertex {
-  glm::vec3 position;
-  glm::vec2 uv;
-};
-
 class Terrain {
+  struct Vertex {
+    glm::vec3 position;
+    glm::vec2 uv;
+  };
+
  public:
   Terrain();
   explicit Terrain(int size);
@@ -25,6 +25,7 @@ class Terrain {
   int size_;
   std::vector<Vertex> vertices_;
   std::vector<int> indices_;
+  std::size_t indices_count_;
   // @TODO: Make some wrappers maybe
   unsigned int VAO_;
   unsigned int EBO_;
@@ -32,6 +33,7 @@ class Terrain {
   Texture heightmap_;
   Texture normalmap_;
 
+ private:
   void GenerateVertices();
   void GenerateIndices();
   void BuildVAO();

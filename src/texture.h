@@ -2,6 +2,8 @@
 
 #include <glad/glad.h>
 
+#include <iostream>
+
 class Texture {
  public:
   Texture() noexcept;
@@ -11,8 +13,10 @@ class Texture {
   Texture &operator=(Texture &&other);
   ~Texture();
   void Bind() const;
+  void Bind(int i) const;
   void BindImage();
   void Generate(unsigned int width, unsigned int height, unsigned char *data);
+  unsigned int GetID() const { return ID_; }
   unsigned int GetWidth() const { return width_; }
   unsigned int GetHeight() const { return height_; }
 
