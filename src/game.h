@@ -40,7 +40,7 @@ class Game {
   std::unique_ptr<Terrain> terrain_;
   std::unique_ptr<GUILayer> gui_;
   std::unique_ptr<Skybox> skybox_;
-  std::unique_ptr<WaterRenderer> water_;
+  std::shared_ptr<WaterRenderer> water_;
   std::unique_ptr<Quad> quad_;
 
   double mouse_last_x_;

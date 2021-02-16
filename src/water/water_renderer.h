@@ -8,13 +8,21 @@
 #include "../frame_buffer.h"
 #include "../light/directional_light.h"
 
+struct WaterMaterial {
+  float specular_power;
+  float reflection_power;
+  float dudv_tiling;
+};
+
 class WaterRenderer {
  public:
   WaterRenderer(int width, int height);
   void Render(Camera *camera, DirectionalLight *sun, glm::mat4 projection);
   void BindReflectionFramebuffer();
   void BindRefractionFramebuffer();
-  float GetHeight() { return height_; }
+  float GetHeight() const { return height_; }
+  void SetHeight(float height) { height_ = height; }
+  WaterMaterial &GetMaterial() { return material_; }
 
  private:
   Shader *water_shader_;
@@ -24,4 +32,5 @@ class WaterRenderer {
   std::unique_ptr<FrameBuffer> reflection_framebuffer_;
   std::unique_ptr<FrameBuffer> refraction_framebuffer_;
   float height_;
+  WaterMaterial material_;
 };

@@ -9,7 +9,7 @@
 
 class Terrain {
   struct Vertex {
-    glm::vec3 position;
+    glm::vec2 position;
     glm::vec2 uv;
   };
 
@@ -18,6 +18,7 @@ class Terrain {
   explicit Terrain(int size);
   Terrain(int size, int res_x, int res_z);
   void Draw(Shader &shader);
+  float GetHeight(int x, int z) const;
 
  private:
   int res_x_;
@@ -25,6 +26,7 @@ class Terrain {
   int size_;
   std::vector<Vertex> vertices_;
   std::vector<int> indices_;
+  std::vector<float> heights_;
   std::size_t indices_count_;
   // @TODO: Make some wrappers maybe
   unsigned int VAO_;

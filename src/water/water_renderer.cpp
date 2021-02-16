@@ -6,6 +6,9 @@
 WaterRenderer::WaterRenderer(int width, int height) : height_(2.0f) {
   water_shader_ = &ResourceManager::GetShader("water");
   water_ = std::make_unique<Water>();
+  material_.specular_power = 32.0f;
+  material_.reflection_power = 0.5f;
+  material_.dudv_tiling = 6.0f;
 
   FrameBuffer::Spec spec;
   spec.width = width;
@@ -63,9 +66,12 @@ void WaterRenderer::Render(Camera *camera, DirectionalLight *sun,
   water_shader_->SetInt("depthmap", 4);
   water_shader_->SetFloat("time", glfwGetTime());
   water_shader_->SetVec3("camera_position", camera->position);
-  water_shader_->SetVec3("sun.direction", glm::normalize(sun->GetDirection()));
+  water_shader_->SetVec3("sun.direction", sun->GetDirection());
   water_shader_->SetVec3("sun.color", sun->GetColor());
   water_shader_->SetFloat("sun.intensity", sun->GetIntensity());
+  water_shader_->SetFloat("reflection_power", material_.reflection_power);
+  water_shader_->SetFloat("specular_power", material_.specular_power);
+  water_shader_->SetFloat("dudv_tiling", material_.dudv_tiling);
 
   water_->Draw();
 

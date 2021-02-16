@@ -19,7 +19,9 @@ uniform float time;
 uniform vec3 camera_position;
 uniform DirectionalLight sun;
 
-const float dudv_tiling = 6.0;
+uniform float dudv_tiling;
+uniform float specular_power;
+uniform float reflection_power;
 
 out vec4 fragColor;
 
@@ -56,14 +58,14 @@ void main() {
     vec3 normal = vec3(normalSample.r * 2.0 - 1.0, normalSample.b * 8.0, normalSample.g * 2.0 - 1.0);
     normal = normalize(normal);
 
-    float k = max(dot(viewDir, normal), 0.1); 
-    float reflectiveFactor = pow(k, 0.5);
+    float k = max(dot(viewDir, normal), 0.01); 
+    float reflectiveFactor = pow(k, reflection_power);
 
     vec3 halfwayDir = normalize(sun.direction + viewDir);
-    float specular = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
+    float specular = pow(max(dot(normal, halfwayDir), 0.0), specular_power);
     vec3 specularColor = sun.color * specular * 0.1 * clamp(waterDepth, 0.0, 1.0);
 
     fragColor = mix(reflectionColor, refractionColor, reflectiveFactor); 
     fragColor = mix(fragColor, vec4(0.0, 0.3, 0.4, 1.0), 0.2) + vec4(specularColor, 0.0);
-    fragColor.a = clamp(waterDepth, 0.0, 1.0);
+    fragColor.a = clamp(waterDepth / 0.3, 0.0, 1.0);
 }

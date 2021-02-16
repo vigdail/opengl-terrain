@@ -14,7 +14,8 @@ Terrain::Terrain(int size, int width, int length)
       res_z_(length),
       size_(size),
       vertices_(std::vector<Vertex>(res_x_ * res_z_)),
-      indices_(std::vector<int>((res_x_ - 1) * (res_z_ - 1) * 2 * 3)) {
+      indices_(std::vector<int>((res_x_ - 1) * (res_z_ - 1) * 2 * 3)),
+      heights_(std::vector<float>(res_x_ * res_z_)) {
   glGenVertexArrays(1, &VAO_);
   glGenBuffers(1, &VBO_);
   glGenBuffers(1, &EBO_);
@@ -27,6 +28,9 @@ Terrain::Terrain(int size, int width, int length)
 
   NormalmapRenderer nm_renderer;
   normalmap_ = nm_renderer.Render(heightmap_);
+
+  heightmap_.Bind();
+  glGetTexImage(GL_TEXTURE_2D, 0, GL_RED, GL_FLOAT, heights_.data());
 
   BuildVAO();
 
@@ -48,14 +52,15 @@ void Terrain::Draw(Shader &shader) {
   glDrawElements(GL_TRIANGLES, indices_count_, GL_UNSIGNED_INT, 0);
 }
 
+float Terrain::GetHeight(int x, int y) const { return 0.0; }
+
 void Terrain::GenerateVertices() {
   for (int i = 0; i < res_z_; i++) {
     for (int j = 0; j < res_x_; j++) {
       float x = (j - (res_x_ - 1) / 2.0f) * size_ / res_x_;
       float z = (i - (res_z_ - 1) / 2.0f) * size_ / res_z_;
-      float y = 0.0f;
       Vertex v = {
-          glm::vec3(x, y, z),
+          glm::vec2(x, z),
           glm::vec2(static_cast<float>(j) / res_x_,
                     static_cast<float>(i) / res_z_),
       };
@@ -92,7 +97,7 @@ void Terrain::BuildVAO() {
                indices_.data(), GL_STATIC_DRAW);
 
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                         static_cast<void *>(0));
 
   glEnableVertexAttribArray(1);
