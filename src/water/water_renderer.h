@@ -25,7 +25,7 @@ class WaterRenderer {
   WaterMaterial &GetMaterial() { return material_; }
 
  private:
-  Shader *water_shader_;
+  Shader *shader_;
   std::unique_ptr<Water> water_;
   Texture *dudv_map_;
   Texture *normal_map_;

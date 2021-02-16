@@ -4,14 +4,14 @@
 #include <GLFW/glfw3.h>
 
 WaterRenderer::WaterRenderer(int width, int height) : height_(2.0f) {
-  water_shader_ = &ResourceManager::GetShader("water");
+  shader_ = &ResourceManager::GetShader("water");
 
-  water_shader_->Use();
-  water_shader_->SetInt("reflection", 0);
-  water_shader_->SetInt("refraction", 1);
-  water_shader_->SetInt("dudv", 2);
-  water_shader_->SetInt("normalmap", 3);
-  water_shader_->SetInt("depthmap", 4);
+  shader_->Use();
+  shader_->SetInt("reflection", 0);
+  shader_->SetInt("refraction", 1);
+  shader_->SetInt("dudv", 2);
+  shader_->SetInt("normalmap", 3);
+  shader_->SetInt("depthmap", 4);
 
   water_ = std::make_unique<Water>();
   material_.specular_power = 32.0f;
@@ -51,7 +51,7 @@ void WaterRenderer::BindRefractionFramebuffer() {
 void WaterRenderer::Render(Camera *camera, DirectionalLight *sun) {
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  water_shader_->Use();
+  shader_->Use();
 
   reflection_framebuffer_->GetTexture(0)->Bind(0);
   refraction_framebuffer_->GetTexture(0)->Bind(1);
@@ -63,19 +63,19 @@ void WaterRenderer::Render(Camera *camera, DirectionalLight *sun) {
   model = glm::translate(model, glm::vec3(0.0f, height_, 0.0f));
   model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 
-  water_shader_->SetMat4("model", model);
-  water_shader_->SetMat4("view", camera->getViewMatrix());
-  water_shader_->SetMat4("projection", camera->getProjectionMatrix());
-  water_shader_->SetFloat("time", glfwGetTime());
-  water_shader_->SetVec3("camera_position", camera->position);
-  water_shader_->SetFloat("camera_near", camera->near);
-  water_shader_->SetFloat("camera_far", camera->far);
-  water_shader_->SetVec3("sun.direction", sun->GetDirection());
-  water_shader_->SetVec3("sun.color", sun->GetColor());
-  water_shader_->SetFloat("sun.intensity", sun->GetIntensity());
-  water_shader_->SetFloat("reflection_power", material_.reflection_power);
-  water_shader_->SetFloat("specular_power", material_.specular_power);
-  water_shader_->SetFloat("dudv_tiling", material_.dudv_tiling);
+  shader_->SetMat4("model", model);
+  shader_->SetMat4("view", camera->getViewMatrix());
+  shader_->SetMat4("projection", camera->getProjectionMatrix());
+  shader_->SetFloat("time", glfwGetTime());
+  shader_->SetVec3("camera_position", camera->position);
+  shader_->SetFloat("camera_near", camera->near);
+  shader_->SetFloat("camera_far", camera->far);
+  shader_->SetVec3("sun.direction", sun->GetDirection());
+  shader_->SetVec3("sun.color", sun->GetColor());
+  shader_->SetFloat("sun.intensity", sun->GetIntensity());
+  shader_->SetFloat("reflection_power", material_.reflection_power);
+  shader_->SetFloat("specular_power", material_.specular_power);
+  shader_->SetFloat("dudv_tiling", material_.dudv_tiling);
 
   water_->Draw();
 
