@@ -17,7 +17,7 @@ struct WaterMaterial {
 class WaterRenderer {
  public:
   WaterRenderer(int width, int height);
-  void Render(Camera *camera, DirectionalLight *sun, glm::mat4 projection);
+  void Render(Camera *camera, DirectionalLight *sun);
   void BindReflectionFramebuffer();
   void BindRefractionFramebuffer();
   float GetHeight() const { return height_; }

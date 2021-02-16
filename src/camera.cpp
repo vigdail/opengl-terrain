@@ -2,30 +2,21 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-Camera::Camera()
-    : position(glm::vec3(0.0f, 0.0f, 0.0f)),
+Camera::Camera() : Camera(45.0f, 800.0f / 600.0f, 0.1f, 1000.0f) {}
+
+Camera::Camera(float fov, float aspect, float near, float far)
+    : position(glm::vec3(0.0f)),
       front(glm::vec3(0.0f, 0.0f, -1.0f)),
       worldUp(glm::vec3(0.0f, 1.0f, 0.0f)),
       yaw(YAW),
       pitch(PITCH),
       speed(SPEED),
       sensitivity(SENSITIVITY),
-      fov(FOV),
-      active_(true) {
-  updateVectors();
-}
-
-// @TODO: refactor this
-Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
-    : position(position),
-      front(glm::vec3(0.0f, 0.0f, -1.0f)),
-      worldUp(up),
-      yaw(yaw),
-      pitch(pitch),
-      speed(SPEED),
-      sensitivity(SENSITIVITY),
-      fov(FOV),
-      active_(true) {
+      fov(fov),
+      near(near),
+      far(far),
+      active_(true),
+      projection_(glm::perspective(glm::radians(fov), aspect, near, far)) {
   updateVectors();
 }
 
@@ -84,20 +75,6 @@ void Camera::handleMouseMovement(float dx, float dy, bool contrainPitch) {
   }
 
   updateVectors();
-}
-
-void Camera::handleMouseScroll(float dy) {
-  if (!active_) {
-    return;
-  }
-  fov -= dy;
-
-  if (fov > 45.0f) {
-    fov = 45.0f;
-  }
-  if (fov < 1.0f) {
-    fov = 1.0f;
-  }
 }
 
 void Camera::updateVectors() {

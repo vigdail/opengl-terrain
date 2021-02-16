@@ -23,6 +23,9 @@ uniform float dudv_tiling;
 uniform float specular_power;
 uniform float reflection_power;
 
+uniform float camera_near;
+uniform float camera_far;
+
 out vec4 fragColor;
 
 void main() {
@@ -30,13 +33,10 @@ void main() {
     vec2 refractionUV = ndc;
     vec2 reflectionUV = vec2(ndc.x, 1.0 - ndc.y);
 
-    // @TODO: Read from camera
-    float near = 0.1;
-    float far = 1000.0;
     float depth = texture(depthmap, refractionUV).r;
-    float floorDistance = 2.0 * far * near / (far + near - (2.0 * depth - 1.0) * (far - near)); 
+    float floorDistance = 2.0 * camera_far * camera_near / (camera_far + camera_near - (2.0 * depth - 1.0) * (camera_far - camera_near)); 
     depth = gl_FragCoord.z;
-    float waterDistance = 2.0 * far * near / (far + near - (2.0 * depth - 1.0) * (far - near)); 
+    float waterDistance = 2.0 * camera_far * camera_near / (camera_far + camera_near - (2.0 * depth - 1.0) * (camera_far - camera_near)); 
     float waterDepth = floorDistance - waterDistance;
 
     vec2 distUV = texture(dudv, vec2(fragUV.x + time / 500.0), fragUV.y).rg * 0.01;

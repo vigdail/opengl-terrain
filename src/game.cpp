@@ -16,13 +16,12 @@ Game::Game(uint width, uint height)
     : width_(width),
       height_(height),
       keys_(),
-      camera_(Camera(glm::vec3(0.0f, 4.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f))),
+      camera_(Camera(60.0f, 1.0f * width_ / height_, 0.1f, 1000.0f)),
       light_(DirectionalLight(glm::vec3(0.0f), glm::vec3(0.0f))),
-      projection_(glm::perspective(glm::radians(60.0f), 1.0f * width_ / height_,
-                                   0.1f, 1000.0f)),
       mouse_last_x_(0.0),
       mouse_last_y_(0.0) {
   LoadAssets();
+  camera_.position = glm::vec3(0.0f, 3.0f, 0.0f);
   terrain_ = std::make_unique<Terrain>(100, 1024, 1024);
   skybox_ = std::make_unique<Skybox>();
   water_ = std::make_shared<WaterRenderer>(width_, height_);
@@ -98,7 +97,7 @@ void Game::Render() {
   glViewport(0, 0, width_, height_);
   RenderScene(glm::vec4(0.0f));
 
-  water_->Render(&camera_, &light_, projection_);
+  water_->Render(&camera_, &light_);
 
   gui_->Render();
 }
@@ -109,7 +108,7 @@ void Game::RenderScene(glm::vec4 clip_plane) {
 
   terrainShader.Use();
   terrainShader.SetMat4("view", camera_.getViewMatrix());
-  terrainShader.SetMat4("projection", projection_);
+  terrainShader.SetMat4("projection", camera_.getProjectionMatrix());
   terrainShader.SetVec3("light.direction",
                         glm::normalize(light_.GetDirection()));
   terrainShader.SetVec3("light.color", light_.GetColor());
@@ -121,7 +120,7 @@ void Game::RenderScene(glm::vec4 clip_plane) {
   glFrontFace(GL_CW);
   skyboxShader.Use();
   skyboxShader.SetMat4("view", glm::mat4(glm::mat3(camera_.getViewMatrix())));
-  skyboxShader.SetMat4("projection", projection_);
+  skyboxShader.SetMat4("projection", camera_.getProjectionMatrix());
   skyboxShader.SetVec3("camera", camera_.position);
   skyboxShader.SetVec3("sun.direction", glm::normalize(light_.GetDirection()));
   skyboxShader.SetVec3("sun.color", light_.GetColor());

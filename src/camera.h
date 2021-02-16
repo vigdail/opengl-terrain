@@ -14,7 +14,6 @@ const float YAW = -90.0f;
 const float PITCH = 0.0f;
 const float SPEED = 5.0f;
 const float SENSITIVITY = 0.1f;
-const float FOV = 60.0f;
 
 class Camera {
  public:
@@ -31,12 +30,14 @@ class Camera {
   float speed;
   float sensitivity;
   float fov;
+  float near;
+  float far;
 
   Camera();
-  Camera(glm::vec3 position, glm::vec3 up, float yaw = YAW,
-         float pitch = PITCH);
+  Camera(float fov, float aspect, float near, float far);
 
   glm::mat4 getViewMatrix();
+  glm::mat4 getProjectionMatrix() { return projection_; }
 
   void move(CameraMovement direction, float dt);
   void handleMouseMovement(float dx, float dy, bool contrainPitch = true);
@@ -48,5 +49,6 @@ class Camera {
 
  private:
   bool active_;
+  glm::mat4 projection_;
   void updateVectors();
 };
