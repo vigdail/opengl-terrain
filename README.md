@@ -25,7 +25,7 @@ Make sure you have ```opengl version>=4.5```, ```glfw``` and ```glm``` installed
 - [x] Water
 - [x] First person camera movement
 - [ ] Multiple texture layers
-- [ ] Lens flare effect
 - [ ] Grass
+- [ ] Lens flare effect
 - [ ] Cascade shadows
 - [ ] Quad tree based terrain tesselation

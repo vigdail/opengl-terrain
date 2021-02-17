@@ -19,6 +19,7 @@ class Terrain {
   Terrain(int size, int res_x, int res_z);
   void Draw(Shader &shader);
   float GetHeight(float x, float z) const;
+  void SetScaleY(float scale_y) { scale_y_ = scale_y; }
 
  private:
   int res_x_;
@@ -41,5 +42,4 @@ class Terrain {
   void GenerateIndices();
   void BuildVAO();
   int GetIndex(int x, int z) { return z * res_x_ + x; }
-  void SetScaleY(float scale_y) { scale_y_ = scale_y; }
 };
