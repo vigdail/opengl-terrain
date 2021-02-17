@@ -13,6 +13,7 @@ Terrain::Terrain(int size, int width, int length)
     : res_x_(width),
       res_z_(length),
       size_(size),
+      scale_y_(15.0f),
       vertices_(std::vector<Vertex>(res_x_ * res_z_)),
       indices_(std::vector<int>((res_x_ - 1) * (res_z_ - 1) * 2 * 3)),
       heights_(std::vector<float>(res_x_ * res_z_)) {
@@ -45,6 +46,7 @@ void Terrain::Draw(Shader &shader) {
   shader.SetMat4("model", model);
   shader.SetInt("heightmap", 0);
   shader.SetInt("normalmap", 1);
+  shader.SetFloat("scale_y", scale_y_);
   shader.SetVec3("color", glm::vec3(0.45f, 0.4f, 0.3f));
   heightmap_.Bind(0);
   normalmap_.Bind(1);
@@ -52,7 +54,40 @@ void Terrain::Draw(Shader &shader) {
   glDrawElements(GL_TRIANGLES, indices_count_, GL_UNSIGNED_INT, 0);
 }
 
-float Terrain::GetHeight(int x, int y) const { return 0.0; }
+float Terrain::GetHeight(float x, float z) const {
+  float h = 0;
+
+  glm::vec2 pos(x, z);
+
+  pos = pos * glm::vec2(res_x_, res_z_) / static_cast<float>(size_) +
+        glm::vec2(res_x_ - 1, res_z_ - 1) / 2.0f;
+  int x0 = std::floor(pos.x);
+  int x1 = x0 + 1;
+  int z0 = std::floor(pos.y);
+  int z1 = z0 + 1;
+
+  float h0 = heights_[res_x_ * z0 + x0];
+  float h1 = heights_[res_x_ * z0 + x1];
+  float h2 = heights_[res_x_ * z1 + x0];
+  float h3 = heights_[res_x_ * z1 + x1];
+
+  float percent_u = pos.x - x0;
+  float percent_v = pos.y - z0;
+
+  float dU, dV;
+  if (percent_u > percent_v) {
+    dU = h1 - h0;
+    dV = h3 - h1;
+  } else {
+    dU = h3 - h2;
+    dV = h2 - h0;
+  }
+
+  h = h0 + (dU * percent_u) + (dV * percent_v);
+  h *= scale_y_;
+
+  return h;
+}
 
 void Terrain::GenerateVertices() {
   for (int i = 0; i < res_z_; i++) {

@@ -69,6 +69,8 @@ void Game::ProcessInput(float dt) {
   if (keys_[GLFW_KEY_D]) {
     camera_.move(CameraMovement::RIGHT, dt);
   }
+  camera_.position.y =
+      terrain_->GetHeight(camera_.position.x, camera_.position.z) + 1.7f;
 }
 
 void Game::Update(float dt) { gui_->Update(dt); }

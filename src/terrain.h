@@ -18,12 +18,13 @@ class Terrain {
   explicit Terrain(int size);
   Terrain(int size, int res_x, int res_z);
   void Draw(Shader &shader);
-  float GetHeight(int x, int z) const;
+  float GetHeight(float x, float z) const;
 
  private:
   int res_x_;
   int res_z_;
   int size_;
+  float scale_y_;
   std::vector<Vertex> vertices_;
   std::vector<int> indices_;
   std::vector<float> heights_;
@@ -40,4 +41,5 @@ class Terrain {
   void GenerateIndices();
   void BuildVAO();
   int GetIndex(int x, int z) { return z * res_x_ + x; }
+  void SetScaleY(float scale_y) { scale_y_ = scale_y; }
 };
