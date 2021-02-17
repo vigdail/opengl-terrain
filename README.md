@@ -23,7 +23,7 @@ Make sure you have ```opengl version>=4.5```, ```glfw``` and ```glm``` installed
 - [x] Procedural skybox
 - [x] Rendering procedural sun (+ day/night cycle)
 - [x] Water
-- [ ] First person camera movement
+- [x] First person camera movement
 - [ ] Multiple texture layers
 - [ ] Lens flare effect
 - [ ] Grass
