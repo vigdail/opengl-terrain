@@ -9,6 +9,7 @@
 #include "gui/gui_skybox.h"
 #include "gui/gui_sun.h"
 #include "gui/gui_water.h"
+#include "gui/gui_terrain.h"
 
 const uint Game::kKeysCount_;
 
@@ -22,7 +23,7 @@ Game::Game(uint width, uint height)
       mouse_last_y_(0.0) {
   LoadAssets();
   camera_.position = glm::vec3(0.0f, 3.0f, 0.0f);
-  terrain_ = std::make_unique<Terrain>(100, 1024, 1024);
+  terrain_ = std::make_shared<Terrain>(100, 1024, 1024);
   skybox_ = std::make_unique<Skybox>();
   water_ = std::make_shared<WaterRenderer>(width_, height_);
   quad_ = std::make_unique<Quad>();
@@ -31,6 +32,7 @@ Game::Game(uint width, uint height)
   gui_->AddPanel(new GUISkyboxPanel(skybox_->GetAtmosphere()));
   gui_->AddPanel(new GUISunPanel(&light_));
   gui_->AddPanel(new GUIWaterPanel(water_));
+  gui_->AddPanel(new GUITerrainPanel(terrain_));
 }
 
 void Game::LoadAssets() {

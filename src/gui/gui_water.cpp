@@ -1,4 +1,5 @@
 #include "gui_water.h"
+#include <imgui/imgui.h>
 
 GUIWaterPanel::GUIWaterPanel(std::shared_ptr<WaterRenderer> water)
     : water_(water) {}

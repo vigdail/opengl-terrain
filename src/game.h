@@ -37,7 +37,7 @@ class Game {
   Camera camera_;
   DirectionalLight light_;
   // glm::mat4 projection_;
-  std::unique_ptr<Terrain> terrain_;
+  std::shared_ptr<Terrain> terrain_;
   std::unique_ptr<GUILayer> gui_;
   std::unique_ptr<Skybox> skybox_;
   std::shared_ptr<WaterRenderer> water_;

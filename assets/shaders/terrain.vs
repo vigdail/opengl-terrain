@@ -15,7 +15,7 @@ out vec2 fragUV;
 uniform sampler2D heightmap;
 
 void main() {
-    float y = texture(heightmap, uv).r  * scale_y;
+    float y = texture(heightmap, uv).r * scale_y;
     vec3 p = vec3(position.x, y, position.y);
     vec4 worldPos = model * vec4(p, 1.0);
     fragPos = projection * view * worldPos;

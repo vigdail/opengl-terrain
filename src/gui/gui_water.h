@@ -2,7 +2,6 @@
 
 #include "gui_panel.h"
 #include "../water/water_renderer.h"
-#include <imgui/imgui.h>
 #include <memory>
 
 class GUIWaterPanel : public GUIPanel {

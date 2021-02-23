@@ -6,13 +6,6 @@
 WaterRenderer::WaterRenderer(int width, int height) : height_(2.0f) {
   shader_ = &ResourceManager::GetShader("water");
 
-  shader_->Use();
-  shader_->SetInt("reflection", 0);
-  shader_->SetInt("refraction", 1);
-  shader_->SetInt("dudv", 2);
-  shader_->SetInt("normalmap", 3);
-  shader_->SetInt("depthmap", 4);
-
   water_ = std::make_unique<Water>();
   material_.specular_power = 32.0f;
   material_.reflection_power = 0.5f;
@@ -52,6 +45,12 @@ void WaterRenderer::Render(Camera *camera, DirectionalLight *sun) {
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   shader_->Use();
+
+  shader_->SetInt("reflection", 0);
+  shader_->SetInt("refraction", 1);
+  shader_->SetInt("dudv", 2);
+  shader_->SetInt("normalmap", 3);
+  shader_->SetInt("depthmap", 4);
 
   reflection_framebuffer_->GetTexture(0)->Bind(0);
   refraction_framebuffer_->GetTexture(0)->Bind(1);
