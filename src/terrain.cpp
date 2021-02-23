@@ -13,7 +13,7 @@ Terrain::Terrain(int size, int width, int length)
     : res_x_(width),
       res_z_(length),
       size_(size),
-      scale_y_(15.0f),
+      scale_y_(100.0f),
       vertices_(std::vector<Vertex>(res_x_ * res_z_)),
       indices_(std::vector<int>((res_x_ - 1) * (res_z_ - 1) * 2 * 3)),
       heights_(std::vector<float>(res_x_ * res_z_)) {

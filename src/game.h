@@ -36,7 +36,6 @@ class Game {
   bool keys_[kKeysCount_];
   Camera camera_;
   DirectionalLight light_;
-  // glm::mat4 projection_;
   std::shared_ptr<Terrain> terrain_;
   std::unique_ptr<GUILayer> gui_;
   std::unique_ptr<Skybox> skybox_;

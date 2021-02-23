@@ -3,7 +3,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <GLFW/glfw3.h>
 
-WaterRenderer::WaterRenderer(int width, int height) : height_(2.0f) {
+WaterRenderer::WaterRenderer(int width, int height) : height_(15.0f) {
   shader_ = &ResourceManager::GetShader("water");
 
   water_ = std::make_unique<Water>();

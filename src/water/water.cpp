@@ -22,10 +22,10 @@ void Water::Draw() {
 
 void Water::BuildVAO() {
   std::array<Vertex, 4> vertices_ = {
-      glm::vec3(-1.0f, 0.0f, -1.0f) * 50.0f, glm::vec2(0.0f, 0.0f),
-      glm::vec3(-1.0f, 0.0f, 1.0f) * 50.0f,  glm::vec2(0.0f, 1.0f),
-      glm::vec3(1.0f, 0.0f, -1.0f) * 50.0f,  glm::vec2(1.0f, 0.0f),
-      glm::vec3(1.0f, 0.0f, 1.0f) * 50.0f,   glm::vec2(1.0f, 1.0f),
+      glm::vec3(-1.0f, 0.0f, -1.0f) * 500.0f, glm::vec2(0.0f, 0.0f),
+      glm::vec3(-1.0f, 0.0f, 1.0f) * 500.0f,  glm::vec2(0.0f, 1.0f),
+      glm::vec3(1.0f, 0.0f, -1.0f) * 500.0f,  glm::vec2(1.0f, 0.0f),
+      glm::vec3(1.0f, 0.0f, 1.0f) * 500.0f,   glm::vec2(1.0f, 1.0f),
   };
   std::array<unsigned int, 6> indices_ = {0, 1, 2, 2, 1, 3};
 

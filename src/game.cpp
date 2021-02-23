@@ -23,7 +23,7 @@ Game::Game(uint width, uint height)
       mouse_last_y_(0.0) {
   LoadAssets();
   camera_.position = glm::vec3(0.0f, 3.0f, 0.0f);
-  terrain_ = std::make_shared<Terrain>(100, 1024, 1024);
+  terrain_ = std::make_shared<Terrain>(1000, 1024, 1024);
   skybox_ = std::make_unique<Skybox>();
   water_ = std::make_shared<WaterRenderer>(width_, height_);
   quad_ = std::make_unique<Quad>();
@@ -71,11 +71,13 @@ void Game::ProcessInput(float dt) {
   if (keys_[GLFW_KEY_D]) {
     camera_.move(CameraMovement::RIGHT, dt);
   }
-  camera_.position.y =
-      terrain_->GetHeight(camera_.position.x, camera_.position.z) + 1.7f;
 }
 
-void Game::Update(float dt) { gui_->Update(dt); }
+void Game::Update(float dt) {
+  camera_.position.y =
+      terrain_->GetHeight(camera_.position.x, camera_.position.z) + 1.7f;
+  gui_->Update(dt);
+}
 
 void Game::Render() {
   // Water refraction pass
@@ -90,7 +92,7 @@ void Game::Render() {
   float dy = 2.0f * (camera_.position.y - water_->GetHeight());
   camera_.position.y -= dy;
   camera_.InvertPitch();
-  RenderScene(glm::vec4(0.0f, 1.0f, 0.0f, -water_->GetHeight() + 0.05f));
+  RenderScene(glm::vec4(0.0f, 1.0f, 0.0f, -water_->GetHeight() + 0.07f));
   camera_.InvertPitch();
   camera_.position.y += dy;
 

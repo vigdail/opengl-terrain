@@ -7,7 +7,7 @@ GUIWaterPanel::GUIWaterPanel(std::shared_ptr<WaterRenderer> water)
 void GUIWaterPanel::Render() {
   ImGui::Begin("Water");
   float height = water_->GetHeight();
-  if (ImGui::SliderFloat("Height", &height, 0.0f, 15.0f, "%.1f")) {
+  if (ImGui::SliderFloat("Height", &height, 0.0f, 150.0f, "%.1f")) {
     water_->SetHeight(height);
   }
   WaterMaterial& material = water_->GetMaterial();
