@@ -6,11 +6,17 @@
 HeightmapRenderer::HeightmapRenderer() {}
 
 Texture HeightmapRenderer::Render(int width, int height, int octaves) {
-  Texture heightmap;
-  heightmap.internal_format = GL_R32F;
-  heightmap.image_format = GL_RED;
-  heightmap.type = GL_FLOAT;
-  heightmap.Generate(width, height, NULL);
+  TextureViewDescriptor view{};
+  view.internal_format = GL_R32F;
+  view.image_format = GL_RED;
+  view.type = GL_FLOAT;
+  view.width = width;
+  view.height = height;
+  Texture heightmap = TextureBuilder().WithView(view).Build();
+  // heightmap.internal_format = GL_R32F;
+  // heightmap.image_format = GL_RED;
+  // heightmap.type = GL_FLOAT;
+  // heightmap.Generate(width, height, NULL);
   heightmap.BindImage();
 
   ShaderHandle shader = ResourceManager::GetShader("compute_heightmap");

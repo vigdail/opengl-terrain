@@ -22,7 +22,7 @@ Scene::Scene(uint width, uint height)
       mouse_last_x_(0.0),
       mouse_last_y_(0.0) {
   LoadAssets();
-  camera_.position = glm::vec3(0.0f, 3.0f, 0.0f);
+  camera_.position = glm::vec3(-200.0f, 3.0f, 0.0f);
   terrain_ = std::make_shared<Terrain>(1000, 1024, 1024);
   skybox_ = std::make_unique<Skybox>();
   water_ = std::make_shared<WaterRenderer>(width_, height_);
@@ -72,10 +72,11 @@ void Scene::LoadAssets() {
       ShaderBuilder().Load("../assets/shaders/compute/heightmap.comp",
                            ShaderModule::Type::Compute));
 
-  ResourceManager::LoadTexture("water_dudv",
-                               "../assets/textures/water_dudv.png");
-  ResourceManager::LoadTexture("water_normal",
-                               "../assets/textures/water_normalmap.png");
+  ResourceManager::AddTexture(
+      "water_dudv", TextureBuilder().Load("../assets/textures/water_dudv.png"));
+  ResourceManager::AddTexture(
+      "water_normal",
+      TextureBuilder().Load("../assets/textures/water_normalmap.png"));
 }
 
 void Scene::ProcessInput(float dt) {

@@ -22,11 +22,11 @@ WaterRenderer::WaterRenderer(int width, int height) : height_(15.0f) {
   spec.height = height / 4;
   reflection_framebuffer_ = std::make_unique<FrameBuffer>(spec);
 
-  dudv_map_ = &ResourceManager::GetTexture("water_dudv");
+  dudv_map_ = ResourceManager::GetTexture("water_dudv");
   dudv_map_->Bind();
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  normal_map_ = &ResourceManager::GetTexture("water_normal");
+  normal_map_ = ResourceManager::GetTexture("water_normal");
   normal_map_->Bind();
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);

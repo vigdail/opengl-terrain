@@ -5,7 +5,7 @@ std::string ReadFile(std::string_view path) {
 
   if (!file.is_open()) {
     std::cerr << "Failed to open file: " << path.data() << '\n';
-    throw std::runtime_error("Shader compilation error for shader");
+    throw std::runtime_error("Failed to open file");
   }
 
   std::stringstream ss;

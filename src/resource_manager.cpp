@@ -18,39 +18,10 @@ ShaderHandle ResourceManager::GetShader(std::string name) {
   return &shaders_[name];
 }
 
-void ResourceManager::LoadTexture(std::string name,
-                                  const std::filesystem::path &path) {
-  textures_.emplace(name, loadTextureFromFile(path));
+void ResourceManager::AddTexture(std::string name,
+                                 const TextureBuilder &builder) {
+  textures_.emplace(name, builder.Build());
 }
-Texture &ResourceManager::GetTexture(std::string name) {
-  return textures_[name];
-}
-
-Texture ResourceManager::loadTextureFromFile(
-    const std::filesystem::path &path) {
-  int width;
-  int height;
-  int n_channels;
-
-  unsigned char *data =
-      stbi_load(path.c_str(), &width, &height, &n_channels, 0);
-
-  if (!data) {
-    std::cerr << "ERROR::TEXTURE: Unable to load texture from file: " << path
-              << std::endl;
-  }
-
-  Texture texture;
-  if (n_channels == 1) {
-    texture.image_format = GL_RED;
-    texture.internal_format = GL_RED;
-  } else if (n_channels == 4) {
-    texture.image_format = GL_RGBA;
-    texture.internal_format = GL_RGBA;
-  }
-
-  texture.Generate(width, height, data);
-  stbi_image_free(data);
-
-  return texture;
+TextureHandle ResourceManager::GetTexture(std::string name) {
+  return &textures_[name];
 }

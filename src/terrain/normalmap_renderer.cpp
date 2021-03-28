@@ -6,11 +6,17 @@
 NormalmapRenderer::NormalmapRenderer() {}
 
 Texture NormalmapRenderer::Render(const Texture& heightmap) {
-  Texture normalmap;
-  normalmap.internal_format = GL_RGBA32F;
-  normalmap.image_format = GL_RGBA;
-  normalmap.type = GL_FLOAT;
-  normalmap.Generate(heightmap.GetWidth(), heightmap.GetHeight(), NULL);
+  TextureViewDescriptor view{};
+  view.internal_format = GL_RGBA32F;
+  view.image_format = GL_RGBA;
+  view.type = GL_FLOAT;
+  view.width = heightmap.GetWidth();
+  view.height = heightmap.GetHeight();
+  Texture normalmap = TextureBuilder().WithView(view).Build();
+  // normalmap.internal_format = GL_RGBA32F;
+  // normalmap.image_format = GL_RGBA;
+  // normalmap.type = GL_FLOAT;
+  // normalmap.Generate(heightmap.GetWidth(), heightmap.GetHeight(), NULL);
   normalmap.BindImage();
 
   ShaderHandle shader = ResourceManager::GetShader("compute_normalmap");
