@@ -1,7 +1,7 @@
 #pragma once
 
 #include "gui_panel.h"
-#include "../terrain.h"
+#include "../terrain/terrain.h"
 #include <memory>
 
 class GUITerrainPanel : public GUIPanel {

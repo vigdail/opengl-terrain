@@ -1,7 +1,7 @@
 #include "normalmap_renderer.h"
 
 #include <iostream>
-#include "resource_manager.h"
+#include "../resource_manager.h"
 
 NormalmapRenderer::NormalmapRenderer() {}
 

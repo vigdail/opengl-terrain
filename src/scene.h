@@ -8,15 +8,15 @@
 #include "camera.h"
 #include "light/directional_light.h"
 #include "resource_manager.h"
-#include "terrain.h"
-#include "skybox.h"
+#include "terrain/terrain.h"
+#include "skybox/skybox.h"
 #include "water/water_renderer.h"
 #include "gui/gui_layer.h"
 #include "quad.h"
 
-class Game {
+class Scene {
  public:
-  Game(uint width, uint height);
+  Scene(uint width, uint height);
   void LoadAssets();
   void ProcessInput(float dt);
   void Update(float dt);

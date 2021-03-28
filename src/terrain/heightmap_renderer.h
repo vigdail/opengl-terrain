@@ -1,6 +1,6 @@
 #pragma once
 
-#include "texture.h"
+#include "../texture.h"
 
 class HeightmapRenderer {
  public:

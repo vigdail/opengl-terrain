@@ -1,7 +1,7 @@
 #include "heightmap_renderer.h"
 
 #include <iostream>
-#include "resource_manager.h"
+#include "../resource_manager.h"
 
 HeightmapRenderer::HeightmapRenderer() {}
 

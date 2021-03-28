@@ -4,8 +4,8 @@
 #include <glm/glm.hpp>
 #include <memory>
 
-#include "shader.h"
-#include "texture.h"
+#include "../shader.h"
+#include "../texture.h"
 
 class Terrain {
   struct Vertex {

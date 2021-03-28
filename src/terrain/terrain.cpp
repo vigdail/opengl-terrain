@@ -1,7 +1,7 @@
 #include "terrain.h"
 #include "normalmap_renderer.h"
 #include "heightmap_renderer.h"
-#include "resource_manager.h"
+#include "../resource_manager.h"
 
 #include <glad/glad.h>
 

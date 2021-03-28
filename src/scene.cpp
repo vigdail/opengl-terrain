@@ -1,4 +1,4 @@
-#include "game.h"
+#include "scene.h"
 #include "application.h"
 
 #include <iostream>
@@ -11,9 +11,9 @@
 #include "gui/gui_water.h"
 #include "gui/gui_terrain.h"
 
-const uint Game::kKeysCount_;
+const uint Scene::kKeysCount_;
 
-Game::Game(uint width, uint height)
+Scene::Scene(uint width, uint height)
     : width_(width),
       height_(height),
       keys_(),
@@ -35,7 +35,7 @@ Game::Game(uint width, uint height)
   gui_->AddPanel(new GUITerrainPanel(terrain_));
 }
 
-void Game::LoadAssets() {
+void Scene::LoadAssets() {
   ResourceManager::LoadShader("terrain", "../assets/shaders/terrain.vs",
                               "../assets/shaders/terrain.fs");
   ResourceManager::LoadShader("skybox", "../assets/shaders/skybox.vs",
@@ -58,7 +58,7 @@ void Game::LoadAssets() {
                                "../assets/textures/water_normalmap.png");
 }
 
-void Game::ProcessInput(float dt) {
+void Scene::ProcessInput(float dt) {
   if (keys_[GLFW_KEY_W]) {
     camera_.move(CameraMovement::FORWARD, dt);
   }
@@ -73,13 +73,13 @@ void Game::ProcessInput(float dt) {
   }
 }
 
-void Game::Update(float dt) {
+void Scene::Update(float dt) {
   camera_.position.y =
       terrain_->GetHeight(camera_.position.x, camera_.position.z) + 1.7f;
   gui_->Update(dt);
 }
 
-void Game::Render() {
+void Scene::Render() {
   // Water refraction pass
   water_->BindRefractionFramebuffer();
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -108,7 +108,7 @@ void Game::Render() {
   gui_->Render();
 }
 
-void Game::RenderScene(glm::vec4 clip_plane) {
+void Scene::RenderScene(glm::vec4 clip_plane) {
   Shader &terrainShader = ResourceManager::GetShader("terrain");
   Shader &skyboxShader = ResourceManager::GetShader("skybox");
 
@@ -136,7 +136,7 @@ void Game::RenderScene(glm::vec4 clip_plane) {
   glDepthFunc(GL_LESS);
 }
 
-void Game::OnKeyEvent(int key, int scancode, int action, int mode) {
+void Scene::OnKeyEvent(int key, int scancode, int action, int mode) {
   gui_->OnKeyEvent(key, scancode, action, mode);
 
   if (action == GLFW_PRESS) {
@@ -149,11 +149,11 @@ void Game::OnKeyEvent(int key, int scancode, int action, int mode) {
   }
 }
 
-void Game::OnMouseButtonEvent(int button, int action, int mode) {
+void Scene::OnMouseButtonEvent(int button, int action, int mode) {
   gui_->OnMouseButtonEvent(button, action, mode);
 }
 
-void Game::OnMousePositionEvent(double x, double y) {
+void Scene::OnMousePositionEvent(double x, double y) {
   float offsetX = x - mouse_last_x_;
   float offsetY = mouse_last_y_ - y;
 
@@ -165,19 +165,19 @@ void Game::OnMousePositionEvent(double x, double y) {
   gui_->OnMousePositionEvent(x, y);
 }
 
-void Game::SetKeyPressed(uint key) {
+void Scene::SetKeyPressed(uint key) {
   if (key < kKeysCount_) {
     keys_[key] = true;
   }
 }
 
-void Game::SetKeyReleased(uint key) {
+void Scene::SetKeyReleased(uint key) {
   if (key < kKeysCount_) {
     keys_[key] = false;
   }
 }
 
-bool Game::IsKeyPressed(uint key) {
+bool Scene::IsKeyPressed(uint key) {
   if (key < kKeysCount_) {
     return keys_[key];
   }

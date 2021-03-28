@@ -4,8 +4,9 @@
 #include <GLFW/glfw3.h>
 
 #include <memory>
+#include <unordered_map>
 
-#include "./game.h"
+#include "./scene.h"
 #include "./gui/gui_layer.h"
 
 class Application {
@@ -17,7 +18,7 @@ class Application {
 
  private:
   GLFWwindow *window_;
-  std::unique_ptr<Game> game_;
+  std::unique_ptr<Scene> scene_;
   unsigned int width_;
   unsigned int height_;
 
