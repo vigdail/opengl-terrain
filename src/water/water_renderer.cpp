@@ -1,10 +1,9 @@
 #include "water_renderer.h"
-#include "../resource_manager.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <GLFW/glfw3.h>
 
 WaterRenderer::WaterRenderer(int width, int height) : height_(15.0f) {
-  shader_ = &ResourceManager::GetShader("water");
+  shader_ = ResourceManager::GetShader("water");
 
   water_ = std::make_unique<Water>();
   material_.specular_power = 32.0f;

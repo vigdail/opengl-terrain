@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "water.h"
+#include "../resource_manager.h"
 #include "../camera.h"
 #include "../shader.h"
 #include "../frame_buffer.h"
@@ -25,7 +26,7 @@ class WaterRenderer {
   WaterMaterial &GetMaterial() { return material_; }
 
  private:
-  Shader *shader_;
+  ShaderHandle shader_;
   std::unique_ptr<Water> water_;
   Texture *dudv_map_;
   Texture *normal_map_;

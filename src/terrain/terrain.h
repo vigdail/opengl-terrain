@@ -6,6 +6,7 @@
 
 #include "../shader.h"
 #include "../texture.h"
+#include "../resource_manager.h"
 
 class Terrain {
   struct Vertex {
@@ -17,7 +18,7 @@ class Terrain {
   Terrain();
   explicit Terrain(int size);
   Terrain(int size, int res_x, int res_z);
-  void Draw(Shader &shader);
+  void Draw(ShaderHandle shader);
   float GetHeight(float x, float z) const;
   float GetScaleY() { return scale_y_; }
   void SetScaleY(float scale_y) { scale_y_ = scale_y; }

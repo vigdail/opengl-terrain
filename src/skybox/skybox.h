@@ -2,6 +2,7 @@
 
 #include "../shader.h"
 #include "../sphere.h"
+#include "../resource_manager.h"
 
 #include <glm/glm.hpp>
 
@@ -34,7 +35,7 @@ struct Atmosphere {
 class Skybox {
  public:
   Skybox();
-  void Draw(Shader& shader);
+  void Draw(ShaderHandle shader);
   Atmosphere& GetAtmosphere();
 
  private:

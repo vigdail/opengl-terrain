@@ -36,21 +36,41 @@ Scene::Scene(uint width, uint height)
 }
 
 void Scene::LoadAssets() {
-  ResourceManager::LoadShader("terrain", "../assets/shaders/terrain.vs",
-                              "../assets/shaders/terrain.fs");
-  ResourceManager::LoadShader("skybox", "../assets/shaders/skybox.vs",
-                              "../assets/shaders/skybox.fs");
-  ResourceManager::LoadShader("solid", "../assets/shaders/solid_color.vs",
-                              "../assets/shaders/solid_color.fs");
-  ResourceManager::LoadShader("sprite", "../assets/shaders/sprite.vs",
-                              "../assets/shaders/sprite.fs");
-  ResourceManager::LoadShader("water", "../assets/shaders/water.vs",
-                              "../assets/shaders/water.fs");
+  ResourceManager::AddShader(
+      "terrain",
+      ShaderBuilder()
+          .Load("../assets/shaders/terrain.vs", ShaderModule::Type::Vertex)
+          .Load("../assets/shaders/terrain.fs", ShaderModule::Type::Fragment));
+  ResourceManager::AddShader(
+      "skybox",
+      ShaderBuilder()
+          .Load("../assets/shaders/skybox.vs", ShaderModule::Type::Vertex)
+          .Load("../assets/shaders/skybox.fs", ShaderModule::Type::Fragment));
+  ResourceManager::AddShader(
+      "solid",
+      ShaderBuilder()
+          .Load("../assets/shaders/solid_color.vs", ShaderModule::Type::Vertex)
+          .Load("../assets/shaders/solid_color.fs",
+                ShaderModule::Type::Fragment));
+  ResourceManager::AddShader(
+      "sprite",
+      ShaderBuilder()
+          .Load("../assets/shaders/sprite.vs", ShaderModule::Type::Vertex)
+          .Load("../assets/shaders/sprite.fs", ShaderModule::Type::Fragment));
+  ResourceManager::AddShader(
+      "water",
+      ShaderBuilder()
+          .Load("../assets/shaders/water.vs", ShaderModule::Type::Vertex)
+          .Load("../assets/shaders/water.fs", ShaderModule::Type::Fragment));
 
-  ResourceManager::LoadComputeShader(
-      "compute_normalmap", "../assets/shaders/compute/normalmap.comp");
-  ResourceManager::LoadComputeShader(
-      "compute_heightmap", "../assets/shaders/compute/heightmap.comp");
+  ResourceManager::AddShader(
+      "compute_normalmap",
+      ShaderBuilder().Load("../assets/shaders/compute/normalmap.comp",
+                           ShaderModule::Type::Compute));
+  ResourceManager::AddShader(
+      "compute_heightmap",
+      ShaderBuilder().Load("../assets/shaders/compute/heightmap.comp",
+                           ShaderModule::Type::Compute));
 
   ResourceManager::LoadTexture("water_dudv",
                                "../assets/textures/water_dudv.png");
@@ -109,28 +129,28 @@ void Scene::Render() {
 }
 
 void Scene::RenderScene(glm::vec4 clip_plane) {
-  Shader &terrainShader = ResourceManager::GetShader("terrain");
-  Shader &skyboxShader = ResourceManager::GetShader("skybox");
+  ShaderHandle terrainShader = ResourceManager::GetShader("terrain");
+  ShaderHandle skyboxShader = ResourceManager::GetShader("skybox");
 
-  terrainShader.Use();
-  terrainShader.SetMat4("view", camera_.getViewMatrix());
-  terrainShader.SetMat4("projection", camera_.getProjectionMatrix());
-  terrainShader.SetVec3("light.direction",
-                        glm::normalize(light_.GetDirection()));
-  terrainShader.SetVec3("light.color", light_.GetColor());
-  terrainShader.SetFloat("light.intensity", light_.GetIntensity());
-  terrainShader.SetVec4("clipPlane", clip_plane);
+  terrainShader->Use();
+  terrainShader->SetMat4("view", camera_.getViewMatrix());
+  terrainShader->SetMat4("projection", camera_.getProjectionMatrix());
+  terrainShader->SetVec3("light.direction",
+                         glm::normalize(light_.GetDirection()));
+  terrainShader->SetVec3("light.color", light_.GetColor());
+  terrainShader->SetFloat("light.intensity", light_.GetIntensity());
+  terrainShader->SetVec4("clipPlane", clip_plane);
   terrain_->Draw(terrainShader);
 
   glDepthFunc(GL_LEQUAL);
   glFrontFace(GL_CW);
-  skyboxShader.Use();
-  skyboxShader.SetMat4("view", glm::mat4(glm::mat3(camera_.getViewMatrix())));
-  skyboxShader.SetMat4("projection", camera_.getProjectionMatrix());
-  skyboxShader.SetVec3("camera", camera_.position);
-  skyboxShader.SetVec3("sun.direction", glm::normalize(light_.GetDirection()));
-  skyboxShader.SetVec3("sun.color", light_.GetColor());
-  skyboxShader.SetFloat("sun.intensity", light_.GetIntensity());
+  skyboxShader->Use();
+  skyboxShader->SetMat4("view", glm::mat4(glm::mat3(camera_.getViewMatrix())));
+  skyboxShader->SetMat4("projection", camera_.getProjectionMatrix());
+  skyboxShader->SetVec3("camera", camera_.position);
+  skyboxShader->SetVec3("sun.direction", glm::normalize(light_.GetDirection()));
+  skyboxShader->SetVec3("sun.color", light_.GetColor());
+  skyboxShader->SetFloat("sun.intensity", light_.GetIntensity());
   skybox_->Draw(skyboxShader);
   glFrontFace(GL_CCW);
   glDepthFunc(GL_LESS);

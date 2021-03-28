@@ -13,11 +13,11 @@ Texture HeightmapRenderer::Render(int width, int height, int octaves) {
   heightmap.Generate(width, height, NULL);
   heightmap.BindImage();
 
-  Shader& shader = ResourceManager::GetShader("compute_heightmap");
-  shader.Use();
+  ShaderHandle shader = ResourceManager::GetShader("compute_heightmap");
+  shader->Use();
   glActiveTexture(GL_TEXTURE0);
-  shader.SetInt("width", width);
-  shader.SetInt("octaves", octaves);
+  shader->SetInt("width", width);
+  shader->SetInt("octaves", octaves);
   glDispatchCompute(width / 16, height / 16, 1);
 
   glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
