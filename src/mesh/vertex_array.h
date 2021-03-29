@@ -8,49 +8,14 @@
 
 class VertexArray {
  public:
-  VertexArray() { glCreateVertexArrays(1, &id_); }
-  VertexArray(const VertexArray &) = delete;
-  VertexArray(VertexArray &&other)
-      : id_{other.id_},
-        vertex_buffers_{std::move(other.vertex_buffers_)},
-        index_buffer_{std::move(other.index_buffer_)} {
-    other.id_ = 0;
-  }
-  VertexArray &operator=(const VertexArray &) = delete;
-  VertexArray &operator=(VertexArray &&other) {
-    std::swap(id_, other.id_);
-    std::swap(vertex_buffers_, other.vertex_buffers_);
-    std::swap(index_buffer_, other.index_buffer_);
-    return *this;
-  }
-  ~VertexArray() {
-    glDeleteVertexArrays(1, &id_);
-    id_ = 0;
-  }
-  void Bind() const { glBindVertexArray(id_); }
-  void Unbind() const { glBindVertexArray(0); }
-  void AddVertexBuffer(VertexBuffer &&buffer) {
-    glBindVertexArray(id_);
-    buffer.Bind();
-
-    auto layout = buffer.GetLayout();
-    for (const auto &element : layout.attributes) {
-      glEnableVertexAttribArray(element.location);
-      glVertexAttribPointer(element.location, element.count,
-                            static_cast<GLenum>(element.type),
-                            element.normalized ? GL_TRUE : GL_FALSE,
-                            layout.stride, (const void *)element.offset);
-    }
-
-    vertex_buffers_.push_back(std::move(buffer));
-  }
-
-  void SetIndexBuffer(IndexBuffer &&buffer) {
-    glBindVertexArray(id_);
-    buffer.Bind();
-
-    index_buffer_ = std::move(buffer);
-  }
+  VertexArray();
+  VertexArray(VertexArray &&other);
+  VertexArray &operator=(VertexArray &&other);
+  ~VertexArray();
+  void Bind() const;
+  void Unbind() const;
+  void AddVertexBuffer(VertexBuffer &&buffer);
+  void SetIndexBuffer(IndexBuffer &&buffer);
 
  private:
   uint32_t id_;

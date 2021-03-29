@@ -14,11 +14,7 @@ struct BufferLayout {
 
 class VertexBuffer {
  public:
-  explicit VertexBuffer(size_t size) noexcept : layout_{}, size_{size} {
-    glCreateBuffers(1, &id_);
-    glBindBuffer(GL_ARRAY_BUFFER, id_);
-    glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
-  }
+  explicit VertexBuffer(size_t size) noexcept;
 
   template <typename Vertex>
   VertexBuffer(const std::vector<Vertex> &vertices,
@@ -29,16 +25,13 @@ class VertexBuffer {
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex),
                  vertices.data(), GL_STATIC_DRAW);
   }
-
-  virtual ~VertexBuffer() {
-    glDeleteBuffers(1, &id_);
-    id_ = 0;
-  }
+  virtual ~VertexBuffer();
 
   VertexBuffer(const VertexBuffer &other) = delete;
   VertexBuffer(VertexBuffer &&other);
   VertexBuffer &operator=(const VertexBuffer &other) = delete;
   VertexBuffer &operator=(VertexBuffer &&other);
+
   template <typename Vertex>
   void SetData(const std::vector<Vertex> &vertices,
                const BufferLayout &layout) {
@@ -48,9 +41,9 @@ class VertexBuffer {
     glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(Vertex),
                     vertices.data());
   }
-  void Bind() const { glBindBuffer(GL_ARRAY_BUFFER, id_); }
-  void Unbind() const { glBindBuffer(GL_ARRAY_BUFFER, 0); }
-  BufferLayout GetLayout() const { return layout_; }
+  void Bind() const;
+  void Unbind() const;
+  BufferLayout GetLayout() const;
 
  private:
   uint32_t id_;
@@ -64,9 +57,9 @@ class IndexBuffer {
   IndexBuffer(IndexBuffer &&other);
   IndexBuffer &operator=(const IndexBuffer &other) = delete;
   IndexBuffer &operator=(IndexBuffer &&other);
-  void Bind() const { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_); }
-  void Unbind() const { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); }
-  size_t Count() const { return count_; }
+  void Bind() const;
+  void Unbind() const;
+  size_t Count() const;
 
  private:
   uint32_t id_;

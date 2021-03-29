@@ -15,12 +15,11 @@ enum class PrimitiveTopology {
 
 class Mesh {
  public:
-  explicit Mesh(const std::shared_ptr<VertexArray> &vertex_array,
-                PrimitiveTopology topology = PrimitiveTopology::Triangle)
-      : vertex_array_{vertex_array}, topology_{topology} {}
-  PrimitiveTopology GetTopology() const { return topology_; }
-  std::shared_ptr<VertexArray> GetVertexArray() const { return vertex_array_; }
-  std::shared_ptr<VertexArray> GetVertexArray() { return vertex_array_; }
+  Mesh(const std::shared_ptr<VertexArray> &vertex_array,
+       PrimitiveTopology topology);
+  PrimitiveTopology GetTopology() const;
+  std::shared_ptr<VertexArray> GetVertexArray() const;
+  std::shared_ptr<VertexArray> GetVertexArray();
 
  private:
   std::shared_ptr<VertexArray> vertex_array_;
