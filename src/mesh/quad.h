@@ -3,6 +3,8 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
+#include "mesh.h"
+
 // @TODO: Use this as water mesh maybe? (code is the same for now)
 class Quad {
   struct Vertex {
@@ -25,9 +27,9 @@ class Quad {
   }
 
  private:
-  unsigned int VAO_;
-  unsigned int VBO_;
-  unsigned int EBO_;
+  uint32_t VAO_;
+  uint32_t VBO_;
+  uint32_t EBO_;
 
  private:
   void BuildVAO() {
