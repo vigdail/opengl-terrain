@@ -29,6 +29,19 @@ void VertexBuffer::Bind() const { glBindBuffer(GL_ARRAY_BUFFER, id_); }
 void VertexBuffer::Unbind() const { glBindBuffer(GL_ARRAY_BUFFER, 0); }
 BufferLayout VertexBuffer::GetLayout() const { return layout_; }
 
+IndexBuffer::IndexBuffer(const std::vector<uint32_t> &indices) noexcept
+    : count_{indices.size()} {
+  glCreateBuffers(1, &id_);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(uint32_t),
+               indices.data(), GL_STATIC_DRAW);
+}
+
+IndexBuffer::~IndexBuffer() {
+  glDeleteBuffers(1, &id_);
+  id_ = 0;
+}
+
 IndexBuffer::IndexBuffer(IndexBuffer &&other)
     : id_{std::exchange(other.id_, 0)},
       count_{std::exchange(other.count_, 0)} {}

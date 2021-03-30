@@ -35,7 +35,7 @@ class VertexBuffer {
   template <typename Vertex>
   void SetData(const std::vector<Vertex> &vertices,
                const BufferLayout &layout) {
-    assert(vertices.size * sizeof(Vertex) <= size_);
+    assert(vertices.size() * sizeof(Vertex) <= size_);
 
     glBindBuffer(GL_ARRAY_BUFFER, id_);
     glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(Vertex),
@@ -53,10 +53,12 @@ class VertexBuffer {
 
 class IndexBuffer {
  public:
+  explicit IndexBuffer(const std::vector<uint32_t> &indices) noexcept;
   IndexBuffer(const IndexBuffer &other) = delete;
   IndexBuffer(IndexBuffer &&other);
   IndexBuffer &operator=(const IndexBuffer &other) = delete;
   IndexBuffer &operator=(IndexBuffer &&other);
+  virtual ~IndexBuffer();
   void Bind() const;
   void Unbind() const;
   size_t Count() const;
