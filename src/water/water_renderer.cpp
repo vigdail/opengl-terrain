@@ -2,10 +2,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <GLFW/glfw3.h>
 
-WaterRenderer::WaterRenderer(int width, int height) : height_(15.0f) {
+WaterRenderer::WaterRenderer(int width, int height)
+    : mesh_(Plane(500.0f).ToMesh()), height_(15.0f) {
   shader_ = ResourceManager::GetShader("water");
 
-  water_ = std::make_unique<Water>();
   material_.specular_power = 32.0f;
   material_.reflection_power = 0.5f;
   material_.dudv_tiling = 6.0f;
@@ -23,13 +23,7 @@ WaterRenderer::WaterRenderer(int width, int height) : height_(15.0f) {
   reflection_framebuffer_ = std::make_unique<FrameBuffer>(spec);
 
   dudv_map_ = ResourceManager::GetTexture("water_dudv");
-  dudv_map_->Bind();
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
   normal_map_ = ResourceManager::GetTexture("water_normal");
-  normal_map_->Bind();
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }
 
 void WaterRenderer::BindReflectionFramebuffer() {
@@ -75,7 +69,9 @@ void WaterRenderer::Render(Camera *camera, DirectionalLight *sun) {
   shader_->SetFloat("specular_power", material_.specular_power);
   shader_->SetFloat("dudv_tiling", material_.dudv_tiling);
 
-  water_->Draw();
+  mesh_.Bind();
+  glDrawElements(static_cast<GLenum>(mesh_.GetTopology()), mesh_.Count(),
+                 GL_UNSIGNED_INT, 0);
 
   glDisable(GL_BLEND);
 }

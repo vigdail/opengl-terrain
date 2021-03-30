@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "water.h"
+#include "../mesh/plane.h"
 #include "../resource_manager.h"
 #include "../camera.h"
 #include "../shader.h"
@@ -27,7 +27,7 @@ class WaterRenderer {
 
  private:
   ShaderHandle shader_;
-  std::unique_ptr<Water> water_;
+  Mesh mesh_;
   TextureHandle dudv_map_;
   TextureHandle normal_map_;
   std::unique_ptr<FrameBuffer> reflection_framebuffer_;

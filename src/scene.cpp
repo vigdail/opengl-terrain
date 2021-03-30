@@ -75,11 +75,17 @@ void Scene::LoadAssets() {
       ShaderBuilder().Load("../assets/shaders/compute/heightmap.comp",
                            ShaderModule::Type::Compute));
 
+  TextureSamplerDescriptor sampler{};
+  sampler.wrap_s = GL_REPEAT;
+  sampler.wrap_t = GL_REPEAT;
+  ResourceManager::AddTexture("water_dudv",
+                              TextureBuilder()
+                                  .Load("../assets/textures/water_dudv.png")
+                                  .WithSampler(sampler));
   ResourceManager::AddTexture(
-      "water_dudv", TextureBuilder().Load("../assets/textures/water_dudv.png"));
-  ResourceManager::AddTexture(
-      "water_normal",
-      TextureBuilder().Load("../assets/textures/water_normalmap.png"));
+      "water_normal", TextureBuilder()
+                          .Load("../assets/textures/water_normalmap.png")
+                          .WithSampler(sampler));
 }
 
 void Scene::ProcessInput(float dt) {

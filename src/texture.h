@@ -35,6 +35,7 @@ class Texture {
   ~Texture();
   void Bind(uint32_t unit = 0) const;
   void BindImage(uint32_t unit = 0) const;
+  // @TODO: Don't expose internal id
   uint32_t GetID() const { return id_; }
   uint32_t GetWidth() const { return view_.width; }
   uint32_t GetHeight() const { return view_.height; }
