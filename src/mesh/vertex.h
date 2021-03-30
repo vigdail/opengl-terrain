@@ -8,7 +8,7 @@ enum class VertexFormat {
 };
 
 struct VertexAttribute {
-  VertexFormat type;
+  VertexFormat type = VertexFormat::FLOAT;
   size_t count;
   size_t offset;
   uint32_t location;

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <utility>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -22,11 +23,13 @@ Scene::Scene(uint width, uint height)
       mouse_last_x_(0.0),
       mouse_last_y_(0.0) {
   LoadAssets();
-  camera_.position = glm::vec3(-200.0f, 3.0f, 0.0f);
+  camera_.position = glm::vec3(-440.0f, 3.0f, 0.0f);
   terrain_ = std::make_shared<Terrain>(1000, 1024, 1024);
   skybox_ = std::make_unique<Skybox>();
   water_ = std::make_shared<WaterRenderer>(width_, height_);
-  quad_ = std::make_unique<Quad>();
+
+  auto quad = std::make_shared<Mesh>(Quad().ToMesh());
+  meshes_.push_back(quad);
 
   gui_ = std::make_unique<GUILayer>(width, height);
   gui_->AddPanel(new GUISkyboxPanel(skybox_->GetAtmosphere()));
@@ -126,6 +129,21 @@ void Scene::Render() {
 
   water_->Render(&camera_, &light_);
 
+  ShaderHandle sprite = ResourceManager::GetShader("sprite");
+  sprite->Use();
+  glm::mat4 model(1.0f);
+  model = glm::translate(model, glm::vec3((width_ - 200.0f), 0.0f, 0.0f));
+  model = glm::scale(model, glm::vec3(200.0f, 200.0f, 1.0f));
+  glm::mat4 proj = glm::ortho(0.0f, static_cast<float>(width_),
+                              static_cast<float>(height_), 0.0f);
+  sprite->SetMat4("projection", proj);
+  for (auto& mesh : meshes_) {
+    mesh->Bind();
+    sprite->SetMat4("model", model);
+    glDrawElements(static_cast<GLenum>(mesh->GetTopology()), mesh->Count(),
+                   GL_UNSIGNED_INT, 0);
+  }
+
   gui_->Render();
 }
 
@@ -152,7 +170,7 @@ void Scene::RenderScene(glm::vec4 clip_plane) {
   skyboxShader->SetVec3("sun.direction", glm::normalize(light_.GetDirection()));
   skyboxShader->SetVec3("sun.color", light_.GetColor());
   skyboxShader->SetFloat("sun.intensity", light_.GetIntensity());
-  skybox_->Draw(skyboxShader);
+  skybox_->Draw();
   glFrontFace(GL_CCW);
   glDepthFunc(GL_LESS);
 }

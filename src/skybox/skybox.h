@@ -35,10 +35,11 @@ struct Atmosphere {
 class Skybox {
  public:
   Skybox();
-  void Draw(ShaderHandle shader);
+  void Draw();
   Atmosphere& GetAtmosphere();
 
  private:
-  Sphere mesh_;
+  ShaderHandle shader_;
+  Mesh mesh_;
   Atmosphere atmosphere_;
 };

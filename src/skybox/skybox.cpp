@@ -2,24 +2,27 @@
 
 #include <glad/glad.h>
 #include <stb_image.h>
-#include <iostream>
 
-Skybox::Skybox() : mesh_(128, 128, 1.0), atmosphere_() {}
+Skybox::Skybox() : mesh_(Sphere(128, 128, 1.0).ToMesh()), atmosphere_() {
+  shader_ = ResourceManager::GetShader("skybox");
+}
 
-void Skybox::Draw(ShaderHandle shader) {
-  shader->Use();
-  shader->SetFloat("planet_radius",
-                   static_cast<float>(atmosphere_.planet_radius));
-  shader->SetFloat("atmosphere_radius",
-                   static_cast<float>(atmosphere_.atmosphere_radius));
-  shader->SetFloat("hR", atmosphere_.hR);
-  shader->SetFloat("hM", atmosphere_.hM);
-  shader->SetFloat("g", atmosphere_.g);
-  shader->SetVec3("beta_R", atmosphere_.beta_R);
-  shader->SetFloat("beta_M", atmosphere_.beta_M);
-  shader->SetInt("view_dir_samples", atmosphere_.view_dir_samples);
-  shader->SetInt("sun_dir_samples", atmosphere_.sun_dir_samples);
-  mesh_.Draw();
+void Skybox::Draw() {
+  shader_->Use();
+  shader_->SetFloat("planet_radius",
+                    static_cast<float>(atmosphere_.planet_radius));
+  shader_->SetFloat("atmosphere_radius",
+                    static_cast<float>(atmosphere_.atmosphere_radius));
+  shader_->SetFloat("hR", atmosphere_.hR);
+  shader_->SetFloat("hM", atmosphere_.hM);
+  shader_->SetFloat("g", atmosphere_.g);
+  shader_->SetVec3("beta_R", atmosphere_.beta_R);
+  shader_->SetFloat("beta_M", atmosphere_.beta_M);
+  shader_->SetInt("view_dir_samples", atmosphere_.view_dir_samples);
+  shader_->SetInt("sun_dir_samples", atmosphere_.sun_dir_samples);
+  mesh_.Bind();
+  glDrawElements(static_cast<GLenum>(mesh_.GetTopology()), mesh_.Count(),
+                 GL_UNSIGNED_INT, 0);
 }
 
 Atmosphere &Skybox::GetAtmosphere() { return atmosphere_; }

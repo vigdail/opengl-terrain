@@ -40,7 +40,7 @@ class Scene {
   std::unique_ptr<GUILayer> gui_;
   std::unique_ptr<Skybox> skybox_;
   std::shared_ptr<WaterRenderer> water_;
-  std::unique_ptr<Quad> quad_;
+  std::vector<std::shared_ptr<Mesh>> meshes_;
 
   double mouse_last_x_;
   double mouse_last_y_;
