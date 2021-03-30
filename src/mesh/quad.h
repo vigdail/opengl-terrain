@@ -1,65 +1,57 @@
 #pragma once
 
+#include "mesh.h"
+
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-#include "mesh.h"
+#include <memory>
+#include <vector>
 
-// @TODO: Use this as water mesh maybe? (code is the same for now)
 class Quad {
+ public:
   struct Vertex {
     glm::vec3 position;
     glm::vec2 uv;
+
+    static BufferLayout GetLayout() {
+      VertexAttribute position_attr{};
+      position_attr.count = 3;
+      position_attr.offset = 0;
+      position_attr.location = 0;
+      position_attr.normalized = false;
+      VertexAttribute uv_attr{};
+      uv_attr.count = 2;
+      uv_attr.offset = offsetof(Vertex, uv);
+      uv_attr.location = 1;
+      uv_attr.normalized = false;
+
+      BufferLayout layout{};
+      layout.stride = sizeof(Vertex);
+      layout.attributes = {position_attr, uv_attr};
+
+      return layout;
+    }
   };
 
- public:
-  Quad() {
-    glGenVertexArrays(1, &VAO_);
-    glGenBuffers(1, &VBO_);
-    glGenBuffers(1, &EBO_);
-
-    BuildVAO();
+  Quad()
+      : vertices_{
+            {glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 1.0f)},
+            {glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 0.0f)},
+            {glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f)},
+            {glm::vec3(1.0f, 1.0f, 0.0f), glm::vec2(1.0f, 0.0f)},
+        }, indices_{0, 1, 2, 2, 1, 3} {
   }
 
-  void Draw() {
-    glBindVertexArray(VAO_);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+  Mesh ToMesh() const {
+    Mesh mesh{PrimitiveTopology::Triangle, indices_.size()};
+    mesh.AddVertexBuffer(VertexBuffer{vertices_, Vertex::GetLayout()});
+    mesh.SetIndexBuffer(IndexBuffer{indices_});
+
+    return mesh;
   }
 
  private:
-  uint32_t VAO_;
-  uint32_t VBO_;
-  uint32_t EBO_;
-
- private:
-  void BuildVAO() {
-    std::array<Vertex, 4> vertices_ = {
-        glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 1.0f),
-        glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 0.0f),
-        glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f),
-        glm::vec3(1.0f, 1.0f, 0.0f), glm::vec2(1.0f, 0.0f),
-    };
-    std::array<unsigned int, 6> indices_ = {0, 1, 2, 2, 1, 3};
-
-    glBindVertexArray(VAO_);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO_);
-    glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(Vertex),
-                 vertices_.data(), GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 indices_.size() * sizeof(unsigned int), indices_.data(),
-                 GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          static_cast<void*>(0));
-
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          reinterpret_cast<void*>(offsetof(Vertex, uv)));
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-  }
+  std::vector<Vertex> vertices_;
+  std::vector<uint32_t> indices_;
 };
