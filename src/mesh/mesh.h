@@ -1,8 +1,10 @@
 #pragma once
 
-#include "vertex_array.h"
+#include "buffer.h"
 
-#include <memory>
+#include <glad/glad.h>
+#include <vector>
+#include <utility>
 
 enum class PrimitiveTopology {
   Points = GL_POINTS,
@@ -15,13 +17,26 @@ enum class PrimitiveTopology {
 
 class Mesh {
  public:
-  Mesh(const std::shared_ptr<VertexArray> &vertex_array,
-       PrimitiveTopology topology);
+  Mesh(PrimitiveTopology topology, size_t count);
+  Mesh(Mesh &&other);
+  Mesh &operator=(Mesh &&other);
+  Mesh(const Mesh &other) = delete;
+  Mesh &operator=(const Mesh &other) = delete;
+  ~Mesh();
+  void Bind() const;
+  void Unbind() const;
+  void AddVertexBuffer(VertexBuffer &&buffer);
+  void SetIndexBuffer(IndexBuffer &&buffer);
+  bool IsIndexed() const { return index_buffer_.has_value(); }
+  void SetCount(uint32_t count) { count_ = count; }
+  size_t Count() const { return count_; }
   PrimitiveTopology GetTopology() const;
-  std::shared_ptr<VertexArray> GetVertexArray() const;
-  std::shared_ptr<VertexArray> GetVertexArray();
+  void SetTopology(PrimitiveTopology topology) { topology_ = topology; }
 
  private:
-  std::shared_ptr<VertexArray> vertex_array_;
+  uint32_t id_;
+  size_t count_;
   PrimitiveTopology topology_;
+  std::vector<VertexBuffer> vertex_buffers_;
+  std::optional<IndexBuffer> index_buffer_;
 };
