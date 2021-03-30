@@ -10,8 +10,8 @@ class FrameBuffer {
     int width;
     int height;
     bool is_multisampled = false;
-    std::vector<unsigned int> color_formats;
-    unsigned int depth_format;
+    std::vector<uint32_t> color_formats;
+    uint32_t depth_format;
   };
 
   explicit FrameBuffer(const Spec &spec) noexcept;
@@ -29,7 +29,7 @@ class FrameBuffer {
   void Unbind();
 
  protected:
-  unsigned int ID_;
+  uint32_t ID_;
   Spec spec_;
   std::vector<Texture> color_attachments_;
   std::optional<Texture> depth_attachment_;

@@ -12,15 +12,15 @@
 class Application {
  public:
   Application() : Application(1280, 720) {}
-  Application(unsigned int width, unsigned int height);
+  Application(uint32_t width, uint32_t height);
   ~Application();
   void Run();
 
  private:
   GLFWwindow *window_;
   std::unique_ptr<Scene> scene_;
-  unsigned int width_;
-  unsigned int height_;
+  uint32_t width_;
+  uint32_t height_;
 
   static void FramebufferSizeCallback(GLFWwindow *window, int width,
                                       int height);

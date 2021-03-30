@@ -54,7 +54,7 @@ class Shader {
   void SetMat4(const char *name, const glm::mat4 &value);
 
  private:
-  unsigned int id_;
+  uint32_t id_;
 
  private:
   static void CheckLinkingErrors(uint32_t id);

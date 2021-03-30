@@ -9,7 +9,7 @@ void DebugMessageCallback(unsigned source, unsigned type, unsigned id,
   std::cerr << message << std::endl;
 }
 
-Application::Application(unsigned int width, unsigned int height)
+Application::Application(uint32_t width, uint32_t height)
     : width_(width), height_(height) {
   glfwInit();
 

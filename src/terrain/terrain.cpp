@@ -127,7 +127,7 @@ void Terrain::BuildVAO() {
                vertices_.data(), GL_STATIC_DRAW);
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned int),
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(uint32_t),
                indices_.data(), GL_STATIC_DRAW);
 
   glEnableVertexAttribArray(0);
