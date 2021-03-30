@@ -8,9 +8,9 @@
 struct TextureSamplerDescriptor {
   uint32_t filter_min = GL_LINEAR;
   uint32_t filter_mag = GL_LINEAR;
-  uint32_t wrap_s = GL_REPEAT;
-  uint32_t wrap_t = GL_REPEAT;
-  uint32_t wrap_r = GL_REPEAT;
+  uint32_t wrap_s = GL_CLAMP_TO_EDGE;
+  uint32_t wrap_t = GL_CLAMP_TO_EDGE;
+  uint32_t wrap_r = GL_CLAMP_TO_EDGE;
 };
 
 struct TextureViewDescriptor {
@@ -33,9 +33,8 @@ class Texture {
   Texture &operator=(const Texture &) = delete;
   Texture &operator=(Texture &&other);
   ~Texture();
-  void Bind() const;
-  void Bind(int i) const;
-  void BindImage();
+  void Bind(uint32_t unit = 0) const;
+  void BindImage(uint32_t unit = 0) const;
   uint32_t GetID() const { return id_; }
   uint32_t GetWidth() const { return view_.width; }
   uint32_t GetHeight() const { return view_.height; }

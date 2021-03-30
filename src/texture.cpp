@@ -25,14 +25,9 @@ void Texture::Delete() {
   id_ = 0;
 }
 
-void Texture::Bind() const { glBindTexture(GL_TEXTURE_2D, id_); }
-void Texture::Bind(int i) const {
-  glActiveTexture(GL_TEXTURE0 + i);
-  glBindTexture(GL_TEXTURE_2D, id_);
-}
+void Texture::Bind(uint32_t unit) const { glBindTextureUnit(unit, id_); }
 
-void Texture::BindImage() {
-  glActiveTexture(GL_TEXTURE0);
+void Texture::BindImage(uint32_t unit) const {
   glBindImageTexture(0, id_, 0, GL_FALSE, 0, GL_WRITE_ONLY,
                      view_.internal_format);
 }
@@ -85,13 +80,12 @@ Texture TextureBuilder::Build() const {
   glBindTexture(GL_TEXTURE_2D, texture.id_);
   glTexImage2D(GL_TEXTURE_2D, 0, view_.internal_format, view_.width,
                view_.height, 0, view_.image_format, view_.type, data_);
-
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, sampler_.filter_min);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, sampler_.filter_mag);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, sampler_.wrap_s);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, sampler_.wrap_t);
-
   glBindTexture(GL_TEXTURE_2D, 0);
+
+  glTextureParameteri(texture.id_, GL_TEXTURE_MIN_FILTER, sampler_.filter_min);
+  glTextureParameteri(texture.id_, GL_TEXTURE_MAG_FILTER, sampler_.filter_mag);
+  glTextureParameteri(texture.id_, GL_TEXTURE_WRAP_S, sampler_.wrap_s);
+  glTextureParameteri(texture.id_, GL_TEXTURE_WRAP_T, sampler_.wrap_t);
 
   if (data_) {
     stbi_image_free(data_);
