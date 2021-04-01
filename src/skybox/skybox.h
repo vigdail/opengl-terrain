@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../shader.h"
-#include "../mesh/sphere.h"
+#include "../mesh/shape/sphere.h"
 #include "../resource_manager.h"
 
 #include <glm/glm.hpp>

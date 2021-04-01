@@ -12,7 +12,7 @@
 #include "skybox/skybox.h"
 #include "water/water_renderer.h"
 #include "gui/gui_layer.h"
-#include "mesh/quad.h"
+#include "mesh/shape/quad.h"
 
 class Scene {
  public:

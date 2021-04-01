@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "../mesh/plane.h"
+#include "../mesh/shape/plane.h"
 #include "../resource_manager.h"
 #include "../camera.h"
 #include "../shader.h"
