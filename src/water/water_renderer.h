@@ -2,7 +2,8 @@
 
 #include <memory>
 
-#include "water.h"
+#include "../mesh/shape/plane.h"
+#include "../resource_manager.h"
 #include "../camera.h"
 #include "../shader.h"
 #include "../frame_buffer.h"
@@ -25,10 +26,10 @@ class WaterRenderer {
   WaterMaterial &GetMaterial() { return material_; }
 
  private:
-  Shader *shader_;
-  std::unique_ptr<Water> water_;
-  Texture *dudv_map_;
-  Texture *normal_map_;
+  ShaderHandle shader_;
+  Mesh mesh_;
+  TextureHandle dudv_map_;
+  TextureHandle normal_map_;
   std::unique_ptr<FrameBuffer> reflection_framebuffer_;
   std::unique_ptr<FrameBuffer> refraction_framebuffer_;
   float height_;

@@ -4,22 +4,23 @@
 #include <GLFW/glfw3.h>
 
 #include <memory>
+#include <unordered_map>
 
-#include "./game.h"
+#include "./scene.h"
 #include "./gui/gui_layer.h"
 
 class Application {
  public:
   Application() : Application(1280, 720) {}
-  Application(unsigned int width, unsigned int height);
+  Application(uint32_t width, uint32_t height);
   ~Application();
   void Run();
 
  private:
   GLFWwindow *window_;
-  std::unique_ptr<Game> game_;
-  unsigned int width_;
-  unsigned int height_;
+  std::unique_ptr<Scene> scene_;
+  uint32_t width_;
+  uint32_t height_;
 
   static void FramebufferSizeCallback(GLFWwindow *window, int width,
                                       int height);

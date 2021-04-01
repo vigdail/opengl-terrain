@@ -9,7 +9,7 @@ void DebugMessageCallback(unsigned source, unsigned type, unsigned id,
   std::cerr << message << std::endl;
 }
 
-Application::Application(unsigned int width, unsigned int height)
+Application::Application(uint32_t width, uint32_t height)
     : width_(width), height_(height) {
   glfwInit();
 
@@ -59,7 +59,7 @@ Application::Application(unsigned int width, unsigned int height)
   glViewport(0, 0, width, height);
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-  game_ = std::make_unique<Game>(width, height);
+  scene_ = std::make_unique<Scene>(width, height);
 }
 
 Application::~Application() { glfwTerminate(); }
@@ -77,11 +77,11 @@ void Application::Run() {
 
     glfwPollEvents();
 
-    game_->ProcessInput(delta_time);
+    scene_->ProcessInput(delta_time);
 
-    game_->Update(delta_time);
+    scene_->Update(delta_time);
 
-    game_->Render();
+    scene_->Render();
 
     glfwSwapBuffers(window_);
   }
@@ -104,18 +104,18 @@ void Application::KeyCallback(GLFWwindow *window, int key, int scancode,
     glfwSetInputMode(window, GLFW_CURSOR, cursore_mode);
   }
 
-  self->game_->OnKeyEvent(key, scancode, action, mode);
+  self->scene_->OnKeyEvent(key, scancode, action, mode);
 }
 
 void Application::MouseCallback(GLFWwindow *window, double x, double y) {
   auto self = static_cast<Application *>(glfwGetWindowUserPointer(window));
-  self->game_->OnMousePositionEvent(x, y);
+  self->scene_->OnMousePositionEvent(x, y);
 }
 
 void Application::MouseButtonCallback(GLFWwindow *window, int button,
                                       int action, int mode) {
   auto self = static_cast<Application *>(glfwGetWindowUserPointer(window));
-  self->game_->OnMouseButtonEvent(button, action, mode);
+  self->scene_->OnMouseButtonEvent(button, action, mode);
 }
 
 void Application::FramebufferSizeCallback(GLFWwindow *window, int width,

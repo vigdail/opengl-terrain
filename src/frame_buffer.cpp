@@ -2,7 +2,6 @@
 #include "frame_buffer.h"
 #include <utility>
 
-// @TODO: Refactor this
 FrameBuffer::FrameBuffer(const FrameBuffer::Spec& spec) noexcept : spec_(spec) {
   glGenFramebuffers(1, &ID_);
 
@@ -18,9 +17,12 @@ FrameBuffer::FrameBuffer(const FrameBuffer::Spec& spec) noexcept : spec_(spec) {
 
   int index = 0;
   for (auto format : spec_.color_formats) {
-    Texture texture;
-    texture.internal_format = format;
-    texture.Generate(spec_.width, spec_.height, nullptr);
+    TextureViewDescriptor view{};
+    view.width = spec_.width;
+    view.height = spec_.height;
+    view.internal_format = format;
+
+    Texture texture = TextureBuilder().WithView(view).Build();
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + index++,
                            TextureTarget(spec_.is_multisampled),
@@ -30,11 +32,14 @@ FrameBuffer::FrameBuffer(const FrameBuffer::Spec& spec) noexcept : spec_(spec) {
   }
 
   if (spec_.depth_format != 0) {
-    Texture texture;
-    texture.internal_format = spec_.depth_format;
-    texture.image_format = GL_DEPTH_COMPONENT;
-    texture.type = GL_FLOAT;
-    texture.Generate(spec_.width, spec_.height, nullptr);
+    TextureViewDescriptor view{};
+    view.width = spec_.width;
+    view.height = spec_.height;
+    view.image_format = GL_DEPTH_COMPONENT;
+    view.internal_format = spec_.depth_format;
+    view.type = GL_FLOAT;
+
+    Texture texture = TextureBuilder().WithView(view).Build();
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
                            TextureTarget(spec_.is_multisampled),

@@ -1,5 +1,5 @@
 #include "sphere.h"
-// #include <glad/glad.h>
+#include <glad/glad.h>
 #include <cmath>
 #include <iostream>
 
@@ -14,13 +14,6 @@ Sphere::Sphere(int sectors, int stacks, float radius)
   assert(stacks > 0);
   GenerateVertices();
   GenerateIndices();
-  BuildVAO();
-}
-
-void Sphere::Draw() {
-  glBindVertexArray(VAO_);
-  glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0);
-  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 void Sphere::GenerateVertices() {
@@ -67,33 +60,4 @@ void Sphere::GenerateIndices() {
       }
     }
   }
-}
-
-void Sphere::BuildVAO() {
-  glGenVertexArrays(1, &VAO_);
-  glGenBuffers(1, &VBO_);
-  glGenBuffers(1, &EBO_);
-
-  glBindVertexArray(VAO_);
-
-  glBindBuffer(GL_ARRAY_BUFFER, VBO_);
-  glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(Vertex),
-               vertices_.data(), GL_STATIC_DRAW);
-
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned int),
-               indices_.data(), GL_STATIC_DRAW);
-
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                        static_cast<void *>(0));
-  glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                        reinterpret_cast<void *>(offsetof(Vertex, normal)));
-  glEnableVertexAttribArray(2);
-  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                        reinterpret_cast<void *>(offsetof(Vertex, uv)));
-
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindVertexArray(0);
 }

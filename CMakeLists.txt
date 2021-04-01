@@ -36,7 +36,7 @@ add_library(imgui ${IMGUI_SOURCE})
 target_include_directories(imgui PRIVATE "lib/imgui/" "lib/include/")
 set(LIBS ${LIBS} imgui)
 
-file(GLOB SOURCE "src/**/*.cpp" "src/*.cpp")
+file(GLOB_RECURSE SOURCE "src/*.cpp")
 
 set(APP "app")
 

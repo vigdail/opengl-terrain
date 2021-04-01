@@ -1,7 +1,6 @@
 #include "terrain.h"
 #include "normalmap_renderer.h"
 #include "heightmap_renderer.h"
-#include "resource_manager.h"
 
 #include <glad/glad.h>
 
@@ -41,13 +40,13 @@ Terrain::Terrain(int size, int width, int length)
   indices_.shrink_to_fit();
 }
 
-void Terrain::Draw(Shader &shader) {
+void Terrain::Draw(ShaderHandle shader) {
   glm::mat4 model = glm::mat4(1.0f);
-  shader.SetMat4("model", model);
-  shader.SetInt("heightmap", 0);
-  shader.SetInt("normalmap", 1);
-  shader.SetFloat("scale_y", scale_y_);
-  shader.SetVec3("color", glm::vec3(0.45f, 0.4f, 0.3f));
+  shader->SetMat4("model", model);
+  shader->SetInt("heightmap", 0);
+  shader->SetInt("normalmap", 1);
+  shader->SetFloat("scale_y", scale_y_);
+  shader->SetVec3("color", glm::vec3(0.45f, 0.4f, 0.3f));
   heightmap_.Bind(0);
   normalmap_.Bind(1);
   glBindVertexArray(VAO_);
@@ -128,7 +127,7 @@ void Terrain::BuildVAO() {
                vertices_.data(), GL_STATIC_DRAW);
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned int),
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(uint32_t),
                indices_.data(), GL_STATIC_DRAW);
 
   glEnableVertexAttribArray(0);

@@ -4,8 +4,9 @@
 #include <glm/glm.hpp>
 #include <memory>
 
-#include "shader.h"
-#include "texture.h"
+#include "../shader.h"
+#include "../texture.h"
+#include "../resource_manager.h"
 
 class Terrain {
   struct Vertex {
@@ -17,7 +18,7 @@ class Terrain {
   Terrain();
   explicit Terrain(int size);
   Terrain(int size, int res_x, int res_z);
-  void Draw(Shader &shader);
+  void Draw(ShaderHandle shader);
   float GetHeight(float x, float z) const;
   float GetScaleY() { return scale_y_; }
   void SetScaleY(float scale_y) { scale_y_ = scale_y; }
@@ -32,9 +33,9 @@ class Terrain {
   std::vector<float> heights_;
   std::size_t indices_count_;
   // @TODO: Make some wrappers maybe
-  unsigned int VAO_;
-  unsigned int EBO_;
-  unsigned int VBO_;
+  uint32_t VAO_;
+  uint32_t EBO_;
+  uint32_t VBO_;
   Texture heightmap_;
   Texture normalmap_;
 
