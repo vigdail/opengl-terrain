@@ -16,7 +16,6 @@ class Renderer {
   SkyboxPass skybox_pass_;
   // Atmosphere pass
   // Terrain pass
-  // Skybox pass
   // other objects pass
   // Water reflections pass
   // Water refractions pass

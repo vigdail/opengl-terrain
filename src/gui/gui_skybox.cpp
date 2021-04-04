@@ -6,9 +6,10 @@ GUISkyboxPanel::GUISkyboxPanel(Atmosphere &atmosphere)
 
 void GUISkyboxPanel::Render() {
   ImGui::Begin("Atmosphere");
-  ImGui::SliderInt("Planet radius", &atmosphere_.planet_radius, 1000e3, 7000e3);
-  ImGui::SliderInt("Atmosphere radius", &atmosphere_.atmosphere_radius, 1000e3,
-                   7000e3);
+  ImGui::SliderFloat("Planet radius", &atmosphere_.planet_radius, 1000e3,
+                     7000e3, "%.0f");
+  ImGui::SliderFloat("Atmosphere radius", &atmosphere_.atmosphere_radius,
+                     1000e3, 7000e3, "%.0f");
   ImGui::SliderFloat("Rayleigh height", &atmosphere_.hR, 100, 10000, "%.0f");
   ImGui::SliderFloat("Mie height", &atmosphere_.hM, 100, 10000, "%.0f");
   ImGui::SliderFloat("g", &atmosphere_.g, -0.999f, 0.999f);
