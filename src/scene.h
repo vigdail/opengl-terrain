@@ -28,17 +28,18 @@ class Scene {
   void OnMouseButtonEvent(int button, int action, int mode);
   void OnMousePositionEvent(double x, double y);
 
+  Camera camera;
+  DirectionalLight light;
+  std::unique_ptr<Skybox> skybox;
+
  private:
   static const uint kKeysCount_ = 1024;
   entt::registry registry_;
   uint width_;
   uint height_;
   bool keys_[kKeysCount_];
-  Camera camera_;
-  DirectionalLight light_;
   std::shared_ptr<Terrain> terrain_;
   std::unique_ptr<GUILayer> gui_;
-  std::unique_ptr<Skybox> skybox_;
   std::shared_ptr<WaterRenderer> water_;
   std::vector<std::shared_ptr<Mesh>> meshes_;
 

@@ -12,7 +12,7 @@ Mesh::Mesh(Mesh &&other)
       index_buffer_{std::move(other.index_buffer_)} {
   other.id_ = 0;
 }
-Mesh &Mesh::operator=(Mesh &&other) {
+Mesh &Mesh::operator=(Mesh &&other) noexcept {
   std::swap(id_, other.id_);
   std::swap(count_, other.count_);
   std::swap(topology_, other.topology_);

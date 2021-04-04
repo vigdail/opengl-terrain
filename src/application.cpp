@@ -23,7 +23,7 @@ Application::Application(uint32_t width, uint32_t height)
   glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
   GLFWmonitor *monitor = glfwGetPrimaryMonitor();
-  if (monitor == NULL) {
+  if (monitor == nullptr) {
     std::cerr << "Failed to get primary monitor" << std::endl;
     glfwTerminate();
   }
@@ -60,6 +60,7 @@ Application::Application(uint32_t width, uint32_t height)
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
   scene_ = std::make_unique<Scene>(width, height);
+  renderer_ = std::make_unique<Renderer>();
 }
 
 Application::~Application() { glfwTerminate(); }
@@ -81,7 +82,8 @@ void Application::Run() {
 
     scene_->Update(delta_time);
 
-    scene_->Render();
+    // scene_->Render();
+    renderer_->Render(scene_.get());
 
     glfwSwapBuffers(window_);
   }

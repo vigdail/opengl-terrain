@@ -19,7 +19,7 @@ class Mesh {
  public:
   Mesh(PrimitiveTopology topology, size_t count);
   Mesh(Mesh &&other);
-  Mesh &operator=(Mesh &&other);
+  Mesh &operator=(Mesh &&other) noexcept;
   Mesh(const Mesh &other) = delete;
   Mesh &operator=(const Mesh &other) = delete;
   ~Mesh();

@@ -6,8 +6,9 @@
 #include <memory>
 #include <unordered_map>
 
-#include "./scene.h"
 #include "./gui/gui_layer.h"
+#include "./scene.h"
+#include "render/renderer.h"
 
 class Application {
  public:
@@ -19,6 +20,7 @@ class Application {
  private:
   GLFWwindow *window_;
   std::unique_ptr<Scene> scene_;
+  std::unique_ptr<Renderer> renderer_;
   uint32_t width_;
   uint32_t height_;
 
