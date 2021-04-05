@@ -1,8 +1,8 @@
 #pragma once
 
 #include <string>
-#include <vector>
 #include <utility>
+#include <vector>
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -16,10 +16,10 @@ class ShaderModule {
 
  public:
   enum class Type {
-    Vertex = GL_VERTEX_SHADER,
-    Fragment = GL_FRAGMENT_SHADER,
-    Geometry = GL_GEOMETRY_SHADER,
-    Compute = GL_COMPUTE_SHADER,
+    VERTEX = GL_VERTEX_SHADER,
+    FRAGMENT = GL_FRAGMENT_SHADER,
+    GEOMETRY = GL_GEOMETRY_SHADER,
+    COMPUTE = GL_COMPUTE_SHADER,
   };
 
   ShaderModule(const char *src, Type type);
@@ -34,7 +34,7 @@ class ShaderModule {
   Type type_;
 
  private:
-  static void CheckCompileErrors(uint32_t id);
+  static void checkCompileErrors(uint32_t id);
 };
 
 class Shader {
@@ -44,27 +44,27 @@ class Shader {
   Shader(const Shader &) = delete;
   Shader(Shader &&other) noexcept;
   Shader &operator=(const Shader &) = delete;
-  Shader &operator=(Shader &&other);
+  Shader &operator=(Shader &&other) noexcept;
   ~Shader();
-  void Use();
-  void SetInt(const char *name, const int value);
-  void SetFloat(const char *name, const float value);
-  void SetVec3(const char *name, const glm::vec3 &value);
-  void SetVec4(const char *name, const glm::vec4 &value);
-  void SetMat4(const char *name, const glm::mat4 &value);
+  void use() const;
+  void setInt(const char *name, int value) const;
+  void setFloat(const char *name, float value) const;
+  void setVec3(const char *name, const glm::vec3 &value) const;
+  void setVec4(const char *name, const glm::vec4 &value) const;
+  void setMat4(const char *name, const glm::mat4 &value) const;
 
  private:
   uint32_t id_;
 
  private:
-  static void CheckLinkingErrors(uint32_t id);
-  void Delete();
+  static void checkLinkingErrors(uint32_t id);
+  void drop();
 };
 
 class ShaderBuilder {
  public:
-  ShaderBuilder &Load(std::string_view path, ShaderModule::Type type);
-  Shader Build() const;
+  ShaderBuilder &load(std::string_view path, ShaderModule::Type type);
+  Shader build() const;
 
  private:
   std::vector<ShaderModule> shaders_;

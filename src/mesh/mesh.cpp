@@ -4,7 +4,7 @@ Mesh::Mesh(PrimitiveTopology topology, size_t count)
     : count_{count}, topology_{topology} {
   glCreateVertexArrays(1, &id_);
 }
-Mesh::Mesh(Mesh &&other)
+Mesh::Mesh(Mesh &&other) noexcept
     : id_{other.id_},
       count_{other.count_},
       topology_{other.topology_},
@@ -24,14 +24,14 @@ Mesh::~Mesh() {
   glDeleteVertexArrays(1, &id_);
   id_ = 0;
 }
-void Mesh::Bind() const { glBindVertexArray(id_); }
-void Mesh::Unbind() const { glBindVertexArray(0); }
-PrimitiveTopology Mesh::GetTopology() const { return topology_; }
-void Mesh::AddVertexBuffer(VertexBuffer &&buffer) {
+void Mesh::bind() const { glBindVertexArray(id_); }
+void Mesh::unbind() const { glBindVertexArray(0); }
+PrimitiveTopology Mesh::getTopology() const { return topology_; }
+void Mesh::addVertexBuffer(VertexBuffer &&buffer) {
   glBindVertexArray(id_);
-  buffer.Bind();
+  buffer.bind();
 
-  auto layout = buffer.GetLayout();
+  auto layout = buffer.getLayout();
   for (const auto &element : layout.attributes) {
     glEnableVertexAttribArray(element.location);
     glVertexAttribPointer(element.location, element.count,
@@ -43,9 +43,9 @@ void Mesh::AddVertexBuffer(VertexBuffer &&buffer) {
   vertex_buffers_.push_back(std::move(buffer));
 }
 
-void Mesh::SetIndexBuffer(IndexBuffer &&buffer) {
+void Mesh::setIndexBuffer(IndexBuffer &&buffer) {
   glBindVertexArray(id_);
-  buffer.Bind();
+  buffer.bind();
 
   index_buffer_ = std::move(buffer);
 }

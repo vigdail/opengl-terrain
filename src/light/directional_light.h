@@ -5,13 +5,13 @@
 class DirectionalLight {
  public:
   DirectionalLight(glm::vec3 position, glm::vec3 look_at, float intensity = 20);
-  glm::vec3 GetDirection();
-  glm::vec3 GetPosition();
-  void SetPosition(glm::vec3 position);
-  glm::vec3 GetColor();
-  float GetIntensity();
-  void SetIntensity(float intensity);
-  void SetDirection(glm::vec3 direction);
+  glm::vec3 getDirection();
+  glm::vec3 getPosition();
+  void setPosition(glm::vec3 position);
+  glm::vec3 getColor();
+  float getIntensity() const;
+  void setIntensity(float intensity);
+  void setDirection(glm::vec3 direction);
 
  private:
   float intensity_;

@@ -4,21 +4,21 @@
 
 #include "gui_panel.h"
 
-class GUILayer {
+class GuiLayer {
  public:
-  explicit GUILayer(int width, int height);
-  ~GUILayer();
-  void Update(float delta_time);
-  void Render();
+  explicit GuiLayer(int width, int height);
+  ~GuiLayer();
+  void update(float delta_time) const;
+  void render();
   // @TODO: Refactor this
-  void OnMouseButtonEvent(int button, int action, int mode);
-  void OnKeyEvent(int key, int scancode, int action, int mode);
-  void OnMousePositionEvent(double x, double y);
-  void AddPanel(GUIPanel *panel);
+  static void onMouseButtonEvent(int button, int action, int mode);
+  static void onKeyEvent(int key, int scancode, int action, int mode);
+  static void onMousePositionEvent(double x, double y);
+  void addPanel(GuiPanel *panel);
 
  private:
   int width_;
   int height_;
 
-  std::vector<GUIPanel *> panels_;
+  std::vector<GuiPanel *> panels_;
 };

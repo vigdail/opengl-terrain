@@ -3,9 +3,9 @@
 #include <iostream>
 #include <string>
 
-void DebugMessageCallback(unsigned source, unsigned type, unsigned id,
+void debugMessageCallback(unsigned source, unsigned type, unsigned id,
                           unsigned severity, int length, const char *message,
-                          const void *userParam) {
+                          const void *user_param) {
   std::cerr << message << std::endl;
 }
 
@@ -28,29 +28,31 @@ Application::Application(uint32_t width, uint32_t height)
     glfwTerminate();
   }
 
-  int screenWidth, screeHeight;
-  glfwGetMonitorWorkarea(monitor, NULL, NULL, &screenWidth, &screeHeight);
-  glfwSetWindowPos(window_, (screenWidth - width) / 2,
-                   (screeHeight - height) / 2);
+  int screen_width, scree_height;
+  glfwGetMonitorWorkarea(monitor, nullptr, nullptr, &screen_width,
+                         &scree_height);
+  int xpos = (screen_width - static_cast<int>(width)) / 2;
+  int ypos = (scree_height - static_cast<int>(height)) / 2;
+  glfwSetWindowPos(window_, xpos, ypos);
 
-  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+  if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
     std::cout << "Failed to initialize GLAD" << std::endl;
   }
 
   glfwSetWindowUserPointer(window_, this);
 
-  glfwSetKeyCallback(window_, KeyCallback);
-  glfwSetCursorPosCallback(window_, MouseCallback);
-  glfwSetMouseButtonCallback(window_, MouseButtonCallback);
-  glfwSetFramebufferSizeCallback(window_, FramebufferSizeCallback);
+  glfwSetKeyCallback(window_, keyCallback);
+  glfwSetCursorPosCallback(window_, mouseCallback);
+  glfwSetMouseButtonCallback(window_, mouseButtonCallback);
+  glfwSetFramebufferSizeCallback(window_, framebufferSizeCallback);
 
 #ifndef NDEBUG
   glEnable(GL_DEBUG_OUTPUT);
   glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-  glDebugMessageCallback(DebugMessageCallback, nullptr);
+  glDebugMessageCallback(debugMessageCallback, nullptr);
 
   glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE,
-                        GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
+                        GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE);
 #endif
 
   glEnable(GL_DEPTH_TEST);
@@ -65,31 +67,31 @@ Application::Application(uint32_t width, uint32_t height)
 
 Application::~Application() { glfwTerminate(); }
 
-void Application::Run() {
+void Application::run() {
   float last_time = 0.0f;
   while (!glfwWindowShouldClose(window_)) {
-    float current_time = glfwGetTime();
+    auto current_time = (float)glfwGetTime();
     float delta_time = current_time - last_time;
     last_time = current_time;
 
-    int fps = floor(1.0f / delta_time);
+    int fps = floor(1.0 / delta_time);
     std::string title = "OpenGL Terrain | " + std::to_string(fps);
     glfwSetWindowTitle(window_, title.c_str());
 
     glfwPollEvents();
 
-    scene_->ProcessInput(delta_time);
+    scene_->processInput(delta_time);
 
-    scene_->Update(delta_time);
+    scene_->update(delta_time);
 
-    // scene_->Render();
-    renderer_->Render(scene_.get());
+    // scene_->render();
+    renderer_->render(scene_.get());
 
     glfwSwapBuffers(window_);
   }
 }
 
-void Application::KeyCallback(GLFWwindow *window, int key, int scancode,
+void Application::keyCallback(GLFWwindow *window, int key, int scancode,
                               int action, int mode) {
   auto self = static_cast<Application *>(glfwGetWindowUserPointer(window));
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
@@ -97,30 +99,30 @@ void Application::KeyCallback(GLFWwindow *window, int key, int scancode,
   }
   // @TODO: Find out a proper way to handle cursor visibility
   if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
-    int cursore_mode;
+    int cursor_mode;
     if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED) {
-      cursore_mode = GLFW_CURSOR_NORMAL;
+      cursor_mode = GLFW_CURSOR_NORMAL;
     } else {
-      cursore_mode = GLFW_CURSOR_DISABLED;
+      cursor_mode = GLFW_CURSOR_DISABLED;
     }
-    glfwSetInputMode(window, GLFW_CURSOR, cursore_mode);
+    glfwSetInputMode(window, GLFW_CURSOR, cursor_mode);
   }
 
-  self->scene_->OnKeyEvent(key, scancode, action, mode);
+  self->scene_->onKeyEvent(key, scancode, action, mode);
 }
 
-void Application::MouseCallback(GLFWwindow *window, double x, double y) {
+void Application::mouseCallback(GLFWwindow *window, double x, double y) {
   auto self = static_cast<Application *>(glfwGetWindowUserPointer(window));
-  self->scene_->OnMousePositionEvent(x, y);
+  self->scene_->onMousePositionEvent(x, y);
 }
 
-void Application::MouseButtonCallback(GLFWwindow *window, int button,
+void Application::mouseButtonCallback(GLFWwindow *window, int button,
                                       int action, int mode) {
   auto self = static_cast<Application *>(glfwGetWindowUserPointer(window));
-  self->scene_->OnMouseButtonEvent(button, action, mode);
+  self->scene_->onMouseButtonEvent(button, action, mode);
 }
 
-void Application::FramebufferSizeCallback(GLFWwindow *window, int width,
+void Application::framebufferSizeCallback(GLFWwindow *window, int width,
                                           int height) {
   glViewport(0, 0, width, height);
 }

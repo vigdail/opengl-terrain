@@ -6,9 +6,9 @@
 
 class Renderer {
  public:
-  void Render(Scene *scene) {
+  void render(Scene *scene) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    skybox_pass_.Render(scene, &context_);
+    skybox_pass_.render(scene, &context_);
   }
 
  private:

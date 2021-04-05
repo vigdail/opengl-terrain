@@ -1,10 +1,10 @@
 #include "water_renderer.h"
-#include <glm/gtc/matrix_transform.hpp>
 #include <GLFW/glfw3.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 WaterRenderer::WaterRenderer(int width, int height)
-    : mesh_(Plane(500.0f).ToMesh()), height_(15.0f) {
-  shader_ = ResourceManager::GetShader("water");
+    : mesh_(Plane(500.0f).toMesh()), height_(15.0f) {
+  shader_ = ResourceManager::getShader("water");
 
   material_.specular_power = 32.0f;
   material_.reflection_power = 0.5f;
@@ -22,55 +22,55 @@ WaterRenderer::WaterRenderer(int width, int height)
   spec.height = height / 4;
   reflection_framebuffer_ = std::make_unique<FrameBuffer>(spec);
 
-  dudv_map_ = ResourceManager::GetTexture("water_dudv");
-  normal_map_ = ResourceManager::GetTexture("water_normal");
+  dudv_map_ = ResourceManager::getTexture("water_dudv");
+  normal_map_ = ResourceManager::getTexture("water_normal");
 }
 
-void WaterRenderer::BindReflectionFramebuffer() {
-  reflection_framebuffer_->Bind();
+void WaterRenderer::bindReflectionFramebuffer() {
+  reflection_framebuffer_->bind();
 }
 
-void WaterRenderer::BindRefractionFramebuffer() {
-  refraction_framebuffer_->Bind();
+void WaterRenderer::bindRefractionFramebuffer() {
+  refraction_framebuffer_->bind();
 }
 
-void WaterRenderer::Render(Camera *camera, DirectionalLight *sun) {
+void WaterRenderer::render(Camera *camera, DirectionalLight *sun) {
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  shader_->Use();
+  shader_->use();
 
-  shader_->SetInt("reflection", 0);
-  shader_->SetInt("refraction", 1);
-  shader_->SetInt("dudv", 2);
-  shader_->SetInt("normalmap", 3);
-  shader_->SetInt("depthmap", 4);
+  shader_->setInt("reflection", 0);
+  shader_->setInt("refraction", 1);
+  shader_->setInt("dudv", 2);
+  shader_->setInt("normalmap", 3);
+  shader_->setInt("depthmap", 4);
 
-  reflection_framebuffer_->GetTexture(0)->Bind(0);
-  refraction_framebuffer_->GetTexture(0)->Bind(1);
-  dudv_map_->Bind(2);
-  normal_map_->Bind(3);
-  refraction_framebuffer_->GetDepth()->Bind(4);
+  reflection_framebuffer_->getTexture(0)->bind(0);
+  refraction_framebuffer_->getTexture(0)->bind(1);
+  dudv_map_->bind(2);
+  normal_map_->bind(3);
+  refraction_framebuffer_->getDepth()->bind(4);
 
   glm::mat4 model = glm::mat4(1.0f);
   model = glm::translate(model, glm::vec3(0.0f, height_, 0.0f));
   model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 
-  shader_->SetMat4("model", model);
-  shader_->SetMat4("view", camera->getViewMatrix());
-  shader_->SetMat4("projection", camera->getProjectionMatrix());
-  shader_->SetFloat("time", glfwGetTime());
-  shader_->SetVec3("camera_position", camera->position);
-  shader_->SetFloat("camera_near", camera->near);
-  shader_->SetFloat("camera_far", camera->far);
-  shader_->SetVec3("sun.direction", sun->GetDirection());
-  shader_->SetVec3("sun.color", sun->GetColor());
-  shader_->SetFloat("sun.intensity", sun->GetIntensity());
-  shader_->SetFloat("reflection_power", material_.reflection_power);
-  shader_->SetFloat("specular_power", material_.specular_power);
-  shader_->SetFloat("dudv_tiling", material_.dudv_tiling);
+  shader_->setMat4("model", model);
+  shader_->setMat4("view", camera->getViewMatrix());
+  shader_->setMat4("projection", camera->getProjectionMatrix());
+  shader_->setFloat("time", glfwGetTime());
+  shader_->setVec3("camera_position", camera->position);
+  shader_->setFloat("camera_near", camera->near);
+  shader_->setFloat("camera_far", camera->far);
+  shader_->setVec3("sun.direction", sun->getDirection());
+  shader_->setVec3("sun.color", sun->getColor());
+  shader_->setFloat("sun.intensity", sun->getIntensity());
+  shader_->setFloat("reflection_power", material_.reflection_power);
+  shader_->setFloat("specular_power", material_.specular_power);
+  shader_->setFloat("dudv_tiling", material_.dudv_tiling);
 
-  mesh_.Bind();
-  glDrawElements(static_cast<GLenum>(mesh_.GetTopology()), mesh_.Count(),
+  mesh_.bind();
+  glDrawElements(static_cast<GLenum>(mesh_.getTopology()), mesh_.count(),
                  GL_UNSIGNED_INT, 0);
 
   glDisable(GL_BLEND);

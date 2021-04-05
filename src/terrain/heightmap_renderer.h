@@ -4,8 +4,7 @@
 
 class HeightmapRenderer {
  public:
-  HeightmapRenderer();
-  Texture Render(int width, int height, int octaves);
+  static Texture render(int width, int height, int octaves);
 
  private:
 };

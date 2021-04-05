@@ -19,10 +19,10 @@ class Camera {
  public:
   glm::vec3 position;
   glm::vec3 front;
-  glm::vec3 up;
-  glm::vec3 right;
+  glm::vec3 up{};
+  glm::vec3 right{};
 
-  glm::vec3 worldUp;
+  glm::vec3 world_up;
 
   float yaw;
   float pitch;
@@ -36,16 +36,16 @@ class Camera {
   Camera();
   Camera(float fov, float aspect, float near, float far);
 
-  glm::mat4 getViewMatrix();
+  glm::mat4 getViewMatrix() const;
   glm::mat4 getProjectionMatrix() { return projection_; }
 
   void move(CameraMovement direction, float dt);
-  void handleMouseMovement(float dx, float dy, bool contrainPitch = true);
+  void handleMouseMovement(float dx, float dy, bool constrain_pitch = true);
   void handleMouseScroll(float dy);
-  void Disable();
-  void Enable();
-  void Toggle();
-  void InvertPitch();
+  void disable();
+  void enable();
+  void toggle();
+  void invertPitch();
 
  private:
   bool active_;

@@ -20,9 +20,9 @@ class ResourceManager {
 
  public:
   ResourceManager() = delete;
-  static void AddShader(std::string name, const ShaderBuilder &builder);
-  static ShaderHandle GetShader(std::string name);
+  static void addShader(const std::string &name, const ShaderBuilder &builder);
+  static ShaderHandle getShader(const std::string &name);
 
-  static void AddTexture(std::string name, const TextureBuilder &bulder);
-  static TextureHandle GetTexture(std::string name);
+  static void addTexture(const std::string &name, const TextureBuilder &builder);
+  static TextureHandle getTexture(const std::string &name);
 };

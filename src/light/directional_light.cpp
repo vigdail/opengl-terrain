@@ -9,18 +9,18 @@ DirectionalLight::DirectionalLight(glm::vec3 position, glm::vec3 look_at,
       direction_(glm::normalize(position - look_at)),
       color_(glm::vec3(1.0f)) {}
 
-glm::vec3 DirectionalLight::GetDirection() {
+glm::vec3 DirectionalLight::getDirection() {
   return glm::normalize(direction_);
 }
-void DirectionalLight::SetDirection(glm::vec3 direction) {
+void DirectionalLight::setDirection(glm::vec3 direction) {
   direction_ = direction;
 }
 
-glm::vec3 DirectionalLight::GetPosition() { return position_; }
-void DirectionalLight::SetPosition(glm::vec3 position) {
+glm::vec3 DirectionalLight::getPosition() { return position_; }
+void DirectionalLight::setPosition(glm::vec3 position) {
   position_ = position;
   direction_ = glm::normalize(position_ - look_at_);
 }
-glm::vec3 DirectionalLight::GetColor() { return color_; }
-float DirectionalLight::GetIntensity() { return intensity_; }
-void DirectionalLight::SetIntensity(float intensity) { intensity_ = intensity; }
+glm::vec3 DirectionalLight::getColor() { return color_; }
+float DirectionalLight::getIntensity() const { return intensity_; }
+void DirectionalLight::setIntensity(float intensity) { intensity_ = intensity; }

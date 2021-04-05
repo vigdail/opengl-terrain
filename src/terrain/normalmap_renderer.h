@@ -4,8 +4,7 @@
 
 class NormalmapRenderer {
  public:
-  NormalmapRenderer();
-  Texture Render(const Texture &heightmap);
+  static Texture render(const Texture &heightmap);
 
  private:
 };

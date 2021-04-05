@@ -1,39 +1,39 @@
 #pragma once
 
-#include <vector>
-#include <optional>
 #include "texture.h"
+#include <optional>
+#include <vector>
 
 class FrameBuffer {
  public:
   struct Spec {
-    int width;
-    int height;
+    uint32_t width;
+    uint32_t height;
     bool is_multisampled = false;
     std::vector<uint32_t> color_formats;
     uint32_t depth_format;
   };
 
-  explicit FrameBuffer(const Spec &spec) noexcept;
+  explicit FrameBuffer(Spec spec) noexcept;
   FrameBuffer(const FrameBuffer &) = delete;
   FrameBuffer(FrameBuffer &&) noexcept;
   FrameBuffer &operator=(const FrameBuffer &) = delete;
-  FrameBuffer &operator=(FrameBuffer &&);
+  FrameBuffer &operator=(FrameBuffer &&) noexcept;
   virtual ~FrameBuffer();
 
-  Texture *GetTexture(int i) { return &color_attachments_[i]; }
-  Texture *GetDepth() { return &depth_attachment_.value(); }
+  Texture *getTexture(int i) { return &color_attachments_[i]; }
+  Texture *getDepth() { return &depth_attachment_.value(); }
 
  public:
-  void Bind();
-  void Unbind();
+  void bind() const;
+  void unbind() const;
 
  protected:
-  uint32_t ID_;
+  uint32_t id_{};
   Spec spec_;
   std::vector<Texture> color_attachments_;
   std::optional<Texture> depth_attachment_;
 
  private:
-  void Delete();
+  void drop();
 };

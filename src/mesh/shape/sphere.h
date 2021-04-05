@@ -11,7 +11,7 @@ class Sphere {
     glm::vec3 normal;
     glm::vec2 uv;
 
-    static BufferLayout GetLayout() {
+    static BufferLayout getLayout() {
       VertexAttribute position_attr{};
       position_attr.count = 3;
       position_attr.offset = 0;
@@ -38,10 +38,10 @@ class Sphere {
 
  public:
   Sphere(int u, int v, float radius);
-  Mesh ToMesh() const {
-    Mesh mesh{PrimitiveTopology::Triangle, indices_.size()};
-    mesh.AddVertexBuffer(VertexBuffer{vertices_, Vertex::GetLayout()});
-    mesh.SetIndexBuffer(IndexBuffer{indices_});
+  Mesh toMesh() const {
+    Mesh mesh{PrimitiveTopology::TRIANGLE, indices_.size()};
+    mesh.addVertexBuffer(VertexBuffer{vertices_, Vertex::getLayout()});
+    mesh.setIndexBuffer(IndexBuffer{indices_});
 
     return mesh;
   }
@@ -54,6 +54,6 @@ class Sphere {
   std::vector<uint32_t> indices_;
 
  private:
-  void GenerateVertices();
-  void GenerateIndices();
+  void generateVertices();
+  void generateIndices();
 };

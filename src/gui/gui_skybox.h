@@ -4,11 +4,11 @@
 #include "gui_panel.h"
 #include <imgui/imgui.h>
 
-class GUISkyboxPanel : public GUIPanel {
+class GuiSkyboxPanel : public GuiPanel {
  public:
-  explicit GUISkyboxPanel(Atmosphere &atmosphere);
+  explicit GuiSkyboxPanel(Atmosphere &atmosphere);
 
-  void Render() override;
+  void render() override;
 
  private:
   Atmosphere &atmosphere_;

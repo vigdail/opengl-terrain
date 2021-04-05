@@ -1,7 +1,7 @@
 #pragma once
 
-#include <glad/glad.h>
 #include <cstddef>
+#include <glad/glad.h>
 
 enum class VertexFormat {
   FLOAT = GL_FLOAT,

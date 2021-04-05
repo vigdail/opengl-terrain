@@ -11,7 +11,7 @@ class Plane {
     glm::vec3 position;
     glm::vec2 uv;
 
-    static BufferLayout GetLayout() {
+    static BufferLayout getLayout() {
       VertexAttribute position_attr{};
       position_attr.count = 3;
       position_attr.offset = 0;
@@ -32,12 +32,10 @@ class Plane {
   };
 
  public:
-  Plane(float size = 1.0f);
-  Mesh ToMesh() const;
+  explicit Plane(float size = 1.0f);
+  Mesh toMesh() const;
 
  private:
   std::vector<Vertex> vertices_;
   std::vector<uint32_t> indices_;
-
- private:
 };

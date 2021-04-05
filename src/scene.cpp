@@ -1,94 +1,84 @@
 #include "scene.h"
 #include "application.h"
 
-#include <iostream>
-#include <string>
-#include <utility>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include "gui/gui_skybox.h"
 #include "gui/gui_sun.h"
-#include "gui/gui_water.h"
 #include "gui/gui_terrain.h"
+#include "gui/gui_water.h"
+#include <glm/glm.hpp>
+#include <string>
 
-const uint Scene::kKeysCount_;
+const uint Scene::keys_count_;
 
 Scene::Scene(uint width, uint height)
     : camera(Camera(60.0f, 1.0f * width / height, 0.1f, 1000.0f)),
       light(DirectionalLight(glm::vec3(0.0f), glm::vec3(0.0f))),
-      keys_(),
-      width_(width),
-      height_(height),
-      mouse_last_x_(0.0),
-      mouse_last_y_(0.0) {
-  LoadAssets();
+      width_(width), height_(height), keys_(), mouse_last_x_(0.0), mouse_last_y_(0.0) {
+  loadAssets();
   camera.position = glm::vec3(-440.0f, 3.0f, 0.0f);
   terrain_ = std::make_shared<Terrain>(1000, 1024, 1024);
   skybox = std::make_unique<Skybox>();
   water_ = std::make_shared<WaterRenderer>(width, height);
 
-  auto quad = std::make_shared<Mesh>(Quad().ToMesh());
+  auto quad = std::make_shared<Mesh>(Quad().toMesh());
   meshes_.push_back(quad);
 
-  gui_ = std::make_unique<GUILayer>(width, height);
-  gui_->AddPanel(new GUISkyboxPanel(skybox->GetAtmosphere()));
-  gui_->AddPanel(new GUISunPanel(&light));
-  gui_->AddPanel(new GUIWaterPanel(water_));
-  gui_->AddPanel(new GUITerrainPanel(terrain_));
+  gui_ = std::make_unique<GuiLayer>(width, height);
+  gui_->addPanel(new GuiSkyboxPanel(skybox->getAtmosphere()));
+  gui_->addPanel(new GuiSunPanel(&light));
+  gui_->addPanel(new GuiWaterPanel(water_));
+  gui_->addPanel(new GuiTerrainPanel(terrain_));
 }
 
-void Scene::LoadAssets() {
-  ResourceManager::AddShader(
+void Scene::loadAssets() {
+  ResourceManager::addShader(
       "terrain",
       ShaderBuilder()
-          .Load("../assets/shaders/terrain.vs", ShaderModule::Type::Vertex)
-          .Load("../assets/shaders/terrain.fs", ShaderModule::Type::Fragment));
-  ResourceManager::AddShader(
+          .load("../assets/shaders/terrain.vs", ShaderModule::Type::VERTEX)
+          .load("../assets/shaders/terrain.fs", ShaderModule::Type::FRAGMENT));
+  ResourceManager::addShader(
       "skybox",
       ShaderBuilder()
-          .Load("../assets/shaders/skybox.vs", ShaderModule::Type::Vertex)
-          .Load("../assets/shaders/skybox.fs", ShaderModule::Type::Fragment));
-  ResourceManager::AddShader(
+          .load("../assets/shaders/skybox.vs", ShaderModule::Type::VERTEX)
+          .load("../assets/shaders/skybox.fs", ShaderModule::Type::FRAGMENT));
+  ResourceManager::addShader(
       "solid",
       ShaderBuilder()
-          .Load("../assets/shaders/solid_color.vs", ShaderModule::Type::Vertex)
-          .Load("../assets/shaders/solid_color.fs",
-                ShaderModule::Type::Fragment));
-  ResourceManager::AddShader(
+          .load("../assets/shaders/solid_color.vs", ShaderModule::Type::VERTEX)
+          .load("../assets/shaders/solid_color.fs",
+                ShaderModule::Type::FRAGMENT));
+  ResourceManager::addShader(
       "sprite",
       ShaderBuilder()
-          .Load("../assets/shaders/sprite.vs", ShaderModule::Type::Vertex)
-          .Load("../assets/shaders/sprite.fs", ShaderModule::Type::Fragment));
-  ResourceManager::AddShader(
+          .load("../assets/shaders/sprite.vs", ShaderModule::Type::VERTEX)
+          .load("../assets/shaders/sprite.fs", ShaderModule::Type::FRAGMENT));
+  ResourceManager::addShader(
       "water",
       ShaderBuilder()
-          .Load("../assets/shaders/water.vs", ShaderModule::Type::Vertex)
-          .Load("../assets/shaders/water.fs", ShaderModule::Type::Fragment));
+          .load("../assets/shaders/water.vs", ShaderModule::Type::VERTEX)
+          .load("../assets/shaders/water.fs", ShaderModule::Type::FRAGMENT));
 
-  ResourceManager::AddShader(
+  ResourceManager::addShader(
       "compute_normalmap",
-      ShaderBuilder().Load("../assets/shaders/compute/normalmap.comp",
-                           ShaderModule::Type::Compute));
-  ResourceManager::AddShader(
+      ShaderBuilder().load("../assets/shaders/compute/normalmap.comp",
+                           ShaderModule::Type::COMPUTE));
+  ResourceManager::addShader(
       "compute_heightmap",
-      ShaderBuilder().Load("../assets/shaders/compute/heightmap.comp",
-                           ShaderModule::Type::Compute));
+      ShaderBuilder().load("../assets/shaders/compute/heightmap.comp",
+                           ShaderModule::Type::COMPUTE));
 
   TextureSamplerDescriptor sampler{};
   sampler.wrap_s = GL_REPEAT;
   sampler.wrap_t = GL_REPEAT;
-  ResourceManager::AddTexture("water_dudv",
+  ResourceManager::addTexture("water_dudv",
                               TextureBuilder()
-                                  .Load("../assets/textures/water_dudv.png")
-                                  .WithSampler(sampler));
-  ResourceManager::AddTexture(
-      "water_normal", TextureBuilder()
-                          .Load("../assets/textures/water_normalmap.png")
-                          .WithSampler(sampler));
+                                  .load("../assets/textures/water_dudv.png")
+                                  .withSampler(sampler));
+  ResourceManager::addTexture(
+      "water_normal", TextureBuilder().load("../assets/textures/water_normalmap.png").withSampler(sampler));
 }
 
-void Scene::ProcessInput(float dt) {
+void Scene::processInput(float dt) {
   if (keys_[GLFW_KEY_W]) {
     camera.move(CameraMovement::FORWARD, dt);
   }
@@ -103,27 +93,27 @@ void Scene::ProcessInput(float dt) {
   }
 }
 
-void Scene::Update(float dt) {
+void Scene::update(float dt) {
   camera.position.y =
-      terrain_->GetHeight(camera.position.x, camera.position.z) + 1.7f;
-  gui_->Update(dt);
+      terrain_->getHeight(camera.position.x, camera.position.z) + 1.7f;
+  gui_->update(dt);
 }
 
-// void Scene::Render() {
+// void Scene::render() {
 //   // Water refraction pass
-//   water_->BindRefractionFramebuffer();
+//   water_->bindRefractionFramebuffer();
 //   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 //   glEnable(GL_CLIP_DISTANCE0);
-//   RenderScene(glm::vec4(0.0f, -1.0f, 0.0f, water_->GetHeight()));
+//   RenderScene(glm::vec4(0.0f, -1.0f, 0.0f, water_->getHeight()));
 
 //   // Water reflection pass
-//   water_->BindReflectionFramebuffer();
+//   water_->bindReflectionFramebuffer();
 //   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//   float dy = 2.0f * (camera.position.y - water_->GetHeight());
+//   float dy = 2.0f * (camera.position.y - water_->getHeight());
 //   camera.position.y -= dy;
-//   camera.InvertPitch();
-//   RenderScene(glm::vec4(0.0f, 1.0f, 0.0f, -water_->GetHeight() + 0.07f));
-//   camera.InvertPitch();
+//   camera.invertPitch();
+//   RenderScene(glm::vec4(0.0f, 1.0f, 0.0f, -water_->getHeight() + 0.07f));
+//   camera.invertPitch();
 //   camera.position.y += dy;
 
 //   // Main pass
@@ -133,84 +123,84 @@ void Scene::Update(float dt) {
 //   glViewport(0, 0, width_, height_);
 //   RenderScene(glm::vec4(0.0f));
 
-//   water_->Render(&camera, &light);
+//   water_->render(&camera, &light);
 
-//   ShaderHandle sprite = ResourceManager::GetShader("sprite");
-//   sprite->Use();
+//   ShaderHandle sprite = ResourceManager::getShader("sprite");
+//   sprite->use();
 //   glm::mat4 model(1.0f);
 //   model = glm::translate(model, glm::vec3((width_ - 200.0f), 0.0f, 0.0f));
 //   model = glm::scale(model, glm::vec3(200.0f, 200.0f, 1.0f));
 //   glm::mat4 proj = glm::ortho(0.0f, static_cast<float>(width_),
 //                               static_cast<float>(height_), 0.0f);
-//   sprite->SetMat4("projection", proj);
+//   sprite->setMat4("projection", proj);
 //   for (auto& mesh : meshes_) {
-//     mesh->Bind();
-//     sprite->SetMat4("model", model);
-//     glDrawElements(static_cast<GLenum>(mesh->GetTopology()), mesh->Count(),
+//     mesh->bind();
+//     sprite->setMat4("model", model);
+//     glDrawElements(static_cast<GLenum>(mesh->getTopology()), mesh->count(),
 //                    GL_UNSIGNED_INT, 0);
 //   }
 
-//   gui_->Render();
+//   gui_->render();
 // }
 
 // void Scene::RenderScene(glm::vec4 clip_plane) {
-//   ShaderHandle terrainShader = ResourceManager::GetShader("terrain");
-//   ShaderHandle skyboxShader = ResourceManager::GetShader("skybox");
+//   ShaderHandle terrainShader = ResourceManager::getShader("terrain");
+//   ShaderHandle skyboxShader = ResourceManager::getShader("skybox");
 
-//   terrainShader->Use();
-//   terrainShader->SetMat4("view", camera.getViewMatrix());
-//   terrainShader->SetMat4("projection", camera.getProjectionMatrix());
-//   terrainShader->SetVec3("light.direction",
-//                          glm::normalize(light.GetDirection()));
-//   terrainShader->SetVec3("light.color", light.GetColor());
-//   terrainShader->SetFloat("light.intensity", light.GetIntensity());
-//   terrainShader->SetVec4("clipPlane", clip_plane);
-//   terrain_->Draw(terrainShader);
+//   terrainShader->use();
+//   terrainShader->setMat4("view", camera.getViewMatrix());
+//   terrainShader->setMat4("projection", camera.getProjectionMatrix());
+//   terrainShader->setVec3("light.direction",
+//                          glm::normalize(light.getDirection()));
+//   terrainShader->setVec3("light.color", light.getColor());
+//   terrainShader->setFloat("light.intensity", light.getIntensity());
+//   terrainShader->setVec4("clipPlane", clip_plane);
+//   terrain_->draw(terrainShader);
 // }
 
-void Scene::OnKeyEvent(int key, int scancode, int action, int mode) {
-  gui_->OnKeyEvent(key, scancode, action, mode);
+void Scene::onKeyEvent(int key, int scancode, int action, int mode) {
+  gui_->onKeyEvent(key, scancode, action, mode);
 
   if (action == GLFW_PRESS) {
-    SetKeyPressed(key);
+    setKeyPressed(key);
   } else if (action == GLFW_RELEASE) {
-    SetKeyReleased(key);
+    setKeyReleased(key);
   }
   if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
-    camera.Toggle();
+    camera.toggle();
   }
 }
 
-void Scene::OnMouseButtonEvent(int button, int action, int mode) {
-  gui_->OnMouseButtonEvent(button, action, mode);
+void Scene::onMouseButtonEvent(int button, int action, int mode) {
+  gui_->onMouseButtonEvent(button, action, mode);
 }
 
-void Scene::OnMousePositionEvent(double x, double y) {
-  float offsetX = x - mouse_last_x_;
-  float offsetY = mouse_last_y_ - y;
+void Scene::onMousePositionEvent(double x, double y) {
+  auto offset_x = static_cast<float>(x - mouse_last_x_);
+  auto offset_y = static_cast<float>(mouse_last_y_ - y);
 
   mouse_last_x_ = x;
   mouse_last_y_ = y;
 
-  camera.handleMouseMovement(offsetX, offsetY);
+  camera.handleMouseMovement(offset_x, offset_y);
 
-  gui_->OnMousePositionEvent(x, y);
+  gui_->onMousePositionEvent(x, y);
 }
 
-void Scene::SetKeyPressed(uint key) {
-  if (key < kKeysCount_) {
+void Scene::setKeyPressed(uint key) {
+  if (key < keys_count_) {
     keys_[key] = true;
   }
 }
 
-void Scene::SetKeyReleased(uint key) {
-  if (key < kKeysCount_) {
+void Scene::setKeyReleased(uint key) {
+  if (key < keys_count_) {
     keys_[key] = false;
   }
 }
 
-bool Scene::IsKeyPressed(uint key) {
-  if (key < kKeysCount_) {
+bool Scene::isKeyPressed(uint key) {
+  if (key < keys_count_) {
     return keys_[key];
   }
 

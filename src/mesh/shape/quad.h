@@ -14,7 +14,7 @@ class Quad {
     glm::vec3 position;
     glm::vec2 uv;
 
-    static BufferLayout GetLayout() {
+    static BufferLayout getLayout() {
       VertexAttribute position_attr{};
       position_attr.count = 3;
       position_attr.offset = 0;
@@ -35,7 +35,7 @@ class Quad {
   };
 
   Quad();
-  Mesh ToMesh() const;
+  Mesh toMesh() const;
 
  private:
   std::vector<Vertex> vertices_;
