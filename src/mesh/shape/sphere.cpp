@@ -1,7 +1,5 @@
 #include "sphere.h"
-#include <glad/glad.h>
 #include <cmath>
-#include <iostream>
 
 // @TODO: Fill initial vectors size
 Sphere::Sphere(int sectors, int stacks, float radius)
@@ -12,51 +10,51 @@ Sphere::Sphere(int sectors, int stacks, float radius)
       indices_() {
   assert(sectors > 0);
   assert(stacks > 0);
-  GenerateVertices();
-  GenerateIndices();
+  generateVertices();
+  generateIndices();
 }
 
-void Sphere::GenerateVertices() {
-  float sector_step = 2 * M_PI / sectors_;
+void Sphere::generateVertices() {
+  float sector_step = M_PI / sectors_ * 2.0f;
   float stack_step = M_PI / stacks_;
 
   for (int i = 0; i <= stacks_; ++i) {
-    float stack_angle = i * stack_step;
+    float stack_angle = (float)i * stack_step;
     float xz = sinf(stack_angle);
     float y = cosf(stack_angle);
 
     for (int j = 0; j <= sectors_; ++j) {
-      float sector_angle = j * sector_step;
+      float sector_angle = (float)j * sector_step;
 
       float x = xz * cosf(sector_angle);
       float z = xz * sinf(sector_angle);
       glm::vec3 position = glm::vec3(x, y, z) * radius_;
 
       glm::vec3 normal(x, y, z);
-      float s = static_cast<float>(j) / sectors_;
-      float t = static_cast<float>(i) / stacks_;
+      float s = (float)j / (float)sectors_;
+      float t = (float)i / (float)stacks_;
       glm::vec2 uv(s, t);
       vertices_.push_back({position, normal, uv});
     }
   }
 }
 
-void Sphere::GenerateIndices() {
+void Sphere::generateIndices() {
   for (int i = 0; i < stacks_; ++i) {
-    int k1 = i * (sectors_ + 1);
-    int k2 = k1 + sectors_ + 1;
+    int k = i * (sectors_ + 1);
+    int m = k + sectors_ + 1;
 
-    for (int j = 0; j < sectors_; ++j, ++k1, ++k2) {
+    for (int j = 0; j < sectors_; ++j, ++k, ++m) {
       if (i != 0) {
-        indices_.push_back(k1);
-        indices_.push_back(k1 + 1);
-        indices_.push_back(k2);
+        indices_.push_back(k);
+        indices_.push_back(k + 1);
+        indices_.push_back(m);
       }
 
       if (i != (stacks_ - 1)) {
-        indices_.push_back(k1 + 1);
-        indices_.push_back(k2 + 1);
-        indices_.push_back(k2);
+        indices_.push_back(k + 1);
+        indices_.push_back(m + 1);
+        indices_.push_back(m);
       }
     }
   }

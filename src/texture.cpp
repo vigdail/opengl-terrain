@@ -1,16 +1,16 @@
 #include "texture.h"
+#include <iostream>
 #include <memory>
 #include <utility>
-#include <iostream>
 
 Texture::Texture() noexcept : view_{} { glGenTextures(1, &id_); }
 
 Texture::Texture(Texture &&other) noexcept
     : id_(std::exchange(other.id_, 0)), view_{other.view_} {}
 
-Texture &Texture::operator=(Texture &&other) {
+Texture &Texture::operator=(Texture &&other) noexcept {
   if (this != &other) {
-    Delete();
+    drop();
     std::swap(id_, other.id_);
     std::swap(view_, other.view_);
   }
@@ -18,32 +18,32 @@ Texture &Texture::operator=(Texture &&other) {
   return *this;
 }
 
-Texture::~Texture() { Delete(); }
+Texture::~Texture() { drop(); }
 
-void Texture::Delete() {
+void Texture::drop() {
   glDeleteTextures(1, &id_);
   id_ = 0;
 }
 
-void Texture::Bind(uint32_t unit) const { glBindTextureUnit(unit, id_); }
+void Texture::bind(uint32_t unit) const { glBindTextureUnit(unit, id_); }
 
-void Texture::BindImage(uint32_t unit) const {
+void Texture::bindImage(uint32_t) const {
   glBindImageTexture(0, id_, 0, GL_FALSE, 0, GL_WRITE_ONLY,
                      view_.internal_format);
 }
 
-TextureBuilder &TextureBuilder::WithSampler(
+TextureBuilder &TextureBuilder::withSampler(
     const TextureSamplerDescriptor &sampler) {
   sampler_ = sampler;
   return *this;
 }
 
-TextureBuilder &TextureBuilder::WithView(const TextureViewDescriptor &view) {
+TextureBuilder &TextureBuilder::withView(const TextureViewDescriptor &view) {
   view_ = view;
   return *this;
 }
 
-TextureBuilder &TextureBuilder::Load(std::string_view path) {
+TextureBuilder &TextureBuilder::load(std::string_view path) {
   if (data_) {
     stbi_image_free(data_);
   }
@@ -56,7 +56,7 @@ TextureBuilder &TextureBuilder::Load(std::string_view path) {
   if (!data_) {
     std::cerr << "ERROR::TEXTURE: Unable to load texture from file: " << path
               << std::endl;
-    throw std::runtime_error("Failer to load texture from file");
+    throw std::runtime_error("Failed to load texture from file");
   }
 
   view_.width = width;
@@ -73,7 +73,7 @@ TextureBuilder &TextureBuilder::Load(std::string_view path) {
   return *this;
 }
 
-Texture TextureBuilder::Build() const {
+Texture TextureBuilder::build() const {
   Texture texture;
 
   texture.view_ = view_;

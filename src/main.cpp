@@ -3,7 +3,7 @@
 int main() {
   try {
     Application app;
-    app.Run();
+    app.run();
   } catch (const std::runtime_error& e) {
     std::cout << e.what() << '\n';
   }

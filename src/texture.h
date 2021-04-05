@@ -31,32 +31,32 @@ class Texture {
   Texture(const Texture &) = delete;
   Texture(Texture &&other) noexcept;
   Texture &operator=(const Texture &) = delete;
-  Texture &operator=(Texture &&other);
+  Texture &operator=(Texture &&other) noexcept;
   ~Texture();
-  void Bind(uint32_t unit = 0) const;
-  void BindImage(uint32_t unit = 0) const;
+  void bind(uint32_t unit = 0) const;
+  void bindImage(uint32_t unit = 0) const;
   // @TODO: Don't expose internal id
-  uint32_t GetID() const { return id_; }
-  uint32_t GetWidth() const { return view_.width; }
-  uint32_t GetHeight() const { return view_.height; }
+  uint32_t getId() const { return id_; }
+  uint32_t getWidth() const { return view_.width; }
+  uint32_t getHeight() const { return view_.height; }
 
  private:
-  uint32_t id_;
+  uint32_t id_{};
   TextureViewDescriptor view_;
 
-  void Delete();
+  void drop();
 };
 
 class TextureBuilder {
  public:
   TextureBuilder() noexcept = default;
-  TextureBuilder &WithSampler(const TextureSamplerDescriptor &sampler);
-  TextureBuilder &WithView(const TextureViewDescriptor &view);
-  TextureBuilder &Load(std::string_view path);
-  Texture Build() const;
+  TextureBuilder &withSampler(const TextureSamplerDescriptor &sampler);
+  TextureBuilder &withView(const TextureViewDescriptor &view);
+  TextureBuilder &load(std::string_view path);
+  Texture build() const;
 
  private:
   TextureSamplerDescriptor sampler_;
   TextureViewDescriptor view_;
-  unsigned char *data_;
+  unsigned char *data_ = nullptr;
 };

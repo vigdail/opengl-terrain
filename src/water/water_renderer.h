@@ -2,12 +2,12 @@
 
 #include <memory>
 
-#include "../mesh/shape/plane.h"
-#include "../resource_manager.h"
 #include "../camera.h"
-#include "../shader.h"
 #include "../frame_buffer.h"
 #include "../light/directional_light.h"
+#include "../mesh/shape/plane.h"
+#include "../resource_manager.h"
+#include "../shader.h"
 
 struct WaterMaterial {
   float specular_power;
@@ -18,12 +18,12 @@ struct WaterMaterial {
 class WaterRenderer {
  public:
   WaterRenderer(int width, int height);
-  void Render(Camera *camera, DirectionalLight *sun);
-  void BindReflectionFramebuffer();
-  void BindRefractionFramebuffer();
-  float GetHeight() const { return height_; }
-  void SetHeight(float height) { height_ = height; }
-  WaterMaterial &GetMaterial() { return material_; }
+  void render(Camera *camera, DirectionalLight *sun);
+  void bindReflectionFramebuffer();
+  void bindRefractionFramebuffer();
+  float getHeight() const { return height_; }
+  void setHeight(float height) { height_ = height; }
+  WaterMaterial &getMaterial() { return material_; }
 
  private:
   ShaderHandle shader_;
@@ -33,5 +33,5 @@ class WaterRenderer {
   std::unique_ptr<FrameBuffer> reflection_framebuffer_;
   std::unique_ptr<FrameBuffer> refraction_framebuffer_;
   float height_;
-  WaterMaterial material_;
+  WaterMaterial material_{};
 };

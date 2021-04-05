@@ -1,7 +1,7 @@
 #pragma once
 
-class GUIPanel {
+class GuiPanel {
  public:
-  virtual ~GUIPanel() = default;
-  virtual void Render() = 0;
+  virtual ~GuiPanel() = default;
+  virtual void render() = 0;
 };

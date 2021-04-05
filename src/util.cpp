@@ -1,6 +1,6 @@
 #include "util.h"
 
-std::string ReadFile(std::string_view path) {
+std::string readFile(std::string_view path) {
   std::ifstream file{path.data()};
 
   if (!file.is_open()) {

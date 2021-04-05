@@ -1,16 +1,17 @@
 #pragma once
 
-#include "gui_panel.h"
 #include "../light/directional_light.h"
+#include "gui_panel.h"
+
 #include <imgui/imgui.h>
 
-class GUISunPanel : public GUIPanel {
+class GuiSunPanel : public GuiPanel {
  public:
-  explicit GUISunPanel(DirectionalLight *sun);
-
-  void Render() override;
+  explicit GuiSunPanel(DirectionalLight *sun);
+  void render() override;
 
  private:
   float hour_;
   DirectionalLight *sun_;
+  float timeToAngle() const;
 };

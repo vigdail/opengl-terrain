@@ -1,13 +1,14 @@
 #pragma once
 
-#include "gui_panel.h"
 #include "../water/water_renderer.h"
+#include "gui_panel.h"
+
 #include <memory>
 
-class GUIWaterPanel : public GUIPanel {
+class GuiWaterPanel : public GuiPanel {
  public:
-  explicit GUIWaterPanel(std::shared_ptr<WaterRenderer> water);
-  void Render() override;
+  explicit GuiWaterPanel(std::shared_ptr<WaterRenderer> water);
+  void render() override;
 
  private:
   std::shared_ptr<WaterRenderer> water_;

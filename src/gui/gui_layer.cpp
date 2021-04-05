@@ -3,7 +3,7 @@
 #include <GLFW/glfw3.h>
 #include <imgui/imgui_impl_opengl3.h>
 
-GUILayer::GUILayer(int width, int height)
+GuiLayer::GuiLayer(int width, int height)
     : width_(width), height_(height), panels_() {
   ImGui::CreateContext();
   ImGui::StyleColorsDark();
@@ -38,34 +38,34 @@ GUILayer::GUILayer(int width, int height)
   ImGui_ImplOpenGL3_Init("#version 450");
 }
 
-GUILayer::~GUILayer() {
+GuiLayer::~GuiLayer() {
   for (auto panel : panels_) {
     delete panel;
   }
 }
 
-void GUILayer::AddPanel(GUIPanel *panel) { panels_.push_back(panel); }
+void GuiLayer::addPanel(GuiPanel *panel) { panels_.push_back(panel); }
 
-void GUILayer::Update(float delta_time) {
+void GuiLayer::update(float delta_time) const {
   ImGuiIO &io = ImGui::GetIO();
 
-  io.DisplaySize = ImVec2(width_, height_);
+  io.DisplaySize = ImVec2(static_cast<float>(width_), static_cast<float>(height_));
   io.DeltaTime = delta_time;
 }
 
-void GUILayer::Render() {
+void GuiLayer::render() {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui::NewFrame();
 
   for (auto panel : panels_) {
-    panel->Render();
+    panel->render();
   }
 
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void GUILayer::OnMouseButtonEvent(int button, int action, int mode) {
+void GuiLayer::onMouseButtonEvent(int button, int action, int mode) {
   bool state = false;
   if (action == GLFW_PRESS) {
     state = true;
@@ -77,7 +77,7 @@ void GUILayer::OnMouseButtonEvent(int button, int action, int mode) {
   io.MouseDown[button] = state;
 }
 
-void GUILayer::OnKeyEvent(int key, int scancode, int action, int mode) {
+void GuiLayer::onKeyEvent(int key, int scancode, int action, int mode) {
   bool state = false;
   if (action == GLFW_PRESS) {
     state = true;
@@ -89,8 +89,8 @@ void GUILayer::OnKeyEvent(int key, int scancode, int action, int mode) {
   io.KeysDown[key] = state;
 }
 
-void GUILayer::OnMousePositionEvent(double x, double y) {
+void GuiLayer::onMousePositionEvent(double x, double y) {
   ImGuiIO &io = ImGui::GetIO();
-  io.MousePos.x = x;
-  io.MousePos.y = y;
+  io.MousePos.x = static_cast<float>(x);
+  io.MousePos.y = static_cast<float>(y);
 }

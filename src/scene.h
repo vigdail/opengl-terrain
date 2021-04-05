@@ -1,44 +1,43 @@
 #pragma once
 
-#include <vector>
 #include <memory>
+#include <vector>
 
 #include <entt/entt.hpp>
 
 #include "camera.h"
-#include "light/directional_light.h"
-#include "resource_manager.h"
-#include "terrain/terrain.h"
-#include "skybox/skybox.h"
-#include "water/water_renderer.h"
 #include "gui/gui_layer.h"
+#include "light/directional_light.h"
 #include "mesh/shape/quad.h"
+#include "resource_manager.h"
+#include "skybox/skybox.h"
+#include "terrain/terrain.h"
+#include "water/water_renderer.h"
 
 class Scene {
  public:
-  Scene(uint width, uint height);
-  void LoadAssets();
-  void ProcessInput(float dt);
-  void Update(float dt);
-  void Render();
-  void SetKeyPressed(uint key);
-  void SetKeyReleased(uint key);
-  bool IsKeyPressed(uint key);
-  void OnKeyEvent(int key, int scancode, int action, int mode);
-  void OnMouseButtonEvent(int button, int action, int mode);
-  void OnMousePositionEvent(double x, double y);
+  Scene(uint32_t width, uint32_t height);
+  void processInput(float dt);
+  void update(float dt);
+  void setKeyPressed(uint32_t key);
+  void setKeyReleased(uint32_t key);
+  bool isKeyPressed(uint32_t key);
+  void onKeyEvent(int key, int scancode, int action, int mode);
+  void onMouseButtonEvent(int button, int action, int mode);
+  void onMousePositionEvent(double x, double y);
+
+  Camera camera;
+  DirectionalLight light;
+  std::unique_ptr<Skybox> skybox;
 
  private:
-  static const uint kKeysCount_ = 1024;
+  static const uint32_t keys_count_ = 1024;
   entt::registry registry_;
-  uint width_;
-  uint height_;
-  bool keys_[kKeysCount_];
-  Camera camera_;
-  DirectionalLight light_;
+  uint32_t width_;
+  uint32_t height_;
+  bool keys_[keys_count_];
   std::shared_ptr<Terrain> terrain_;
-  std::unique_ptr<GUILayer> gui_;
-  std::unique_ptr<Skybox> skybox_;
+  std::unique_ptr<GuiLayer> gui_;
   std::shared_ptr<WaterRenderer> water_;
   std::vector<std::shared_ptr<Mesh>> meshes_;
 
@@ -46,5 +45,6 @@ class Scene {
   double mouse_last_y_;
 
  private:
-  void RenderScene(glm::vec4 clip_plane);
+  static void loadAssets();
+  //  void RenderScene(glm::vec4 clip_plane);
 };

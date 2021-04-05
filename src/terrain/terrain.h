@@ -1,12 +1,12 @@
 #pragma once
 
-#include <vector>
 #include <glm/glm.hpp>
 #include <memory>
+#include <vector>
 
+#include "../resource_manager.h"
 #include "../shader.h"
 #include "../texture.h"
-#include "../resource_manager.h"
 
 class Terrain {
   struct Vertex {
@@ -18,10 +18,10 @@ class Terrain {
   Terrain();
   explicit Terrain(int size);
   Terrain(int size, int res_x, int res_z);
-  void Draw(ShaderHandle shader);
-  float GetHeight(float x, float z) const;
-  float GetScaleY() { return scale_y_; }
-  void SetScaleY(float scale_y) { scale_y_ = scale_y; }
+  void draw(ShaderHandle shader);
+  float getHeight(float x, float z) const;
+  float getScaleY() const { return scale_y_; }
+  void setScaleY(float scale_y) { scale_y_ = scale_y; }
 
  private:
   int res_x_;
@@ -31,17 +31,17 @@ class Terrain {
   std::vector<Vertex> vertices_;
   std::vector<int> indices_;
   std::vector<float> heights_;
-  std::size_t indices_count_;
+  std::size_t indices_count_{};
   // @TODO: Make some wrappers maybe
-  uint32_t VAO_;
-  uint32_t EBO_;
-  uint32_t VBO_;
+  uint32_t vao_{};
+  uint32_t ebo_{};
+  uint32_t vbo_{};
   Texture heightmap_;
   Texture normalmap_;
 
  private:
-  void GenerateVertices();
-  void GenerateIndices();
-  void BuildVAO();
-  int GetIndex(int x, int z) { return z * res_x_ + x; }
+  void generateVertices();
+  void generateIndices();
+  void buildVao();
+  int getIndex(int x, int z) const { return z * res_x_ + x; }
 };

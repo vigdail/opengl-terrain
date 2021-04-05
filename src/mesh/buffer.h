@@ -2,10 +2,11 @@
 
 #include "vertex.h"
 
-#include <vector>
-#include <glad/glad.h>
 #include <cassert>
+#include <glad/glad.h>
 #include <optional>
+#include <utility>
+#include <vector>
 
 struct BufferLayout {
   size_t stride;
@@ -16,10 +17,10 @@ class VertexBuffer {
  public:
   explicit VertexBuffer(size_t size) noexcept;
 
-  template <typename Vertex>
+  template<typename Vertex>
   VertexBuffer(const std::vector<Vertex> &vertices,
-               const BufferLayout &layout) noexcept
-      : layout_{layout}, size_{vertices.size() * sizeof(Vertex)} {
+               BufferLayout layout) noexcept
+      : layout_{std::move(layout)}, size_{vertices.size() * sizeof(Vertex)} {
     glCreateBuffers(1, &id_);
     glBindBuffer(GL_ARRAY_BUFFER, id_);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex),
@@ -28,12 +29,12 @@ class VertexBuffer {
   virtual ~VertexBuffer();
 
   VertexBuffer(const VertexBuffer &other) = delete;
-  VertexBuffer(VertexBuffer &&other);
+  VertexBuffer(VertexBuffer &&other) noexcept;
   VertexBuffer &operator=(const VertexBuffer &other) = delete;
-  VertexBuffer &operator=(VertexBuffer &&other);
+  VertexBuffer &operator=(VertexBuffer &&other) noexcept;
 
-  template <typename Vertex>
-  void SetData(const std::vector<Vertex> &vertices,
+  template<typename Vertex>
+  void setData(const std::vector<Vertex> &vertices,
                const BufferLayout &layout) {
     assert(vertices.size() * sizeof(Vertex) <= size_);
 
@@ -41,12 +42,12 @@ class VertexBuffer {
     glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(Vertex),
                     vertices.data());
   }
-  void Bind() const;
-  void Unbind() const;
-  BufferLayout GetLayout() const;
+  void bind() const;
+  void unbind() const;
+  BufferLayout getLayout() const;
 
  private:
-  uint32_t id_;
+  uint32_t id_{};
   BufferLayout layout_;
   size_t size_;
 };
@@ -55,15 +56,15 @@ class IndexBuffer {
  public:
   explicit IndexBuffer(const std::vector<uint32_t> &indices) noexcept;
   IndexBuffer(const IndexBuffer &other) = delete;
-  IndexBuffer(IndexBuffer &&other);
+  IndexBuffer(IndexBuffer &&other) noexcept;
   IndexBuffer &operator=(const IndexBuffer &other) = delete;
-  IndexBuffer &operator=(IndexBuffer &&other);
+  IndexBuffer &operator=(IndexBuffer &&other) noexcept;
   virtual ~IndexBuffer();
-  void Bind() const;
-  void Unbind() const;
-  size_t Count() const;
+  void bind() const;
+  void unbind() const;
+  size_t count() const;
 
  private:
-  uint32_t id_;
+  uint32_t id_{};
   size_t count_;
 };

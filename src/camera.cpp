@@ -5,30 +5,23 @@
 Camera::Camera() : Camera(45.0f, 800.0f / 600.0f, 0.1f, 1000.0f) {}
 
 Camera::Camera(float fov, float aspect, float near, float far)
-    : position(glm::vec3(0.0f)),
-      front(glm::vec3(0.0f, 0.0f, -1.0f)),
-      worldUp(glm::vec3(0.0f, 1.0f, 0.0f)),
-      yaw(YAW),
-      pitch(PITCH),
-      speed(SPEED),
-      sensitivity(SENSITIVITY),
-      fov(fov),
-      near(near),
-      far(far),
+    : position(glm::vec3(0.0f)), front(glm::vec3(0.0f, 0.0f, -1.0f)),
+      world_up(glm::vec3(0.0f, 1.0f, 0.0f)), yaw(YAW), pitch(PITCH),
+      speed(SPEED), sensitivity(SENSITIVITY), fov(fov), near(near), far(far),
       active_(true),
       projection_(glm::perspective(glm::radians(fov), aspect, near, far)) {
   updateVectors();
 }
 
-glm::mat4 Camera::getViewMatrix() {
+glm::mat4 Camera::getViewMatrix() const {
   return glm::lookAt(position, position + front, up);
 }
 
-void Camera::Enable() { active_ = true; }
-void Camera::Disable() { active_ = false; }
-void Camera::Toggle() { active_ = !active_; }
+void Camera::enable() { active_ = true; }
+void Camera::disable() { active_ = false; }
+void Camera::toggle() { active_ = !active_; }
 
-void Camera::InvertPitch() {
+void Camera::invertPitch() {
   pitch = -pitch;
   updateVectors();
 }
@@ -55,18 +48,17 @@ void Camera::move(CameraMovement direction, float dt) {
       break;
   }
 }
-void Camera::handleMouseMovement(float dx, float dy, bool contrainPitch) {
+void Camera::handleMouseMovement(float dx, float dy, bool constrain_pitch) {
   if (!active_) {
     return;
   }
-  const float sensetivity = 0.1f;
-  dx *= sensetivity;
-  dy *= sensetivity;
+  dx *= sensitivity;
+  dy *= sensitivity;
 
   yaw += dx;
   pitch += dy;
 
-  if (contrainPitch) {
+  if (constrain_pitch) {
     if (pitch > 89.0f) {
       pitch = 89.0f;
     }
@@ -79,12 +71,13 @@ void Camera::handleMouseMovement(float dx, float dy, bool contrainPitch) {
 }
 
 void Camera::updateVectors() {
-  glm::vec3 _front;
-  _front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-  _front.y = sin(glm::radians(pitch));
-  _front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-  front = glm::normalize(_front);
+  front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+  front.y = sin(glm::radians(pitch));
+  front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+  front = glm::normalize(front);
 
-  right = glm::normalize(glm::cross(front, worldUp));
+  right = glm::normalize(glm::cross(front, world_up));
   up = glm::normalize(glm::cross(right, front));
 }
+
+void Camera::handleMouseScroll(float dy) {}

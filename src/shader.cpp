@@ -1,12 +1,12 @@
 #include "shader.h"
-#include <iostream>
 #include <glm/gtc/type_ptr.hpp>
+#include <iostream>
 
 ShaderModule::ShaderModule(const char *src, Type type)
     : id_{glCreateShader(static_cast<GLenum>(type))}, type_{type} {
   glShaderSource(id_, 1, &src, nullptr);
   glCompileShader(id_);
-  CheckCompileErrors(id_);
+  checkCompileErrors(id_);
 }
 
 ShaderModule::~ShaderModule() {
@@ -25,14 +25,14 @@ ShaderModule &ShaderModule::operator=(ShaderModule &&other) noexcept {
   return *this;
 }
 
-void ShaderModule::CheckCompileErrors(uint32_t id) {
+void ShaderModule::checkCompileErrors(uint32_t id) {
   int success;
   glGetShaderiv(id, GL_COMPILE_STATUS, &success);
 
   if (!success) {
-    constexpr int MAX_LOG_SIZE = 512;
-    char info_log[MAX_LOG_SIZE];
-    glGetShaderInfoLog(id, MAX_LOG_SIZE, nullptr,
+    constexpr int max_log_size = 512;
+    char info_log[max_log_size];
+    glGetShaderInfoLog(id, max_log_size, nullptr,
                        static_cast<char *>(info_log));
     std::cerr << "ShaderModule compilation error: " << id << " " << info_log
               << '\n';
@@ -46,42 +46,42 @@ Shader::Shader(const std::vector<ShaderModule> &shaders)
     glAttachShader(id_, shader.id_);
   }
   glLinkProgram(id_);
-  CheckLinkingErrors(id_);
+  checkLinkingErrors(id_);
 }
 Shader::Shader(Shader &&other) noexcept : id_(std::exchange(other.id_, 0)) {}
-Shader &Shader::operator=(Shader &&other) {
+Shader &Shader::operator=(Shader &&other) noexcept {
   if (this != &other) {
-    Delete();
+    drop();
     std::swap(id_, other.id_);
   }
 
   return *this;
 }
-Shader::~Shader() { Delete(); }
-void Shader::Delete() {
+Shader::~Shader() { drop(); }
+void Shader::drop() {
   glDeleteProgram(id_);
   id_ = 0;
 }
-void Shader::Use() { glUseProgram(id_); }
-void Shader::SetInt(const char *name, const int value) {
+void Shader::use() const { glUseProgram(id_); }
+void Shader::setInt(const char *name, const int value) const {
   glUniform1i(glGetUniformLocation(id_, name), value);
 }
-void Shader::SetFloat(const char *name, float value) {
+void Shader::setFloat(const char *name, float value) const {
   glUniform1f(glGetUniformLocation(id_, name), value);
 }
-void Shader::SetVec3(const char *name, const glm::vec3 &value) {
+void Shader::setVec3(const char *name, const glm::vec3 &value) const {
   glUniform3f(glGetUniformLocation(id_, name), value.x, value.y, value.z);
 }
-void Shader::SetVec4(const char *name, const glm::vec4 &value) {
+void Shader::setVec4(const char *name, const glm::vec4 &value) const {
   glUniform4f(glGetUniformLocation(id_, name), value.x, value.y, value.z,
               value.w);
 }
-void Shader::SetMat4(const char *name, const glm::mat4 &matrix) {
+void Shader::setMat4(const char *name, const glm::mat4 &value) const {
   glUniformMatrix4fv(glGetUniformLocation(id_, name), 1, false,
-                     glm::value_ptr(matrix));
+                     glm::value_ptr(value));
 }
 
-void Shader::CheckLinkingErrors(uint32_t id) {
+void Shader::checkLinkingErrors(uint32_t id) {
   int success;
   glGetProgramiv(id, GL_LINK_STATUS, &success);
   GLchar info_log[1024];
@@ -92,13 +92,13 @@ void Shader::CheckLinkingErrors(uint32_t id) {
   }
 }
 
-ShaderBuilder &ShaderBuilder::Load(std::string_view path,
+ShaderBuilder &ShaderBuilder::load(std::string_view path,
                                    ShaderModule::Type type) {
-  const std::string src = ReadFile(path);
+  const std::string src = readFile(path);
 
-  shaders_.push_back(ShaderModule(src.c_str(), type));
+  shaders_.emplace_back(src.c_str(), type);
 
   return *this;
 }
 
-Shader ShaderBuilder::Build() const { return Shader{shaders_}; }
+Shader ShaderBuilder::build() const { return Shader{shaders_}; }

@@ -5,4 +5,4 @@
 #include <fstream>
 #include <sstream>
 
-std::string ReadFile(std::string_view path);
+std::string readFile(std::string_view path);
