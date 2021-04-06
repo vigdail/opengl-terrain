@@ -16,18 +16,18 @@ Scene::Scene(uint width, uint height)
       width_(width), height_(height), keys_(), mouse_last_x_(0.0), mouse_last_y_(0.0) {
   loadAssets();
   camera.position = glm::vec3(-440.0f, 3.0f, 0.0f);
-  terrain_ = std::make_shared<Terrain>(1000, 1024, 1024);
+  terrain = std::make_shared<Terrain>(1000, 1024, 1024);
   skybox = std::make_unique<Skybox>();
   water_ = std::make_shared<WaterRenderer>(width, height);
 
   auto quad = std::make_shared<Mesh>(Quad().toMesh());
   meshes_.push_back(quad);
 
-  gui_ = std::make_unique<GuiLayer>(width, height);
-  gui_->addPanel(new GuiSkyboxPanel(skybox->getAtmosphere()));
-  gui_->addPanel(new GuiSunPanel(&light));
-  gui_->addPanel(new GuiWaterPanel(water_));
-  gui_->addPanel(new GuiTerrainPanel(terrain_));
+  gui = std::make_unique<GuiLayer>(width, height);
+  gui->addPanel(new GuiSkyboxPanel(skybox->getAtmosphere()));
+  gui->addPanel(new GuiSunPanel(&light));
+  gui->addPanel(new GuiWaterPanel(water_));
+  gui->addPanel(new GuiTerrainPanel(terrain));
 }
 
 void Scene::loadAssets() {
@@ -95,8 +95,8 @@ void Scene::processInput(float dt) {
 
 void Scene::update(float dt) {
   camera.position.y =
-      terrain_->getHeight(camera.position.x, camera.position.z) + 1.7f;
-  gui_->update(dt);
+      terrain->getHeight(camera.position.x, camera.position.z) + 1.7f;
+  gui->update(dt);
 }
 
 // void Scene::render() {
@@ -125,41 +125,10 @@ void Scene::update(float dt) {
 
 //   water_->render(&camera, &light);
 
-//   ShaderHandle sprite = ResourceManager::getShader("sprite");
-//   sprite->use();
-//   glm::mat4 model(1.0f);
-//   model = glm::translate(model, glm::vec3((width_ - 200.0f), 0.0f, 0.0f));
-//   model = glm::scale(model, glm::vec3(200.0f, 200.0f, 1.0f));
-//   glm::mat4 proj = glm::ortho(0.0f, static_cast<float>(width_),
-//                               static_cast<float>(height_), 0.0f);
-//   sprite->setMat4("projection", proj);
-//   for (auto& mesh : meshes_) {
-//     mesh->bind();
-//     sprite->setMat4("model", model);
-//     glDrawElements(static_cast<GLenum>(mesh->getTopology()), mesh->count(),
-//                    GL_UNSIGNED_INT, 0);
-//   }
-
-//   gui_->render();
-// }
-
-// void Scene::RenderScene(glm::vec4 clip_plane) {
-//   ShaderHandle terrainShader = ResourceManager::getShader("terrain");
-//   ShaderHandle skyboxShader = ResourceManager::getShader("skybox");
-
-//   terrainShader->use();
-//   terrainShader->setMat4("view", camera.getViewMatrix());
-//   terrainShader->setMat4("projection", camera.getProjectionMatrix());
-//   terrainShader->setVec3("light.direction",
-//                          glm::normalize(light.getDirection()));
-//   terrainShader->setVec3("light.color", light.getColor());
-//   terrainShader->setFloat("light.intensity", light.getIntensity());
-//   terrainShader->setVec4("clipPlane", clip_plane);
-//   terrain_->draw(terrainShader);
 // }
 
 void Scene::onKeyEvent(int key, int scancode, int action, int mode) {
-  gui_->onKeyEvent(key, scancode, action, mode);
+  gui->onKeyEvent(key, scancode, action, mode);
 
   if (action == GLFW_PRESS) {
     setKeyPressed(key);
@@ -172,7 +141,7 @@ void Scene::onKeyEvent(int key, int scancode, int action, int mode) {
 }
 
 void Scene::onMouseButtonEvent(int button, int action, int mode) {
-  gui_->onMouseButtonEvent(button, action, mode);
+  gui->onMouseButtonEvent(button, action, mode);
 }
 
 void Scene::onMousePositionEvent(double x, double y) {
@@ -184,7 +153,7 @@ void Scene::onMousePositionEvent(double x, double y) {
 
   camera.handleMouseMovement(offset_x, offset_y);
 
-  gui_->onMousePositionEvent(x, y);
+  gui->onMousePositionEvent(x, y);
 }
 
 void Scene::setKeyPressed(uint key) {

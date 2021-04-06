@@ -29,6 +29,8 @@ class Scene {
   Camera camera;
   DirectionalLight light;
   std::unique_ptr<Skybox> skybox;
+  std::shared_ptr<Terrain> terrain;
+  std::unique_ptr<GuiLayer> gui;
 
  private:
   static const uint32_t keys_count_ = 1024;
@@ -36,8 +38,6 @@ class Scene {
   uint32_t width_;
   uint32_t height_;
   bool keys_[keys_count_];
-  std::shared_ptr<Terrain> terrain_;
-  std::unique_ptr<GuiLayer> gui_;
   std::shared_ptr<WaterRenderer> water_;
   std::vector<std::shared_ptr<Mesh>> meshes_;
 
@@ -46,5 +46,4 @@ class Scene {
 
  private:
   static void loadAssets();
-  //  void RenderScene(glm::vec4 clip_plane);
 };
