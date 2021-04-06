@@ -24,12 +24,10 @@ struct Atmosphere {
 class Skybox {
  public:
   Skybox();
-  // void draw();
   Atmosphere &getAtmosphere();
   Mesh &getMesh();
 
  private:
-  // ShaderHandle shader_;
   Mesh mesh_;
   Atmosphere atmosphere_;
 };

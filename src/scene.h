@@ -12,7 +12,7 @@
 #include "resource_manager.h"
 #include "skybox/skybox.h"
 #include "terrain/terrain.h"
-#include "water/water_renderer.h"
+#include "water/water.h"
 
 class Scene {
  public:
@@ -23,12 +23,17 @@ class Scene {
   void setKeyReleased(uint32_t key);
   bool isKeyPressed(uint32_t key);
   void onKeyEvent(int key, int scancode, int action, int mode);
-  void onMouseButtonEvent(int button, int action, int mode);
+  void onMouseButtonEvent(int button, int action, int mode) const;
   void onMousePositionEvent(double x, double y);
 
   Camera camera;
   DirectionalLight light;
   std::unique_ptr<Skybox> skybox;
+  std::shared_ptr<Terrain> terrain;
+  std::unique_ptr<GuiLayer> gui;
+  std::shared_ptr<Water> water;
+  uint32_t getWidth() const;
+  uint32_t getHeight() const;
 
  private:
   static const uint32_t keys_count_ = 1024;
@@ -36,9 +41,6 @@ class Scene {
   uint32_t width_;
   uint32_t height_;
   bool keys_[keys_count_];
-  std::shared_ptr<Terrain> terrain_;
-  std::unique_ptr<GuiLayer> gui_;
-  std::shared_ptr<WaterRenderer> water_;
   std::vector<std::shared_ptr<Mesh>> meshes_;
 
   double mouse_last_x_;
@@ -46,5 +48,4 @@ class Scene {
 
  private:
   static void loadAssets();
-  //  void RenderScene(glm::vec4 clip_plane);
 };

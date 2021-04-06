@@ -62,7 +62,7 @@ Application::Application(uint32_t width, uint32_t height)
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
   scene_ = std::make_unique<Scene>(width, height);
-  renderer_ = std::make_unique<Renderer>();
+  renderer_ = std::make_unique<Renderer>(width, height);
 }
 
 Application::~Application() { glfwTerminate(); }
@@ -84,7 +84,6 @@ void Application::run() {
 
     scene_->update(delta_time);
 
-    // scene_->render();
     renderer_->render(scene_.get());
 
     glfwSwapBuffers(window_);

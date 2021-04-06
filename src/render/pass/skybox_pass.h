@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../render_context.h"
-#include "../../scene.h"
 #include "../../resource_manager.h"
+#include "../../scene.h"
+#include "../render_context.h"
 
 class SkyboxPass {
  public:
@@ -15,12 +15,10 @@ class SkyboxPass {
     Atmosphere &atmosphere = skybox->getAtmosphere();
 
     shader_->use();
-    shader_->setMat4("view",
-                     glm::mat4(glm::mat3(scene->camera.getViewMatrix())));
+    shader_->setMat4("view", glm::mat4(glm::mat3(scene->camera.getViewMatrix())));
     shader_->setMat4("projection", scene->camera.getProjectionMatrix());
     shader_->setVec3("camera", scene->camera.position);
-    shader_->setVec3("sun.direction",
-                     glm::normalize(scene->light.getDirection()));
+    shader_->setVec3("sun.direction", glm::normalize(scene->light.getDirection()));
     shader_->setVec3("sun.color", scene->light.getColor());
     shader_->setFloat("sun.intensity", scene->light.getIntensity());
 

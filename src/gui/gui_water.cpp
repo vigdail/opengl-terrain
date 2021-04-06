@@ -4,7 +4,7 @@
 
 #include <utility>
 
-GuiWaterPanel::GuiWaterPanel(std::shared_ptr<WaterRenderer> water)
+GuiWaterPanel::GuiWaterPanel(std::shared_ptr<Water> water)
     : water_(std::move(water)) {}
 
 void GuiWaterPanel::render() {
