@@ -34,29 +34,29 @@ void Scene::loadAssets() {
   ResourceManager::addShader(
       "terrain",
       ShaderBuilder()
-          .load("../assets/shaders/terrain.vs", ShaderModule::Type::VERTEX)
-          .load("../assets/shaders/terrain.fs", ShaderModule::Type::FRAGMENT));
+          .load("../assets/shaders/terrain.vert", ShaderModule::Type::VERTEX)
+          .load("../assets/shaders/terrain.frag", ShaderModule::Type::FRAGMENT));
   ResourceManager::addShader(
       "skybox",
       ShaderBuilder()
-          .load("../assets/shaders/skybox.vs", ShaderModule::Type::VERTEX)
-          .load("../assets/shaders/skybox.fs", ShaderModule::Type::FRAGMENT));
+          .load("../assets/shaders/skybox.vert", ShaderModule::Type::VERTEX)
+          .load("../assets/shaders/skybox.frag", ShaderModule::Type::FRAGMENT));
   ResourceManager::addShader(
       "solid",
       ShaderBuilder()
-          .load("../assets/shaders/solid_color.vs", ShaderModule::Type::VERTEX)
-          .load("../assets/shaders/solid_color.fs",
+          .load("../assets/shaders/solid_color.vert", ShaderModule::Type::VERTEX)
+          .load("../assets/shaders/solid_color.frag",
                 ShaderModule::Type::FRAGMENT));
   ResourceManager::addShader(
       "sprite",
       ShaderBuilder()
-          .load("../assets/shaders/sprite.vs", ShaderModule::Type::VERTEX)
-          .load("../assets/shaders/sprite.fs", ShaderModule::Type::FRAGMENT));
+          .load("../assets/shaders/sprite.vert", ShaderModule::Type::VERTEX)
+          .load("../assets/shaders/sprite.frag", ShaderModule::Type::FRAGMENT));
   ResourceManager::addShader(
       "water",
       ShaderBuilder()
-          .load("../assets/shaders/water.vs", ShaderModule::Type::VERTEX)
-          .load("../assets/shaders/water.fs", ShaderModule::Type::FRAGMENT));
+          .load("../assets/shaders/water.vert", ShaderModule::Type::VERTEX)
+          .load("../assets/shaders/water.frag", ShaderModule::Type::FRAGMENT));
 
   ResourceManager::addShader(
       "compute_normalmap",
