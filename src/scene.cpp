@@ -18,7 +18,7 @@ Scene::Scene(uint width, uint height)
   camera.position = glm::vec3(-440.0f, 3.0f, 0.0f);
   terrain = std::make_shared<Terrain>(1000, 1024, 1024);
   skybox = std::make_unique<Skybox>();
-  water_ = std::make_shared<WaterRenderer>(width, height);
+  water = std::make_shared<Water>();
 
   auto quad = std::make_shared<Mesh>(Quad().toMesh());
   meshes_.push_back(quad);
@@ -26,7 +26,7 @@ Scene::Scene(uint width, uint height)
   gui = std::make_unique<GuiLayer>(width, height);
   gui->addPanel(new GuiSkyboxPanel(skybox->getAtmosphere()));
   gui->addPanel(new GuiSunPanel(&light));
-  gui->addPanel(new GuiWaterPanel(water_));
+  gui->addPanel(new GuiWaterPanel(water));
   gui->addPanel(new GuiTerrainPanel(terrain));
 }
 
@@ -99,34 +99,6 @@ void Scene::update(float dt) {
   gui->update(dt);
 }
 
-// void Scene::render() {
-//   // Water refraction pass
-//   water_->bindRefractionFramebuffer();
-//   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//   glEnable(GL_CLIP_DISTANCE0);
-//   RenderScene(glm::vec4(0.0f, -1.0f, 0.0f, water_->getHeight()));
-
-//   // Water reflection pass
-//   water_->bindReflectionFramebuffer();
-//   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//   float dy = 2.0f * (camera.position.y - water_->getHeight());
-//   camera.position.y -= dy;
-//   camera.invertPitch();
-//   RenderScene(glm::vec4(0.0f, 1.0f, 0.0f, -water_->getHeight() + 0.07f));
-//   camera.invertPitch();
-//   camera.position.y += dy;
-
-//   // Main pass
-//   glDisable(GL_CLIP_DISTANCE0);
-//   glBindFramebuffer(GL_FRAMEBUFFER, 0);
-//   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//   glViewport(0, 0, width_, height_);
-//   RenderScene(glm::vec4(0.0f));
-
-//   water_->render(&camera, &light);
-
-// }
-
 void Scene::onKeyEvent(int key, int scancode, int action, int mode) {
   gui->onKeyEvent(key, scancode, action, mode);
 
@@ -140,7 +112,7 @@ void Scene::onKeyEvent(int key, int scancode, int action, int mode) {
   }
 }
 
-void Scene::onMouseButtonEvent(int button, int action, int mode) {
+void Scene::onMouseButtonEvent(int button, int action, int mode) const {
   gui->onMouseButtonEvent(button, action, mode);
 }
 
@@ -174,4 +146,10 @@ bool Scene::isKeyPressed(uint key) {
   }
 
   return false;
+}
+uint32_t Scene::getWidth() const {
+  return width_;
+}
+uint32_t Scene::getHeight() const {
+  return height_;
 }

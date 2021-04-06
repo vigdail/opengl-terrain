@@ -10,7 +10,7 @@ void TerrainPass::render(Scene *scene, RenderContext *context) {
   shader_->setVec3("light.direction", glm::normalize(scene->light.getDirection()));
   shader_->setVec3("light.color", scene->light.getColor());
   shader_->setFloat("light.intensity", scene->light.getIntensity());
-  //  shader_->setVec4("clipPlane", clip_plane);
+  shader_->setVec4("clipPlane", context->getClipPlane());
 
   glm::mat4 model = glm::mat4(1.0f);
   shader_->setMat4("model", model);

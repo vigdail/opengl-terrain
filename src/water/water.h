@@ -10,28 +10,23 @@
 #include "../shader.h"
 
 struct WaterMaterial {
-  float specular_power;
-  float reflection_power;
-  float dudv_tiling;
+  float specular_power = 32.0f;
+  float reflection_power = 0.5f;
+  float dudv_tiling = 6.0f;
+  TextureHandle dudv_map;
+  TextureHandle normal_map;
 };
 
-class WaterRenderer {
+class Water {
  public:
-  WaterRenderer(int width, int height);
-  void render(Camera *camera, DirectionalLight *sun);
-  void bindReflectionFramebuffer();
-  void bindRefractionFramebuffer();
+  Water();
   float getHeight() const { return height_; }
   void setHeight(float height) { height_ = height; }
   WaterMaterial &getMaterial() { return material_; }
+  const Mesh &getMesh() const;
 
  private:
-  ShaderHandle shader_;
   Mesh mesh_;
-  TextureHandle dudv_map_;
-  TextureHandle normal_map_;
-  std::unique_ptr<FrameBuffer> reflection_framebuffer_;
-  std::unique_ptr<FrameBuffer> refraction_framebuffer_;
   float height_;
   WaterMaterial material_{};
 };
