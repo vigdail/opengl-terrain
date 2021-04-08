@@ -13,28 +13,31 @@ class Renderer {
     skybox_pass_ = std::make_unique<SkyboxPass>();
     terrain_pass_ = std::make_unique<TerrainPass>();
     water_pass_ = std::make_unique<WaterPass>(reflection_framebuffer_, refraction_framebuffer_);
+
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
   }
 
   void render(Scene *scene) {
-    // Water refraction
-    refraction_framebuffer_->bind();
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glEnable(GL_CLIP_DISTANCE0);
-    context_.setClipPlane(glm::vec4(0.0f, -1.0f, 0.0f, scene->water->getHeight()));
-    skybox_pass_->render(scene, &context_);
-    terrain_pass_->render(scene, &context_);
-
-    // Water reflection
-    reflection_framebuffer_->bind();
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    float dy = 2.0f * (scene->camera.position.y - scene->water->getHeight());
-    scene->camera.position.y -= dy;
-    scene->camera.invertPitch();
-    context_.setClipPlane(glm::vec4(0.0f, 1.0f, 0.0f, -scene->water->getHeight() + 0.07f));
-    skybox_pass_->render(scene, &context_);
-    terrain_pass_->render(scene, &context_);
-    scene->camera.invertPitch();
-    scene->camera.position.y += dy;
+    //    // Water refraction
+    //    refraction_framebuffer_->bind();
+    //    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //    glEnable(GL_CLIP_DISTANCE0);
+    //    context_.setClipPlane(glm::vec4(0.0f, -1.0f, 0.0f, scene->water->getHeight()));
+    //    skybox_pass_->render(scene, &context_);
+    //    terrain_pass_->render(scene, &context_);
+    //
+    //    // Water reflection
+    //    reflection_framebuffer_->bind();
+    //    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //    float dy = 2.0f * (scene->camera.position.y - scene->water->getHeight());
+    //    scene->camera.position.y -= dy;
+    //    scene->camera.invertPitch();
+    //    context_.setClipPlane(glm::vec4(0.0f, 1.0f, 0.0f, -scene->water->getHeight() + 0.07f));
+    //    skybox_pass_->render(scene, &context_);
+    //    terrain_pass_->render(scene, &context_);
+    //    scene->camera.invertPitch();
+    //    scene->camera.position.y += dy;
 
     // Main pass
     glDisable(GL_CLIP_DISTANCE0);
@@ -44,8 +47,8 @@ class Renderer {
     context_.setClipPlane(glm::vec4(0.0f));
     skybox_pass_->render(scene, &context_);
     terrain_pass_->render(scene, &context_);
-    water_pass_->render(scene, &context_);
-    scene->gui->render();
+    //    water_pass_->render(scene, &context_);
+    //    scene->gui->render();
   }
 
  private:

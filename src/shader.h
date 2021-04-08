@@ -19,6 +19,8 @@ class ShaderModule {
     VERTEX = GL_VERTEX_SHADER,
     FRAGMENT = GL_FRAGMENT_SHADER,
     GEOMETRY = GL_GEOMETRY_SHADER,
+    TESS_CONTROL = GL_TESS_CONTROL_SHADER,
+    TESS_EVALUATION = GL_TESS_EVALUATION_SHADER,
     COMPUTE = GL_COMPUTE_SHADER,
   };
 
@@ -49,6 +51,7 @@ class Shader {
   void use() const;
   void setInt(const char *name, int value) const;
   void setFloat(const char *name, float value) const;
+  void setVec2(const char *name, const glm::vec2 &value) const;
   void setVec3(const char *name, const glm::vec3 &value) const;
   void setVec4(const char *name, const glm::vec4 &value) const;
   void setMat4(const char *name, const glm::mat4 &value) const;

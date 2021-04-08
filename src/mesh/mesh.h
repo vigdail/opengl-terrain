@@ -13,6 +13,7 @@ enum class PrimitiveTopology {
   TRIANGLE = GL_TRIANGLES,
   TRIANGLE_STRIP = GL_TRIANGLE_STRIP,
   TRIANGLE_FAN = GL_TRIANGLE_FAN,
+  PATCHES = GL_PATCHES,
 };
 
 class Mesh {

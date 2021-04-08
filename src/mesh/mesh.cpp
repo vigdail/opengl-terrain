@@ -37,7 +37,7 @@ void Mesh::addVertexBuffer(VertexBuffer &&buffer) {
     glVertexAttribPointer(element.location, element.count,
                           static_cast<GLenum>(element.type),
                           element.normalized ? GL_TRUE : GL_FALSE,
-                          layout.stride, (const void *)element.offset);
+                          layout.stride, reinterpret_cast<const void *>(element.offset));
   }
 
   vertex_buffers_.push_back(std::move(buffer));

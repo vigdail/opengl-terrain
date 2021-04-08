@@ -10,5 +10,5 @@ class TerrainPass {
 
  private:
   ShaderHandle shader_ = nullptr;
-  PrimitiveTopology topology_ = PrimitiveTopology::TRIANGLE;
+  PrimitiveTopology topology_ = PrimitiveTopology::PATCHES;
 };
