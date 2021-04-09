@@ -6,7 +6,10 @@
 struct TerrainConfig {
   uint32_t root_nodes_count = 8;
   glm::ivec2 resolution = {512, 512};
-  glm::vec3 scale = {3000.0f, 100.0f, 3000.0f};
+  glm::vec3 scale = {6000.0f, 100.0f, 6000.0f};
+  float tessellation_factor = 600.0f;
+  float tessellation_slope = 1.8f;
+  float tessellation_shift = 0.2f;
   std::array<float, 8> lod_ranges = {
       1750,
       874,

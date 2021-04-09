@@ -119,5 +119,5 @@ void main() {
     vec4 world_pos = world_matrix * vec4(local_position.x, height, local_position.y, 1.0);
 
     gl_ClipDistance[0] = dot(world_pos, clipPlane);
-    gl_Position = projection * view * world_pos;
+    gl_Position = world_pos;
 }

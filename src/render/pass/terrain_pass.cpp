@@ -22,6 +22,9 @@ void TerrainPass::render(Scene *scene, RenderContext *context) {
   shader_->setVec3("color", glm::vec3(0.45f, 0.4f, 0.3f));
   shader_->setVec3("camera", scene->camera.position);
   shader_->setMat4("world_matrix", terrain->getTransform().getMatrix());
+  shader_->setFloat("tessellation_factor", terrain->getConfig().tessellation_factor);
+  shader_->setFloat("tessellation_slope", terrain->getConfig().tessellation_slope);
+  shader_->setFloat("tessellation_shift", terrain->getConfig().tessellation_shift);
   auto &areas = terrain->getConfig().lod_morphing_areas;
   for (auto i = 0; i < areas.size(); i++) {
     shader_->setInt(std::string("lod_morph_area[" + std::to_string(i) + "]").c_str(), areas[i]);

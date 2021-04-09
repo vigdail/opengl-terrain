@@ -2,6 +2,9 @@
 
 layout(quads, fractional_odd_spacing, cw) in;
 
+uniform mat4 view;
+uniform mat4 projection;
+
 void main() {
 	float u = gl_TessCoord.x;
 	float v = gl_TessCoord.y;
@@ -13,5 +16,5 @@ void main() {
 	u * v * gl_in[3].gl_Position +
 	(1 - u) * v * gl_in[15].gl_Position);
 
-	gl_Position = position;
+	gl_Position = projection * view * position;
 }
