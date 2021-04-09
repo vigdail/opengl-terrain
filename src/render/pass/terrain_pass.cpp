@@ -4,6 +4,7 @@ void drawNode(const TerrainNode &node, ShaderHandle shader, const std::shared_pt
 
 void TerrainPass::render(Scene *scene, RenderContext *context) {
   Terrain *terrain = scene->terrain.get();
+  const TerrainConfig &config = terrain->getConfig();
 
   shader_ = ResourceManager::getShader("terrain");
   shader_->use();
@@ -22,16 +23,17 @@ void TerrainPass::render(Scene *scene, RenderContext *context) {
   shader_->setVec3("color", glm::vec3(0.45f, 0.4f, 0.3f));
   shader_->setVec3("camera", scene->camera.position);
   shader_->setMat4("world_matrix", terrain->getTransform().getMatrix());
-  shader_->setFloat("tessellation_factor", terrain->getConfig().tessellation_factor);
-  shader_->setFloat("tessellation_slope", terrain->getConfig().tessellation_slope);
-  shader_->setFloat("tessellation_shift", terrain->getConfig().tessellation_shift);
-  auto &areas = terrain->getConfig().lod_morphing_areas;
+  shader_->setFloat("tessellation_factor", config.tessellation_factor);
+  shader_->setFloat("tessellation_slope", config.tessellation_slope);
+  shader_->setFloat("tessellation_shift", config.tessellation_shift);
+  auto &areas = config.lod_morphing_areas;
   for (auto i = 0; i < areas.size(); i++) {
     shader_->setInt(std::string("lod_morph_area[" + std::to_string(i) + "]").c_str(), areas[i]);
   }
   terrain->getHeightmap().bind(0);
   terrain->getNormalmap().bind(1);
 
+  shader_->setVec3("color", glm::vec3(0.1, 0.8, 0.1));
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   terrain->getMesh()->bind();
   glPatchParameteri(GL_PATCH_VERTICES, terrain->getMesh()->count());
@@ -39,7 +41,6 @@ void TerrainPass::render(Scene *scene, RenderContext *context) {
   for (auto &node : terrain->getNodes()) {
     drawNode(node, shader_, terrain->getMesh());
   }
-
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 

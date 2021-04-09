@@ -3,12 +3,17 @@
 layout (location = 0) in vec2 position;
 layout (location = 1) in vec2 uv;
 
+layout (location = 0) out vec2 vs_uv;
+
 uniform mat4 local_matrix;
 uniform mat4 world_matrix;
 uniform vec3 camera;
 uniform mat4 view;
 uniform mat4 projection;
 uniform vec4 clipPlane;
+
+uniform sampler2D heightmap;
+uniform float scale_y;
 
 uniform int lod;
 uniform vec2 index;
@@ -111,13 +116,17 @@ vec2 morph(vec2 pos, float height, int morph_area) {
 
 void main() {
     vec2 local_position = (local_matrix * vec4(position.x, 0, position.y, 1.0)).xz;
-    float height = 0.0;// texture(heightmap, uv).r * scale_y;
+    float height = texture(heightmap, local_position).r;
     if (lod > 0) {
         local_position += morph(local_position, height, lod_morph_area[lod-1]);
     }
 
+    vs_uv = local_position;
+    height = texture(heightmap, vs_uv).r;
+
     vec4 world_pos = world_matrix * vec4(local_position.x, height, local_position.y, 1.0);
 
     gl_ClipDistance[0] = dot(world_pos, clipPlane);
+
     gl_Position = world_pos;
 }

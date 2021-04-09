@@ -2,6 +2,9 @@
 
 layout(vertices = 16) out;
 
+layout(location = 0) in vec2 vs_uv[];
+layout(location = 0) out vec2 tc_uv[];
+
 uniform float tessellation_factor;
 uniform float tessellation_slope;
 uniform float tessellation_shift;
@@ -38,6 +41,6 @@ void main() {
         gl_TessLevelInner[0] = (gl_TessLevelOuter[BC] + gl_TessLevelOuter[DA]) / 4;
         gl_TessLevelInner[1] = (gl_TessLevelOuter[AB] + gl_TessLevelOuter[CD]) / 4;
     }
-
+    tc_uv[gl_InvocationID] = vs_uv[gl_InvocationID];
     gl_out[gl_InvocationID].gl_Position = gl_in[gl_InvocationID].gl_Position;
 }
