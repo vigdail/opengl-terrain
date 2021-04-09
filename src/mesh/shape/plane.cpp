@@ -7,7 +7,7 @@ Plane::Plane(float size)
         {glm::vec3(1.0f, 0.0f, -1.0f) * size, glm::vec2(1.0f, 0.0f)},
         {glm::vec3(1.0f, 0.0f, 1.0f) * size, glm::vec2(1.0f, 1.0f)},
     },
-      indices_{0, 1, 2, 2, 1, 1} {}
+      indices_{0, 1, 2, 2, 1, 3} {}
 
 Mesh Plane::toMesh() const {
   Mesh mesh{PrimitiveTopology::TRIANGLE, indices_.size()};
