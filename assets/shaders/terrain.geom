@@ -3,7 +3,7 @@
 layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
 
-in vec2 g_uv[];
+in vec2 g_uv[3];
 out vec2 fs_uv;
 
 uniform mat4 view;
@@ -19,5 +19,4 @@ void main() {
     }
 
     EndPrimitive();
-
 }

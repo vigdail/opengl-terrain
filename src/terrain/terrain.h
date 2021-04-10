@@ -39,7 +39,7 @@ class Terrain {
 
  public:
   explicit Terrain(TerrainConfig config);
-  //  float getHeight(float x, float z) const;
+  float getHeight(float x, float z) const;
   float getScaleY() const { return config_.scale.y; }
   void setScaleY(float scale_y) { config_.scale.y = scale_y; }
   const Texture &getHeightmap() const;

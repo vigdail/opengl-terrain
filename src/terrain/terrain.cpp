@@ -31,37 +31,39 @@ Terrain::Terrain(TerrainConfig config)
   glGetTexImage(GL_TEXTURE_2D, 0, GL_RED, GL_FLOAT, heights_.data());
 }
 
-//float Terrain::getHeight(float x, float z) const {
-//  glm::vec2 pos(x, z);
-//
-//  pos = pos * glm::vec2(res_x_, res_z_) / static_cast<float>(size_) + glm::vec2(res_x_ - 1, res_z_ - 1) / 2.0f;
-//  int x0 = std::floor(pos.x);
-//  int x1 = x0 + 1;
-//  int z0 = std::floor(pos.y);
-//  int z1 = z0 + 1;
-//
-//  float h0 = heights_[res_x_ * z0 + x0];
-//  float h1 = heights_[res_x_ * z0 + x1];
-//  float h2 = heights_[res_x_ * z1 + x0];
-//  float h3 = heights_[res_x_ * z1 + x1];
-//
-//  float percent_u = pos.x - (float)x0;
-//  float percent_v = pos.y - (float)z0;
-//
-//  float dU, dV;
-//  if (percent_u > percent_v) {
-//    dU = h1 - h0;
-//    dV = h3 - h1;
-//  } else {
-//    dU = h3 - h2;
-//    dV = h2 - h0;
-//  }
-//
-//  float h = h0 + (dU * percent_u) + (dV * percent_v);
-//  h *= scale_y_;
-//
-//  return h;
-//}
+float Terrain::getHeight(float x, float z) const {
+  glm::vec2 pos(x, z);
+
+  int res_x = config_.resolution.x;
+  int res_z = config_.resolution.y;
+  pos = pos * glm::vec2(res_x, res_z) / static_cast<float>(config_.scale.x) + glm::vec2(res_x - 1, res_z - 1) / 2.0f;
+  int x_0 = std::floor(pos.x);
+  int x_1 = x_0 + 1;
+  int z_0 = std::floor(pos.y);
+  int z_1 = z_0 + 1;
+
+  float h_0 = heights_[res_x * z_0 + x_0];
+  float h_1 = heights_[res_x * z_0 + x_1];
+  float h_2 = heights_[res_x * z_1 + x_0];
+  float h_3 = heights_[res_x * z_1 + x_1];
+
+  float percent_u = pos.x - (float)x_0;
+  float percent_v = pos.y - (float)z_0;
+
+  float du, dv;
+  if (percent_u > percent_v) {
+    du = h_1 - h_0;
+    dv = h_3 - h_1;
+  } else {
+    du = h_3 - h_2;
+    dv = h_2 - h_0;
+  }
+
+  float h = h_0 + (du * percent_u) + (dv * percent_v);
+  h *= config_.scale.y;
+
+  return h;
+}
 
 Mesh Terrain::createMesh() {
   std::vector<Terrain::Vertex> vertices(16);
