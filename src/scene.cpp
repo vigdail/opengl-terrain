@@ -34,6 +34,7 @@ void Scene::loadAssets() {
       ShaderBuilder()
           .load("../assets/shaders/terrain.vert", ShaderModule::Type::VERTEX)
           .load("../assets/shaders/terrain.frag", ShaderModule::Type::FRAGMENT)
+          .load("../assets/shaders/terrain.geom", ShaderModule::Type::GEOMETRY)
           .load("../assets/shaders/terrain.tesc", ShaderModule::Type::TESS_CONTROL)
           .load("../assets/shaders/terrain.tese", ShaderModule::Type::TESS_EVALUATION));
   ResourceManager::addShader(

@@ -3,7 +3,7 @@
 layout(quads, fractional_odd_spacing, cw) in;
 
 layout(location = 0) in vec2 te_uv[];
-layout(location = 0) out vec2 fs_uv;
+layout(location = 0) out vec2 g_uv;
 
 uniform mat4 view;
 uniform mat4 projection;
@@ -31,6 +31,7 @@ void main() {
     height *= scale_y;
     position.y = height;
 
-    fs_uv = uv;
-    gl_Position = projection * view * position;
+    g_uv = uv;
+    //    gl_Position = projection * view * position;
+    gl_Position = position;
 }
