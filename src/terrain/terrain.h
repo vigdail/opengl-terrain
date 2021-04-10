@@ -15,7 +15,6 @@ class Terrain {
 
   struct Vertex {
     glm::vec2 position;
-    glm::vec2 uv;
 
     static BufferLayout getLayout() {
       VertexAttribute position_attr{};
@@ -23,15 +22,10 @@ class Terrain {
       position_attr.offset = 0;
       position_attr.location = 0;
       position_attr.normalized = false;
-      VertexAttribute uv_attr{};
-      uv_attr.count = 2;
-      uv_attr.offset = offsetof(Vertex, uv);
-      uv_attr.location = 1;
-      uv_attr.normalized = false;
 
       BufferLayout layout{};
       layout.stride = sizeof(Vertex);
-      layout.attributes = {position_attr, uv_attr};
+      layout.attributes = {position_attr};
 
       return layout;
     }
@@ -46,33 +40,18 @@ class Terrain {
   const Texture &getNormalmap() const;
   const std::shared_ptr<Mesh> &getMesh() const;
   const std::vector<TerrainNode> &getNodes() const;
-  void update(const Camera &camera) {
-    for (auto &node : nodes_) {
-      node.update(camera);
-    }
-  }
+  const Transform &getTransform() const;
+  const TerrainConfig &getConfig() const;
+  void update(const Camera &camera);
 
  private:
   TerrainConfig config_{};
-
- public:
-  const TerrainConfig &getConfig() const;
-
- private:
   std::vector<float> heights_;
   std::vector<TerrainNode> nodes_;
-
- private:
   std::shared_ptr<Mesh> mesh_;
   Transform transform_{};
-
- public:
-  const Transform &getTransform() const;
-
- private:
   Texture heightmap_;
   Texture normalmap_;
 
-  //  int getIndex(int x, int z) const { return z * res_x_ + x; }
   static Mesh createMesh();
 };

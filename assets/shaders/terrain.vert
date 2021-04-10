@@ -1,7 +1,6 @@
 #version 450 core
 
 layout (location = 0) in vec2 position;
-layout (location = 1) in vec2 uv;
 
 layout (location = 0) out vec2 tc_uv;
 
@@ -108,11 +107,11 @@ void main() {
         local_position += morph(local_position, lod_morph_area[lod-1]);
     }
 
+    tc_uv = local_position;
     float height = texture(heightmap, tc_uv).r;
 
     vec4 world_pos = world_matrix * vec4(local_position.x, height, local_position.y, 1.0);
 
-    tc_uv = local_position;
     gl_ClipDistance[0] = dot(world_pos, clipPlane);
 
     gl_Position = world_pos;

@@ -65,26 +65,12 @@ float Terrain::getHeight(float x, float z) const {
   return h;
 }
 
-Mesh Terrain::createMesh() {
-  std::vector<Terrain::Vertex> vertices(16);
-  uint32_t size = 4;
-  for (int i = 0; i < size; i++) {
-    for (int j = 0; j < size; j++) {
-      float x = (float)j / (float)(size - 1);
-      float z = (float)i / (float)(size - 1);
-      Vertex v = {
-          glm::vec2(x, z),
-          glm::vec2(x, z),// @TODO: It seems redundant to store UVs
-      };
-      vertices[i * size + j] = v;
-    }
+void Terrain::update(const Camera &camera) {
+  for (auto &node : nodes_) {
+    node.update(camera);
   }
-
-  Mesh mesh(PrimitiveTopology::PATCHES, vertices.size());
-  mesh.addVertexBuffer(VertexBuffer{vertices, Terrain::Vertex::getLayout()});
-
-  return mesh;
 }
+
 const std::shared_ptr<Mesh> &Terrain::getMesh() const {
   return mesh_;
 }
@@ -102,4 +88,22 @@ const TerrainConfig &Terrain::getConfig() const {
 }
 const Transform &Terrain::getTransform() const {
   return transform_;
+}
+
+Mesh Terrain::createMesh() {
+  std::vector<Terrain::Vertex> vertices(16);
+  uint32_t size = 4;
+  for (int i = 0; i < size; i++) {
+    for (int j = 0; j < size; j++) {
+      float x = (float)j / (float)(size - 1);
+      float z = (float)i / (float)(size - 1);
+      Vertex v{glm::vec2(x, z)};
+      vertices[i * size + j] = v;
+    }
+  }
+
+  Mesh mesh(PrimitiveTopology::PATCHES, vertices.size());
+  mesh.addVertexBuffer(VertexBuffer{vertices, Terrain::Vertex::getLayout()});
+
+  return mesh;
 }
