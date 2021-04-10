@@ -69,6 +69,9 @@ void Shader::setInt(const char *name, const int value) const {
 void Shader::setFloat(const char *name, float value) const {
   glUniform1f(glGetUniformLocation(id_, name), value);
 }
+void Shader::setVec2(const char *name, const glm::vec2 &value) const {
+  glUniform2f(glGetUniformLocation(id_, name), value.x, value.y);
+}
 void Shader::setVec3(const char *name, const glm::vec3 &value) const {
   glUniform3f(glGetUniformLocation(id_, name), value.x, value.y, value.z);
 }

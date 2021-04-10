@@ -55,9 +55,6 @@ Application::Application(uint32_t width, uint32_t height)
                         GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE);
 #endif
 
-  glEnable(GL_DEPTH_TEST);
-  glEnable(GL_CULL_FACE);
-
   glViewport(0, 0, width, height);
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 

@@ -1,25 +1,118 @@
-#version 330 core
+#version 450 core
 
 layout (location = 0) in vec2 position;
-layout (location = 1) in vec2 uv;
 
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
+layout (location = 0) out vec2 tc_uv;
+
+uniform mat4 local_matrix;
+uniform mat4 world_matrix;
+uniform vec3 camera;
 uniform vec4 clipPlane;
-uniform float scale_y;
-
-out vec4 fragPos;
-out vec2 fragUV;
 
 uniform sampler2D heightmap;
+uniform float scale_y;
+
+uniform int lod;
+uniform vec2 index;
+uniform float gap;
+uniform vec2 location;
+uniform int lod_morph_area[8];
+
+float morphLat(vec2 pos) {
+    vec2 frac = pos - location;
+
+    if (index == vec2(0, 0)){
+        float morph = frac.x - frac.y;
+        if (morph > 0){
+            return morph;
+        }
+    }
+    if (index == vec2(1, 0)){
+        float morph = gap - frac.x - frac.y;
+        if (morph > 0){
+            return morph;
+        }
+    }
+    if (index == vec2(0, 1)){
+        float morph = frac.x + frac.y - gap;
+        if (morph > 0){
+            return -morph;
+        }
+    }
+    if (index == vec2(1, 1)){
+        float morph = frac.y - frac.x;
+        if (morph > 0){
+            return -morph;
+        }
+    }
+    return 0;
+}
+
+float morphLon(vec2 pos) {
+    vec2 frac = pos - location;
+
+    if (index == vec2(0, 0)){
+        float morph = frac.y - frac.x;
+        if (morph > 0) {
+            return -morph;
+        }
+    }
+    if (index == vec2(1, 0)){
+        float morph = frac.y - (gap - frac.x);
+        if (morph > 0) {
+            return morph;
+        }
+    }
+    if (index == vec2(0, 1)){
+        float morph = gap - frac.y - frac.x;
+        if (morph > 0) {
+            return -morph;
+        }
+    }
+    if (index == vec2(1, 1)){
+        float morph = frac.x - frac.y;
+        if (morph > 0) {
+            return morph;
+        }
+    }
+    return 0;
+}
+
+vec2 morph(vec2 pos, int morph_area) {
+    vec2 morphing = vec2(0.0);
+
+    int i = int(index.x);
+    int j = int(index.y);
+    vec2 fix_point_lat = location + vec2(1 - i, j) * gap;
+    vec2 fix_point_lon = location + vec2(i, 1 - j) * gap;
+
+    float planar_factor = clamp(camera.y / scale_y, 0, 1);
+
+    float dist_lat = length(camera - (world_matrix * vec4(fix_point_lat.x, planar_factor, fix_point_lat.y, 1.0)).xyz);
+    float dist_lon = length(camera - (world_matrix * vec4(fix_point_lon.x, planar_factor, fix_point_lon.y, 1.0)).xyz);
+
+    if (dist_lat > morph_area) {
+        morphing.x += morphLat(pos);
+    }
+    if (dist_lon > morph_area) {
+        morphing.y += morphLon(pos);
+    }
+
+    return morphing;
+}
 
 void main() {
-    float y = texture(heightmap, uv).r * scale_y;
-    vec3 p = vec3(position.x, y, position.y);
-    vec4 worldPos = model * vec4(p, 1.0);
-    fragPos = projection * view * worldPos;
-    fragUV = uv;
-    gl_ClipDistance[0] = dot(worldPos, clipPlane);
-    gl_Position = fragPos;
+    vec2 local_position = (local_matrix * vec4(position.x, 0, position.y, 1.0)).xz;
+    if (lod > 0) {
+        local_position += morph(local_position, lod_morph_area[lod-1]);
+    }
+
+    tc_uv = local_position;
+    float height = texture(heightmap, tc_uv).r;
+
+    vec4 world_pos = world_matrix * vec4(local_position.x, height, local_position.y, 1.0);
+
+    gl_ClipDistance[0] = dot(world_pos, clipPlane);
+
+    gl_Position = world_pos;
 }

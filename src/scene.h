@@ -8,7 +8,6 @@
 #include "camera.h"
 #include "gui/gui_layer.h"
 #include "light/directional_light.h"
-#include "mesh/shape/quad.h"
 #include "resource_manager.h"
 #include "skybox/skybox.h"
 #include "terrain/terrain.h"

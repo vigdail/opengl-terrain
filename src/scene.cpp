@@ -11,17 +11,15 @@
 const uint Scene::keys_count_;
 
 Scene::Scene(uint width, uint height)
-    : camera(Camera(60.0f, 1.0f * width / height, 0.1f, 1000.0f)),
+    : camera(Camera(60.0f, 1.0f * width / height, 0.1f, 3000.0f)),
       light(DirectionalLight(glm::vec3(0.0f), glm::vec3(0.0f))),
       width_(width), height_(height), keys_(), mouse_last_x_(0.0), mouse_last_y_(0.0) {
   loadAssets();
-  camera.position = glm::vec3(-440.0f, 3.0f, 0.0f);
-  terrain = std::make_shared<Terrain>(1000, 1024, 1024);
+  camera.position = glm::vec3(0.0f, 3.0f, -2.0f);
+  terrain = std::make_shared<Terrain>(TerrainConfig{});
   skybox = std::make_unique<Skybox>();
   water = std::make_shared<Water>();
-
-  auto quad = std::make_shared<Mesh>(Quad().toMesh());
-  meshes_.push_back(quad);
+  terrain->update(camera);
 
   gui = std::make_unique<GuiLayer>(width, height);
   gui->addPanel(new GuiSkyboxPanel(skybox->getAtmosphere()));
@@ -35,7 +33,10 @@ void Scene::loadAssets() {
       "terrain",
       ShaderBuilder()
           .load("../assets/shaders/terrain.vert", ShaderModule::Type::VERTEX)
-          .load("../assets/shaders/terrain.frag", ShaderModule::Type::FRAGMENT));
+          .load("../assets/shaders/terrain.frag", ShaderModule::Type::FRAGMENT)
+          .load("../assets/shaders/terrain.geom", ShaderModule::Type::GEOMETRY)
+          .load("../assets/shaders/terrain.tesc", ShaderModule::Type::TESS_CONTROL)
+          .load("../assets/shaders/terrain.tese", ShaderModule::Type::TESS_EVALUATION));
   ResourceManager::addShader(
       "skybox",
       ShaderBuilder()
@@ -94,8 +95,9 @@ void Scene::processInput(float dt) {
 }
 
 void Scene::update(float dt) {
-  camera.position.y =
-      terrain->getHeight(camera.position.x, camera.position.z) + 1.7f;
+  //  camera.position.y =
+  //      terrain->getHeight(camera.position.x, camera.position.z) + 1.7f;
+  terrain->update(camera);
   gui->update(dt);
 }
 
