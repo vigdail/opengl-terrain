@@ -24,8 +24,8 @@ Make sure you have ```opengl version>=4.5```, ```glfw``` and ```glm``` installed
 - [x] Rendering procedural sun (+ day/night cycle)
 - [x] Water
 - [x] First person camera movement
+- [x] Quad tree based terrain tesselation
 - [ ] Multiple texture layers
 - [ ] Grass
 - [ ] Lens flare effect
 - [ ] Cascade shadows
-- [ ] Quad tree based terrain tesselation
