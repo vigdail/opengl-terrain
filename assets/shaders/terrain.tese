@@ -2,8 +2,8 @@
 
 layout(quads, fractional_odd_spacing, cw) in;
 
-layout(location = 0) in vec2 tc_uv[];
-layout(location = 0) out vec2 te_uv;
+layout(location = 0) in vec2 te_uv[];
+layout(location = 0) out vec2 fs_uv;
 
 uniform mat4 view;
 uniform mat4 projection;
@@ -22,15 +22,15 @@ void main() {
     (1 - u) * v * gl_in[15].gl_Position);
 
     vec2 uv =
-    ((1 - u) * (1 - v) * tc_uv[12] +
-    u * (1 - v) * tc_uv[0] +
-    u * v * tc_uv[3] +
-    (1 - u) * v * tc_uv[15]);
+    ((1 - u) * (1 - v) * te_uv[12] +
+    u * (1 - v) * te_uv[0] +
+    u * v * te_uv[3] +
+    (1 - u) * v * te_uv[15]);
 
     float height = texture(heightmap, uv).r;
     height *= scale_y;
     position.y = height;
 
-    te_uv = uv;
+    fs_uv = uv;
     gl_Position = projection * view * position;
 }

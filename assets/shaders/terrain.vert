@@ -3,7 +3,7 @@
 layout (location = 0) in vec2 position;
 layout (location = 1) in vec2 uv;
 
-layout (location = 0) out vec2 vs_uv;
+layout (location = 0) out vec2 tc_uv;
 
 uniform mat4 local_matrix;
 uniform mat4 world_matrix;
@@ -79,7 +79,7 @@ float morph_lon(vec2 pos) {
     return 0;
 }
 
-vec2 morph(vec2 pos, float height, int morph_area) {
+vec2 morph(vec2 pos, int morph_area) {
     vec2 morphing = vec2(0.0);
 
     vec2 fixPointLat = vec2(0.0);
@@ -99,8 +99,15 @@ vec2 morph(vec2 pos, float height, int morph_area) {
         fixPointLon = location + vec2(gap, 0);
     }
 
-    float distLat = length(camera - (world_matrix * vec4(fixPointLat.x, height, fixPointLat.y, 1.0)).xyz);
-    float distLon = length(camera - (world_matrix * vec4(fixPointLon.x, height, fixPointLon.y, 1)).xyz);
+    float planar_factor = 0;
+    if (camera.y > abs(scale_y)) {
+        planar_factor = 1;
+    } else {
+        planar_factor = camera.y / abs(scale_y);
+    }
+
+    float distLat = length(camera - (world_matrix * vec4(fixPointLat.x, planar_factor, fixPointLat.y, 1.0)).xyz);
+    float distLon = length(camera - (world_matrix * vec4(fixPointLon.x, planar_factor, fixPointLon.y, 1)).xyz);
 
     if (distLat > morph_area) {
         morphing.x += morph_lat(pos);
@@ -114,16 +121,15 @@ vec2 morph(vec2 pos, float height, int morph_area) {
 
 void main() {
     vec2 local_position = (local_matrix * vec4(position.x, 0, position.y, 1.0)).xz;
-    float height = texture(heightmap, local_position).r;
     if (lod > 0) {
-        local_position += morph(local_position, height, lod_morph_area[lod-1]);
+        local_position += morph(local_position, lod_morph_area[lod-1]);
     }
 
-    vs_uv = local_position;
-    height = texture(heightmap, vs_uv).r;
+    float height = texture(heightmap, tc_uv).r;
 
     vec4 world_pos = world_matrix * vec4(local_position.x, height, local_position.y, 1.0);
 
+    tc_uv = local_position;
     gl_ClipDistance[0] = dot(world_pos, clipPlane);
 
     gl_Position = world_pos;

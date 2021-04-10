@@ -14,7 +14,6 @@ TerrainNode::TerrainNode(const TerrainConfig &config, int lod, const glm::vec2 &
 
   glm::vec2 scale_xz = glm::vec2(config.scale.x, config.scale.z);
   glm::vec2 loc = (location + gap_ / 2.0f) * scale_xz - scale_xz / 2.0f;
-  //  float height = getTerrainHeight(loc.getX(), loc.getY());
   world_position_ = glm::vec3(loc.x, 0, loc.y);
 }
 
@@ -30,17 +29,21 @@ void TerrainNode::update(const Camera &camera) {
 }
 
 void TerrainNode::updateChildNodes(const Camera &camera) {
+  world_position_.y = glm::clamp(camera.position.y, 0.0f, config_.scale.y);
   float distance = glm::distance(camera.position, world_position_);
-  if (distance < config_.lod_ranges[lod_]) {
-    addChildNodes(lod_ + 1);
-  } else if (distance >= config_.lod_ranges[lod_]) {
-    removeChildNodes();
+
+  if (is_leaf_) {
+    if (distance < config_.lod_ranges[lod_]) {
+      addChildNodes(lod_ + 1);
+    }
+  } else {
+    if (distance >= config_.lod_ranges[lod_]) {
+      removeChildNodes();
+    }
   }
 }
 void TerrainNode::addChildNodes(int lod) {
-  if (is_leaf_) {
-    is_leaf_ = false;
-  }
+  is_leaf_ = false;
 
   if (nodes_.empty()) {
     for (int i = 0; i < 2; i++) {
@@ -54,9 +57,8 @@ void TerrainNode::addChildNodes(int lod) {
 }
 
 void TerrainNode::removeChildNodes() {
-  if (!is_leaf_) {
-    is_leaf_ = true;
-  }
+  is_leaf_ = true;
+
   if (!nodes_.empty()) {
     nodes_.clear();
   }
