@@ -34,7 +34,7 @@ void TerrainPass::render(Scene *scene, RenderContext *context) {
   terrain->getNormalmap().bind(1);
 
   shader_->setVec3("color", glm::vec3(0.1, 0.8, 0.1));
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  //  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   terrain->getMesh()->bind();
   glPatchParameteri(GL_PATCH_VERTICES, terrain->getMesh()->count());
 

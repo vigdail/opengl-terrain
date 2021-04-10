@@ -8,8 +8,6 @@ layout (location = 0) out vec2 vs_uv;
 uniform mat4 local_matrix;
 uniform mat4 world_matrix;
 uniform vec3 camera;
-uniform mat4 view;
-uniform mat4 projection;
 uniform vec4 clipPlane;
 
 uniform sampler2D heightmap;
