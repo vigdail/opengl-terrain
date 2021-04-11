@@ -6,25 +6,25 @@
 #include <glad/glad.h>
 
 Terrain::Terrain(TerrainConfig config)
-    : config_(config),
-      heights_(config.resolution.x * config.resolution.y) {
+    : heights_(config.resolution.x * config.resolution.y) {
   mesh_ = std::make_shared<Mesh>(createMesh());
+  config_ = std::make_shared<TerrainConfig>(std::move(config));
 
-  transform_.position.x = -config.scale.x / 2.0f;
+  transform_.position.x = -config_->scale.x / 2.0f;
   transform_.position.y = 0.0f;
-  transform_.position.z = -config.scale.z / 2.0f;
-  transform_.scale = config.scale;
+  transform_.position.z = -config_->scale.z / 2.0f;
+  transform_.scale = config_->scale;
 
-  nodes_.reserve(config.root_nodes_count * config.root_nodes_count);
-  for (auto i = 0; i < config.root_nodes_count; i++) {
-    for (auto j = 0; j < config.root_nodes_count; j++) {
-      glm::vec2 location((float)i / config.root_nodes_count, (float)j / config.root_nodes_count);
+  nodes_.reserve(config_->root_nodes_count * config_->root_nodes_count);
+  for (auto i = 0; i < config_->root_nodes_count; i++) {
+    for (auto j = 0; j < config_->root_nodes_count; j++) {
+      glm::vec2 location((float)i / config_->root_nodes_count, (float)j / config_->root_nodes_count);
       glm::vec2 index(i, j);
       nodes_.emplace_back(TerrainNode(config_, 0, location, index));
     }
   }
 
-  heightmap_ = HeightmapRenderer::render(config.resolution.x, config.resolution.y, 8);
+  heightmap_ = HeightmapRenderer::render(config_->resolution.x, config_->resolution.y, 8);
   normalmap_ = NormalmapRenderer::render(heightmap_);
 
   heightmap_.bind();
@@ -34,9 +34,9 @@ Terrain::Terrain(TerrainConfig config)
 float Terrain::getHeight(float x, float z) const {
   glm::vec2 pos(x, z);
 
-  int res_x = config_.resolution.x;
-  int res_z = config_.resolution.y;
-  pos = pos * glm::vec2(res_x, res_z) / static_cast<float>(config_.scale.x) + glm::vec2(res_x - 1, res_z - 1) / 2.0f;
+  int res_x = config_->resolution.x;
+  int res_z = config_->resolution.y;
+  pos = pos * glm::vec2(res_x, res_z) / static_cast<float>(config_->scale.x) + glm::vec2(res_x - 1, res_z - 1) / 2.0f;
   int x_0 = std::floor(pos.x);
   int x_1 = x_0 + 1;
   int z_0 = std::floor(pos.y);
@@ -60,7 +60,7 @@ float Terrain::getHeight(float x, float z) const {
   }
 
   float h = h_0 + (du * percent_u) + (dv * percent_v);
-  h *= config_.scale.y;
+  h *= config_->scale.y;
 
   return h;
 }
@@ -83,7 +83,7 @@ const Texture &Terrain::getNormalmap() const {
 const std::vector<TerrainNode> &Terrain::getNodes() const {
   return nodes_;
 }
-const TerrainConfig &Terrain::getConfig() const {
+const std::shared_ptr<TerrainConfig> &Terrain::getConfig() const {
   return config_;
 }
 const Transform &Terrain::getTransform() const {

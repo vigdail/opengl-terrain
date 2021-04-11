@@ -4,7 +4,7 @@ void drawNode(const TerrainNode &node, ShaderHandle shader, const std::shared_pt
 
 void TerrainPass::render(Scene *scene, RenderContext *context) {
   Terrain *terrain = scene->terrain.get();
-  const TerrainConfig &config = terrain->getConfig();
+  const auto &config = terrain->getConfig();
 
   shader_ = ResourceManager::getShader("terrain");
   shader_->use();
@@ -23,10 +23,10 @@ void TerrainPass::render(Scene *scene, RenderContext *context) {
   shader_->setVec3("color", glm::vec3(0.45f, 0.4f, 0.3f));
   shader_->setVec3("camera", scene->camera.position);
   shader_->setMat4("world_matrix", terrain->getTransform().getMatrix());
-  shader_->setFloat("tessellation_factor", config.tessellation_factor);
-  shader_->setFloat("tessellation_slope", config.tessellation_slope);
-  shader_->setFloat("tessellation_shift", config.tessellation_shift);
-  auto &areas = config.lod_morphing_areas;
+  shader_->setFloat("tessellation_factor", config->tessellation_factor);
+  shader_->setFloat("tessellation_slope", config->tessellation_slope);
+  shader_->setFloat("tessellation_shift", config->tessellation_shift);
+  auto &areas = config->lod_morphing_areas;
   for (auto i = 0; i < areas.size(); i++) {
     shader_->setInt(std::string("lod_morph_area[" + std::to_string(i) + "]").c_str(), areas[i]);
   }

@@ -34,18 +34,21 @@ class Terrain {
  public:
   explicit Terrain(TerrainConfig config);
   float getHeight(float x, float z) const;
-  float getScaleY() const { return config_.scale.y; }
-  void setScaleY(float scale_y) { config_.scale.y = scale_y; }
+  float getScaleY() const { return config_->scale.y; }
+  void setScaleY(float scale_y) {
+    config_->scale.y = scale_y;
+    transform_.scale.y = scale_y;
+  }
   const Texture &getHeightmap() const;
   const Texture &getNormalmap() const;
   const std::shared_ptr<Mesh> &getMesh() const;
   const std::vector<TerrainNode> &getNodes() const;
   const Transform &getTransform() const;
-  const TerrainConfig &getConfig() const;
+  const std::shared_ptr<TerrainConfig> &getConfig() const;
   void update(const Camera &camera);
 
  private:
-  TerrainConfig config_{};
+  std::shared_ptr<TerrainConfig> config_{};
   std::vector<float> heights_;
   std::vector<TerrainNode> nodes_;
   std::shared_ptr<Mesh> mesh_;

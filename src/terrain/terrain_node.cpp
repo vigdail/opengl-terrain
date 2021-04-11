@@ -3,16 +3,16 @@
 
 #include <utility>
 
-TerrainNode::TerrainNode(const TerrainConfig &config, int lod, const glm::vec2 &location, const glm::vec2 &index)
+TerrainNode::TerrainNode(const std::shared_ptr<TerrainConfig> &config, int lod, const glm::vec2 &location, const glm::vec2 &index)
     : config_(config), lod_(lod), location_(location), index_(index) {
-  gap_ = 1.0f / (config.root_nodes_count * (float)(std::pow(2, lod)));
+  gap_ = 1.0f / (config->root_nodes_count * (float)(std::pow(2, lod)));
 
   glm::vec3 local_scale(gap_, 0, gap_);
   glm::vec3 local_position(location.x, 0, location.y);
   transform_.position = local_position;
   transform_.scale = local_scale;
 
-  glm::vec2 scale_xz = glm::vec2(config.scale.x, config.scale.z);
+  glm::vec2 scale_xz = glm::vec2(config->scale.x, config->scale.z);
   glm::vec2 loc = (location + gap_ / 2.0f) * scale_xz - scale_xz / 2.0f;
   world_position_ = glm::vec3(loc.x, 0, loc.y);
 }
@@ -29,15 +29,15 @@ void TerrainNode::update(const Camera &camera) {
 }
 
 void TerrainNode::updateChildNodes(const Camera &camera) {
-  world_position_.y = glm::clamp(camera.position.y, 0.0f, config_.scale.y);
+  world_position_.y = glm::clamp(camera.position.y, 0.0f, config_->scale.y);
   float distance = glm::distance(camera.position, world_position_);
 
   if (is_leaf_) {
-    if (distance < config_.lod_ranges[lod_]) {
+    if (distance < config_->lod_ranges[lod_]) {
       addChildNodes(lod_ + 1);
     }
   } else {
-    if (distance >= config_.lod_ranges[lod_]) {
+    if (distance >= config_->lod_ranges[lod_]) {
       removeChildNodes();
     }
   }

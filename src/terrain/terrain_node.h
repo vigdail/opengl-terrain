@@ -8,7 +8,7 @@
 
 class TerrainNode {
  public:
-  TerrainNode(const TerrainConfig &config, int lod, const glm::vec2 &location, const glm::vec2 &index);
+  TerrainNode(const std::shared_ptr<TerrainConfig> &config, int lod, const glm::vec2 &location, const glm::vec2 &index);
   bool isLeaf() const;
   void update(const Camera &camera);
   const Transform &getTransform() const;
@@ -19,7 +19,7 @@ class TerrainNode {
   float getGap() const;
 
  private:
-  TerrainConfig config_;
+  std::shared_ptr<TerrainConfig> config_;
   Transform transform_{};
   int lod_;
   glm::vec2 location_;
