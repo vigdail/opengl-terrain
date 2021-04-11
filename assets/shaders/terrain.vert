@@ -7,8 +7,6 @@ layout (location = 0) out vec2 tc_uv;
 uniform mat4 local_matrix;
 uniform mat4 world_matrix;
 uniform vec3 camera;
-uniform vec4 clipPlane;
-
 uniform sampler2D heightmap;
 uniform float scale_y;
 
@@ -111,8 +109,6 @@ void main() {
     float height = texture(heightmap, tc_uv).r;
 
     vec4 world_pos = world_matrix * vec4(local_position.x, height, local_position.y, 1.0);
-
-    gl_ClipDistance[0] = dot(world_pos, clipPlane);
 
     gl_Position = world_pos;
 }

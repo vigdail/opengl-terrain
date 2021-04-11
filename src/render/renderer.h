@@ -19,25 +19,25 @@ class Renderer {
   }
 
   void render(Scene *scene) {
-    //    // Water refraction
-    //    refraction_framebuffer_->bind();
-    //    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    //    glEnable(GL_CLIP_DISTANCE0);
-    //    context_.setClipPlane(glm::vec4(0.0f, -1.0f, 0.0f, scene->water->getHeight()));
-    //    skybox_pass_->render(scene, &context_);
-    //    terrain_pass_->render(scene, &context_);
-    //
-    //    // Water reflection
-    //    reflection_framebuffer_->bind();
-    //    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    //    float dy = 2.0f * (scene->camera.position.y - scene->water->getHeight());
-    //    scene->camera.position.y -= dy;
-    //    scene->camera.invertPitch();
-    //    context_.setClipPlane(glm::vec4(0.0f, 1.0f, 0.0f, -scene->water->getHeight() + 0.07f));
-    //    skybox_pass_->render(scene, &context_);
-    //    terrain_pass_->render(scene, &context_);
-    //    scene->camera.invertPitch();
-    //    scene->camera.position.y += dy;
+    // Water refraction
+    refraction_framebuffer_->bind();
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_CLIP_DISTANCE0);
+    context_.setClipPlane(glm::vec4(0.0f, -1.0f, 0.0f, scene->water->getHeight()));
+    terrain_pass_->render(scene, &context_);
+    skybox_pass_->render(scene, &context_);
+
+    // Water reflection
+    reflection_framebuffer_->bind();
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    float dy = 2.0f * (scene->camera.position.y - scene->water->getHeight());
+    scene->camera.position.y -= dy;
+    scene->camera.invertPitch();
+    context_.setClipPlane(glm::vec4(0.0f, 1.0f, 0.0f, -scene->water->getHeight() + 0.07f));
+    terrain_pass_->render(scene, &context_);
+    skybox_pass_->render(scene, &context_);
+    scene->camera.invertPitch();
+    scene->camera.position.y += dy;
 
     // Main pass
     glDisable(GL_CLIP_DISTANCE0);
@@ -45,10 +45,10 @@ class Renderer {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glViewport(0, 0, scene->getWidth(), scene->getHeight());
     context_.setClipPlane(glm::vec4(0.0f));
-    skybox_pass_->render(scene, &context_);
     terrain_pass_->render(scene, &context_);
-    //    water_pass_->render(scene, &context_);
-    //    scene->gui->render();
+    skybox_pass_->render(scene, &context_);
+    water_pass_->render(scene, &context_);
+    scene->gui->render();
   }
 
  private:

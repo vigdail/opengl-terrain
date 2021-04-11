@@ -32,6 +32,5 @@ void main() {
     position.y = height;
 
     g_uv = uv;
-    //    gl_Position = projection * view * position;
     gl_Position = position;
 }

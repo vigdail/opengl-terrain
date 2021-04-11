@@ -76,12 +76,10 @@ void Shader::setVec3(const char *name, const glm::vec3 &value) const {
   glUniform3f(glGetUniformLocation(id_, name), value.x, value.y, value.z);
 }
 void Shader::setVec4(const char *name, const glm::vec4 &value) const {
-  glUniform4f(glGetUniformLocation(id_, name), value.x, value.y, value.z,
-              value.w);
+  glUniform4f(glGetUniformLocation(id_, name), value.x, value.y, value.z, value.w);
 }
 void Shader::setMat4(const char *name, const glm::mat4 &value) const {
-  glUniformMatrix4fv(glGetUniformLocation(id_, name), 1, false,
-                     glm::value_ptr(value));
+  glUniformMatrix4fv(glGetUniformLocation(id_, name), 1, false, glm::value_ptr(value));
 }
 
 void Shader::checkLinkingErrors(uint32_t id) {

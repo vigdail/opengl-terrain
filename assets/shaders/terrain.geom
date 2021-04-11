@@ -8,11 +8,13 @@ out vec2 fs_uv;
 
 uniform mat4 view;
 uniform mat4 projection;
+uniform vec4 clip_plane;
 
 void main() {
 
     for (int i = 0; i < gl_in.length(); ++i) {
         vec4 position = gl_in[i].gl_Position;
+        gl_ClipDistance[0] = dot(position, clip_plane);
         gl_Position = projection * view * position;
         fs_uv = g_uv[i];
         EmitVertex();
