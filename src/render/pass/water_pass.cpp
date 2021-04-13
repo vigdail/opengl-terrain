@@ -46,6 +46,10 @@ void WaterPass::render(Scene *scene, RenderContext *context) {
   shader_->setFloat("reflection_power", material.reflection_power);
   shader_->setFloat("specular_power", material.specular_power);
   shader_->setFloat("dudv_tiling", material.dudv_tiling);
+  shader_->setVec3("color", material.color);
+  shader_->setFloat("wave_strength", material.wave_strength);
+  shader_->setFloat("depth_factor", material.depth_factor);
+  shader_->setFloat("wave_speed", material.wave_speed_factor);
 
   water->getMesh().bind();
   glDrawElements(static_cast<GLenum>(topology_), water->getMesh().count(), GL_UNSIGNED_INT, nullptr);

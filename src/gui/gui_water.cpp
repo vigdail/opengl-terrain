@@ -14,8 +14,12 @@ void GuiWaterPanel::render() {
     water_->setHeight(height);
   }
   WaterMaterial &material = water_->getMaterial();
-  ImGui::SliderFloat("Specular", &material.specular_power, 4.0, 128.0, "%.0f");
-  ImGui::SliderFloat("Reflective", &material.reflection_power, 0.1, 10.0, "%.1f");
-  ImGui::SliderFloat("DUDV Tiling", &material.dudv_tiling, 1.0, 20.0, "%.0f");
+  ImGui::SliderFloat("Specular", &material.specular_power, 4.0, 32.0, "%.0f");
+  ImGui::SliderFloat("Reflective", &material.reflection_power, 0.1, 1.0, "%.05f");
+  ImGui::SliderFloat("Wave Strength", &material.wave_strength, 0.0, 0.05, "%.05f");
+  ImGui::SliderFloat("Wave Speed Factor", &material.wave_speed_factor, 1, 1000, "%.0f");
+  ImGui::SliderFloat("DUDV Tiling", &material.dudv_tiling, 1.0, 100.0, "%.0f");
+  ImGui::SliderFloat("Depth factor", &material.depth_factor, 0.0, 10.0, "%.1f");
+  ImGui::ColorEdit3("Color", &material.color.x);
   ImGui::End();
 }

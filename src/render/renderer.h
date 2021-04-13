@@ -23,7 +23,7 @@ class Renderer {
     refraction_framebuffer_->bind();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_CLIP_DISTANCE0);
-    context_.setClipPlane(glm::vec4(0.0f, -1.0f, 0.0f, scene->water->getHeight()));
+    context_.setClipPlane(glm::vec4(0.0f, -1.0f, 0.0f, scene->water->getHeight() + 2.0f));
     terrain_pass_->render(scene, &context_);
     skybox_pass_->render(scene, &context_);
 
@@ -33,7 +33,7 @@ class Renderer {
     float dy = 2.0f * (scene->camera.position.y - scene->water->getHeight());
     scene->camera.position.y -= dy;
     scene->camera.invertPitch();
-    context_.setClipPlane(glm::vec4(0.0f, 1.0f, 0.0f, -scene->water->getHeight() + 0.07f));
+    context_.setClipPlane(glm::vec4(0.0f, 1.0f, 0.0f, -scene->water->getHeight() + 0.1f));
     terrain_pass_->render(scene, &context_);
     skybox_pass_->render(scene, &context_);
     scene->camera.invertPitch();
@@ -72,8 +72,8 @@ class Renderer {
 
     refraction_framebuffer_ = std::make_unique<FrameBuffer>(spec);
 
-    spec.width = width / 4;
-    spec.height = height / 4;
+    spec.width = width / 2;
+    spec.height = height / 2;
     reflection_framebuffer_ = std::make_unique<FrameBuffer>(spec);
   }
 };
