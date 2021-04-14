@@ -6,8 +6,12 @@ layout(triangle_strip, max_vertices = 3) out;
 in vec2 g_uv[3];
 out vec2 fs_uv;
 
-uniform mat4 view;
-uniform mat4 projection;
+layout(std140, binding = 0) uniform Camera {
+    vec3 camera_position;
+    mat4 view;
+    mat4 projection;
+};
+
 uniform vec4 clip_plane;
 
 void main() {

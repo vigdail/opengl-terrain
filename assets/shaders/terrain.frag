@@ -10,7 +10,6 @@ struct DirectionalLight {
 };
 
 uniform vec3 color;
-uniform vec3 camera;
 uniform DirectionalLight light;
 
 uniform sampler2D normalmap;

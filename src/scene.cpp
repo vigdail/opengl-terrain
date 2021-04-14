@@ -15,7 +15,7 @@ Scene::Scene(uint width, uint height)
       light(DirectionalLight(glm::vec3(0.0f), glm::vec3(0.0f))),
       width_(width), height_(height), keys_(), mouse_last_x_(0.0), mouse_last_y_(0.0) {
   loadAssets();
-  camera.position = glm::vec3(0.0f, 3.0f, -2.0f);
+  camera.position = glm::vec3(0.0f, 50.0f, 0.0f);
   terrain = std::make_shared<Terrain>(TerrainConfig{});
   skybox = std::make_unique<Skybox>();
   water = std::make_shared<Water>();

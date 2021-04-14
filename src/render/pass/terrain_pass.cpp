@@ -8,8 +8,8 @@ void TerrainPass::render(Scene *scene, RenderContext *context) {
 
   shader_ = ResourceManager::getShader("terrain");
   shader_->use();
-  shader_->setMat4("view", scene->camera.getViewMatrix());
-  shader_->setMat4("projection", scene->camera.getProjectionMatrix());
+  //  shader_->setMat4("view", scene->camera.getViewMatrix());
+  //  shader_->setMat4("projection", scene->camera.getProjectionMatrix());
   shader_->setVec3("light.direction", glm::normalize(scene->light.getDirection()));
   shader_->setVec3("light.color", scene->light.getColor());
   shader_->setFloat("light.intensity", scene->light.getIntensity());
@@ -20,7 +20,7 @@ void TerrainPass::render(Scene *scene, RenderContext *context) {
   shader_->setInt("heightmap", 0);
   shader_->setInt("normalmap", 1);
   shader_->setFloat("scale_y", terrain->getScaleY());
-  shader_->setVec3("camera", scene->camera.position);
+  //  shader_->setVec3("camera", scene->camera.position);
   shader_->setMat4("world_matrix", terrain->getTransform().getMatrix());
   shader_->setFloat("tessellation_factor", config->tessellation_factor);
   shader_->setFloat("tessellation_slope", config->tessellation_slope);

@@ -5,10 +5,14 @@ layout(vertices = 16) out;
 layout(location = 0) in vec2 tc_uv[];
 layout(location = 0) out vec2 te_uv[];
 
+layout(std140, binding = 0) uniform Camera {
+    vec3 camera_position;
+    mat4 view;
+    mat4 projection;
+};
 uniform float tessellation_factor;
 uniform float tessellation_slope;
 uniform float tessellation_shift;
-uniform vec3 camera;
 
 const int AB = 2;
 const int BC = 3;
@@ -28,10 +32,10 @@ void main() {
         vec3 cd_mid = vec3(gl_in[15].gl_Position + gl_in[12].gl_Position)/2.0;
         vec3 da_mid = vec3(gl_in[12].gl_Position + gl_in[0].gl_Position)/2.0;
 
-        float distance_AB = distance(ab_mid, camera);
-        float distance_BC = distance(bc_mid, camera);
-        float distance_CD = distance(cd_mid, camera);
-        float distance_DA = distance(da_mid, camera);
+        float distance_AB = distance(ab_mid, camera_position);
+        float distance_BC = distance(bc_mid, camera_position);
+        float distance_CD = distance(cd_mid, camera_position);
+        float distance_DA = distance(da_mid, camera_position);
 
         gl_TessLevelOuter[AB] = mix(1, gl_MaxTessGenLevel, lodFactor(distance_AB));
         gl_TessLevelOuter[BC] = mix(1, gl_MaxTessGenLevel, lodFactor(distance_BC));

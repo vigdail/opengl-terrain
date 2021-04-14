@@ -68,3 +68,30 @@ class IndexBuffer {
   uint32_t id_{};
   size_t count_;
 };
+
+class UniformBuffer {
+ public:
+  UniformBuffer(size_t size) noexcept {
+    glCreateBuffers(1, &id_);
+    glBindBuffer(GL_UNIFORM_BUFFER, id_);
+    glBufferData(GL_UNIFORM_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+  }
+  void bindBase(int binding) const {
+    glBindBufferBase(GL_UNIFORM_BUFFER, binding, id_);
+  }
+  void setData(const void *data, size_t start, size_t size) {
+    bind();
+    glBufferSubData(GL_UNIFORM_BUFFER, start, size, data);
+    unbind();
+  }
+  void bind() const {
+    glBindBuffer(GL_UNIFORM_BUFFER, id_);
+  }
+  void unbind() const {
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+  }
+
+ private:
+  uint32_t id_{};
+};

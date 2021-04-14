@@ -34,9 +34,9 @@ void WaterPass::render(Scene *scene, RenderContext *context) {
   model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 
   shader_->setMat4("model", model);
-  shader_->setMat4("view", scene->camera.getViewMatrix());
-  shader_->setMat4("projection", scene->camera.getProjectionMatrix());
-  shader_->setVec3("camera_position", scene->camera.position);
+  //  shader_->setMat4("view", scene->camera.getViewMatrix());
+  //  shader_->setMat4("projection", scene->camera.getProjectionMatrix());
+  //  shader_->setVec3("camera_position", scene->camera.position);
   shader_->setFloat("camera_near", scene->camera.near);
   shader_->setFloat("camera_far", scene->camera.far);
   shader_->setFloat("time", glfwGetTime());

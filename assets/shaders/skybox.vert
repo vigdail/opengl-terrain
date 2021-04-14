@@ -1,14 +1,19 @@
-#version 330 core
+#version 450 core
 
 layout (location = 0) in vec3 position;
 
-uniform mat4 view;
-uniform mat4 projection;
+layout(std140, binding = 0) uniform Camera {
+    vec3 camera_position;
+    mat4 view;
+    mat4 projection;
+};
 
 out vec3 fragPos;
 
 void main() {
     fragPos = position;
-    vec4 pos = projection * view * vec4(position, 1.0);
+    // @TODO: get this from camera UBO
+    mat4 v = mat4(mat3(view));
+    vec4 pos = projection * v * vec4(position, 1.0);
     gl_Position = pos.xyww;
 }

@@ -5,8 +5,12 @@ layout(quads, fractional_odd_spacing, cw) in;
 layout(location = 0) in vec2 te_uv[];
 layout(location = 0) out vec2 g_uv;
 
-uniform mat4 view;
-uniform mat4 projection;
+layout(std140, binding = 0) uniform Camera {
+    vec3 camera_position;
+    mat4 view;
+    mat4 projection;
+};
+
 uniform sampler2D heightmap;
 uniform float scale_y;
 

@@ -3,10 +3,13 @@
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec2 uv;
 
+layout(std140, binding = 0) uniform Camera {
+    vec3 camera_position;
+    mat4 view;
+    mat4 projection;
+};
+
 uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
-uniform vec3 camera_position;
 
 out vec2 fragUV;
 out vec4 fragClip;

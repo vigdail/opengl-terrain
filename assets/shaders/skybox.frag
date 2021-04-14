@@ -8,7 +8,12 @@ struct DirectionalLight {
     float intensity;
 };
 
-uniform vec3 camera;
+layout(std140, binding = 0) uniform Camera {
+    vec3 camera_position;
+    mat4 view;
+    mat4 projection;
+};
+
 uniform DirectionalLight sun;
 uniform float planet_radius;
 uniform float atmosphere_radius;
@@ -45,9 +50,9 @@ void main() {
     if (fragPos.y < 0) {
         discard;
     }
-  
+
     vec3 r = normalize(fragPos);
-    vec3 r0 = camera + vec3(0, planet_radius, 0);
+    vec3 r0 = camera_position + vec3(0, planet_radius, 0);
 
     // Calculate the step size of the primary ray.
     vec2 p = rsi(r0, r, atmosphere_radius);

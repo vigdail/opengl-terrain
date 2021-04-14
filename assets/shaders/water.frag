@@ -10,13 +10,18 @@ struct DirectionalLight {
     float intensity;
 };
 
+layout(std140, binding = 0) uniform Camera {
+    vec3 camera_position;
+    mat4 view;
+    mat4 projection;
+};
+
 uniform sampler2D reflection;
 uniform sampler2D refraction;
 uniform sampler2D dudv;
 uniform sampler2D normalmap;
 uniform sampler2D depthmap;
 uniform float time;
-uniform vec3 camera_position;
 uniform DirectionalLight sun;
 
 uniform float dudv_tiling;
