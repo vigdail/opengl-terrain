@@ -13,9 +13,11 @@
 #include "terrain/terrain.h"
 #include "water/water.h"
 
+struct GLFWwindow;
+
 class Scene {
  public:
-  Scene(uint32_t width, uint32_t height);
+  Scene(uint32_t width, uint32_t height, GLFWwindow *window);
   void processInput(float dt);
   void update(float dt);
   void setKeyPressed(uint32_t key);

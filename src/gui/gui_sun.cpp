@@ -8,13 +8,13 @@ GuiSunPanel::GuiSunPanel(DirectionalLight *sun)
 }
 
 void GuiSunPanel::render() {
-  ImGui::Begin("Sun");
+  if (!ImGui::CollapsingHeader("Sun")) {
+    return;
+  }
   if (ImGui::SliderFloat("Hour", &hour_, 5, 19, "%.1f")) {
     auto angle = timeToAngle();
     sun_->setPosition(glm::vec3(cos(angle), sin(angle), 0.0f));
   }
-
-  ImGui::End();
 }
 
 float GuiSunPanel::timeToAngle() const {

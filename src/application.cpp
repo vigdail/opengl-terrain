@@ -58,7 +58,7 @@ Application::Application(uint32_t width, uint32_t height)
   glViewport(0, 0, width, height);
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-  scene_ = std::make_unique<Scene>(width, height);
+  scene_ = std::make_unique<Scene>(width, height, window_);
   renderer_ = std::make_unique<Renderer>(width, height);
 }
 
@@ -70,10 +70,6 @@ void Application::run() {
     auto current_time = (float)glfwGetTime();
     float delta_time = current_time - last_time;
     last_time = current_time;
-
-    int fps = floor(1.0 / delta_time);
-    std::string title = "OpenGL Terrain | " + std::to_string(fps);
-    glfwSetWindowTitle(window_, title.c_str());
 
     glfwPollEvents();
 

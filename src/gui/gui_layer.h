@@ -4,21 +4,16 @@
 
 #include "gui_panel.h"
 
+struct GLFWwindow;
+
 class GuiLayer {
  public:
-  explicit GuiLayer(int width, int height);
+  explicit GuiLayer(GLFWwindow *window);
   ~GuiLayer();
-  void update(float delta_time) const;
-  void render();
-  // @TODO: Refactor this
-  static void onMouseButtonEvent(int button, int action, int mode);
-  static void onKeyEvent(int key, int scancode, int action, int mode);
-  static void onMousePositionEvent(double x, double y);
+  void update() const;
+  void render() const;
   void addPanel(GuiPanel *panel);
 
  private:
-  int width_;
-  int height_;
-
   std::vector<GuiPanel *> panels_;
 };

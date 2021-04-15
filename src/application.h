@@ -7,7 +7,6 @@
 #include <memory>
 #include <unordered_map>
 
-#include "./gui/gui_layer.h"
 #include "./scene.h"
 #include "render/renderer.h"
 

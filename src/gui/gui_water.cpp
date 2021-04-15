@@ -8,7 +8,10 @@ GuiWaterPanel::GuiWaterPanel(std::shared_ptr<Water> water)
     : water_(std::move(water)) {}
 
 void GuiWaterPanel::render() {
-  ImGui::Begin("Water");
+  if (!ImGui::CollapsingHeader("Water")) {
+    return;
+  }
+  ImGui::PushID("water");
   float height = water_->getHeight();
   if (ImGui::SliderFloat("Height", &height, 0.0f, 150.0f, "%.1f")) {
     water_->setHeight(height);
@@ -21,5 +24,5 @@ void GuiWaterPanel::render() {
   ImGui::SliderFloat("DUDV Tiling", &material.dudv_tiling, 1.0, 100.0, "%.0f");
   ImGui::SliderFloat("Depth factor", &material.depth_factor, 0.0, 10.0, "%.1f");
   ImGui::ColorEdit3("Color", &material.color.x);
-  ImGui::End();
+  ImGui::PopID();
 }

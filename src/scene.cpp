@@ -10,7 +10,7 @@
 
 const uint Scene::keys_count_;
 
-Scene::Scene(uint width, uint height)
+Scene::Scene(uint width, uint height, GLFWwindow *window)
     : camera(Camera(60.0f, 1.0f * width / height, 0.1f, 3000.0f)),
       light(DirectionalLight(glm::vec3(0.0f), glm::vec3(0.0f))),
       width_(width), height_(height), keys_(), mouse_last_x_(0.0), mouse_last_y_(0.0) {
@@ -21,7 +21,7 @@ Scene::Scene(uint width, uint height)
   water = std::make_shared<Water>();
   terrain->update(camera);
 
-  gui = std::make_unique<GuiLayer>(width, height);
+  gui = std::make_unique<GuiLayer>(window);
   gui->addPanel(new GuiSkyboxPanel(skybox->getAtmosphere()));
   gui->addPanel(new GuiSunPanel(&light));
   gui->addPanel(new GuiWaterPanel(water));
@@ -98,12 +98,10 @@ void Scene::update(float dt) {
   //  camera.position.y =
   //      terrain->getHeight(camera.position.x, camera.position.z) + 1.7f;
   terrain->update(camera);
-  gui->update(dt);
+  gui->update();
 }
 
 void Scene::onKeyEvent(int key, int scancode, int action, int mode) {
-  gui->onKeyEvent(key, scancode, action, mode);
-
   if (action == GLFW_PRESS) {
     setKeyPressed(key);
   } else if (action == GLFW_RELEASE) {
@@ -115,7 +113,7 @@ void Scene::onKeyEvent(int key, int scancode, int action, int mode) {
 }
 
 void Scene::onMouseButtonEvent(int button, int action, int mode) const {
-  gui->onMouseButtonEvent(button, action, mode);
+  //
 }
 
 void Scene::onMousePositionEvent(double x, double y) {
@@ -126,8 +124,6 @@ void Scene::onMousePositionEvent(double x, double y) {
   mouse_last_y_ = y;
 
   camera.handleMouseMovement(offset_x, offset_y);
-
-  gui->onMousePositionEvent(x, y);
 }
 
 void Scene::setKeyPressed(uint key) {
