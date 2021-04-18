@@ -8,8 +8,7 @@
 
 struct CameraUBO {
   glm::vec3 camera_position;
-  float __padding;
-  glm::mat4 view;
+  alignas(16) glm::mat4 view;
   glm::mat4 projection;
 };
 
